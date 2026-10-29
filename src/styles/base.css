@@ -1,0 +1,292 @@
+/* Base styles: theme tokens, fullscreen canvas + UI layer, overlays shared by every screen.
+   The "ui" agent adds its own stylesheets (src/styles/ui/*.css) on top of these tokens. */
+
+:root {
+  --bg: #05070a;
+  --panel: rgba(12, 18, 26, 0.86);
+  --panel-solid: #0c121a;
+  --line: rgba(160, 190, 220, 0.22);
+  --text: #e8eef4;
+  --text-dim: #9fb0c0;
+  --accent: #ffb000; /* Apollo amber */
+  --accent-2: #4fd1ff; /* CRT cyan */
+  --crt-green: #59ff8a;
+  --warn: #ff4b3a;
+  --caution: #ffcf3a;
+  --ok: #45e07a;
+  --font-ui: 'Barlow', system-ui, sans-serif;
+  --font-title: 'Barlow Condensed', 'Barlow', sans-serif;
+  --font-mono: 'Share Tech Mono', ui-monospace, monospace;
+  --safe-l: env(safe-area-inset-left, 0px);
+  --safe-r: env(safe-area-inset-right, 0px);
+  --safe-t: env(safe-area-inset-top, 0px);
+  --safe-b: env(safe-area-inset-bottom, 0px);
+  --ui-scale: clamp(0.72, 0.5vw + 0.62vh, 1.15);
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-ui);
+  font-size: calc(16px * var(--ui-scale));
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior: none;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+}
+
+#app {
+  position: fixed;
+  inset: 0;
+}
+
+#gl {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  touch-action: none;
+}
+
+#ui {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  padding: var(--safe-t) var(--safe-r) var(--safe-b) var(--safe-l);
+}
+
+#ui > * {
+  pointer-events: auto;
+}
+
+.btn {
+  font-family: var(--font-title);
+  font-size: 1.05rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text);
+  background: rgba(20, 30, 42, 0.9);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 0.55em 1.1em;
+  margin: 0.25em;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, transform 0.1s;
+}
+
+.btn:hover:not(:disabled) {
+  border-color: var(--accent);
+  background: rgba(40, 52, 66, 0.95);
+}
+
+.btn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.btn-mini {
+  font-size: 0.7rem;
+  padding: 0.1em 0.5em;
+  margin-left: 0.5em;
+  background: #22303f;
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.loading-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  background: rgba(3, 5, 8, 0.92);
+  font-family: var(--font-title);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.loading-spinner {
+  width: 3rem;
+  height: 3rem;
+  border: 3px solid var(--line);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.error-overlay {
+  position: fixed;
+  inset: 5vh 5vw;
+  z-index: 1001;
+  background: #160b0b;
+  border: 1px solid var(--warn);
+  padding: 1.5rem;
+  overflow: auto;
+}
+
+.error-overlay pre {
+  white-space: pre-wrap;
+  font-size: 0.75rem;
+  color: #ffb4a8;
+}
+
+.fps-counter {
+  position: fixed;
+  right: calc(8px + var(--safe-r));
+  bottom: calc(6px + var(--safe-b));
+  z-index: 999;
+  font: 12px var(--font-mono);
+  color: var(--crt-green);
+  pointer-events: none;
+}
+
+/* Landscape-only on phones: overlay asks to rotate. */
+#rotate-device {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  background: var(--bg);
+  color: var(--text);
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-family: var(--font-title);
+  font-size: 1.3rem;
+  letter-spacing: 0.08em;
+  padding: 2rem;
+}
+
+.rotate-icon {
+  width: 64px;
+  height: 104px;
+  border: 4px solid var(--accent);
+  border-radius: 12px;
+  margin-bottom: 1.2rem;
+  animation: rotate-hint 2.2s ease-in-out infinite;
+}
+
+@keyframes rotate-hint {
+  0%, 25% {
+    transform: rotate(0deg);
+  }
+  60%, 100% {
+    transform: rotate(-90deg);
+  }
+}
+
+@media (orientation: portrait) and (pointer: coarse) {
+  #rotate-device {
+    display: flex;
+  }
+}
+
+/* Architect stubs (removed when the ui agent replaces the menu/HUD). */
+.menu-stub {
+  position: absolute;
+  inset: 0;
+  overflow: auto;
+  padding: 2rem;
+  background: radial-gradient(circle at 70% 20%, #13243a, #05070a 70%);
+}
+
+.menu-stub .btn-big {
+  display: block;
+  width: min(32rem, 90%);
+  text-align: left;
+  padding: 1rem 1.4rem;
+}
+
+.hud-stub {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  font-family: var(--font-mono);
+}
+
+.hud-stub > * {
+  pointer-events: auto;
+}
+
+.hud-stub-clock {
+  position: absolute;
+  top: 0.6rem;
+  left: 0.8rem;
+  color: var(--crt-green);
+}
+
+.hud-stub-obj {
+  position: absolute;
+  top: 2.2rem;
+  left: 0.8rem;
+  max-width: 22rem;
+  font-family: var(--font-ui);
+}
+
+.obj-done {
+  color: var(--ok);
+  text-decoration: line-through;
+}
+
+.hud-stub-cl {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.8rem;
+  max-width: 22rem;
+  background: var(--panel);
+  font-size: 0.85rem;
+}
+
+.cl-item.done {
+  color: var(--ok);
+}
+
+.hud-stub-sub {
+  position: absolute;
+  bottom: 1.2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: 70vw;
+  text-align: center;
+  font-family: var(--font-ui);
+  text-shadow: 0 1px 3px #000;
+}
+
+.hud-stub-modal {
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--panel-solid);
+  border: 1px solid var(--accent);
+  padding: 1rem 1.5rem;
+  text-align: center;
+}

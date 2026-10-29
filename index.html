@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+    <meta name="theme-color" content="#05070a" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="description" content="Proyecto Apolo: simulador de las misiones Apolo 11 y Apolo 13. Vuela el Saturn V, el módulo de mando y el módulo lunar en primera persona o dirige la misión desde el Control de Misión de Houston." />
+    <title>Proyecto Apolo — Simulador de misiones lunares</title>
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+  </head>
+  <body>
+    <div id="app">
+      <canvas id="gl"></canvas>
+      <div id="ui"></div>
+    </div>
+    <div id="rotate-device" aria-live="polite">
+      <div class="rotate-icon"></div>
+      <p>Gira el teléfono a horizontal para jugar</p>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

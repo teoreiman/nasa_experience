@@ -1,0 +1,13 @@
+{
+  "name": "Proyecto Apolo — Simulador de misiones lunares",
+  "short_name": "Proyecto Apolo",
+  "description": "Vuela el Apolo 11 y el Apolo 13 en primera persona o dirige la misión desde el Control de Misión de Houston.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "fullscreen",
+  "orientation": "landscape",
+  "background_color": "#05070a",
+  "theme_color": "#05070a",
+  "lang": "es",
+  "icons": [{ "src": "favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
+}

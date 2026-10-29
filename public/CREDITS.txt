@@ -1,0 +1,16 @@
+Proyecto Apolo — créditos de recursos
+
+Texturas
+- Tierra: NASA Visible Earth "Blue Marble: Next Generation" (diciembre 2004, topografía y batimetría) — dominio público.
+- Luces nocturnas: NASA Earth Observatory "Black Marble" 2012 — dominio público.
+- Nubes: NASA Visible Earth "cloud_combined_2048" — dominio público.
+- Máscara de agua y normal map terrestres: ejemplos de three.js (MIT), derivados de imágenes de la NASA.
+- Luna: NASA Scientific Visualization Studio, "CGI Moon Kit" (LRO LROC color + LOLA elevación) — dominio público.
+
+Audio
+- Grabaciones históricas de las misiones Apolo 8, 11 y 13 y discursos de J. F. Kennedy: NASA "Historical Sounds" — dominio público.
+
+Software
+- three.js (MIT), Vite (MIT), fuentes Barlow / Barlow Condensed / Share Tech Mono (SIL Open Font License) vía Fontsource.
+
+Proyecto de fans sin afiliación con la NASA.
