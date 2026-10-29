@@ -1,3 +1,5 @@
+import { LM_EXTRA_SWITCHES } from './registryExtra.js';
+
 // LM switch & signal registry. STUB by the architect with the reserved contract IDs
 // (docs/ARCHITECTURE.md §7). The "lm" agent replaces/extends this with the complete panel set.
 
@@ -47,8 +49,13 @@ export const LM_SWITCHES = [
   T2('LM.ECS.CO2_CANISTER', 'PRIM', 'SEC', 'PRIM', { label: 'CO2 CANISTER SEL', panel: 'LM_P2', group: 'ECS' }),
   T2('LM.ECS.SUIT_FAN', '1', '2', '1', { label: 'SUIT FAN', panel: 'LM_P2', group: 'ECS' }),
   { ...T3('LM.MT.EVENT_TIMER', 'START', 'STOP', 'RESET', 'STOP'), label: 'EVENT TIMER', panel: 'LM_P3', group: 'TIMER' },
-  CB('LM.CB.ENG_ARM', { label: 'ENG ARM', panel: 'LM_P16', group: 'STAB/CONT' }),
+  CB('LM.CB.ENG_ARM', { label: 'ENG ARM', panel: 'LM_P16', group: 'LMP STAB/CONT' }),
 ];
+
+{
+  const known = new Set(LM_SWITCHES.map((s) => s.id));
+  for (const d of LM_EXTRA_SWITCHES) if (!known.has(d.id)) { LM_SWITCHES.push(d); known.add(d.id); }
+}
 
 export const LM_SIGNALS = [
   { key: 'LM.EPS.CDR_BUS.V', unit: 'V', min: 0, max: 40 },

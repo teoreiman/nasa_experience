@@ -1,3 +1,5 @@
+import { CM_EXTRA_SWITCHES } from './registryExtra.js';
+
 // CSM switch & signal registry. STUB written by the architect: contains the reserved contract IDs
 // (see docs/ARCHITECTURE.md §6). The "csm" agent replaces/extends this with the complete panel set.
 
@@ -109,6 +111,11 @@ export const CM_SWITCHES = [
   BUTTON('CM.OPT.MARK', { label: 'MARK', panel: 'CM_LEB', group: 'OPT' }),
   BUTTON('CM.OPT.MARK_REJECT', { label: 'MARK REJECT', panel: 'CM_LEB', group: 'OPT' }),
 ];
+
+{
+  const known = new Set(CM_SWITCHES.map((s) => s.id));
+  for (const d of CM_EXTRA_SWITCHES) if (!known.has(d.id)) { CM_SWITCHES.push(d); known.add(d.id); }
+}
 
 export const CM_SIGNALS = [
   { key: 'CM.EPS.MNA.V', unit: 'V', min: 0, max: 45 },
