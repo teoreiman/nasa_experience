@@ -237,8 +237,11 @@ export class CSMSystems {
       // ~1 kg/h of O2 for the fuel cells + cabin at ~60 A: the 2 × 145 kg tanks last ~12 days
       const draw = this.fc.reduce((s, f) => s + (f.reac && !f.failed ? f.amps : 0), 0) * 1.6e-8; // fraction/s
       o.qty = Math.max(0, o.qty - (draw / 2 + o.leak) * dt);
-      const target = o.qty <= 0.002 ? 0 : 880 + (fansOn(i + 1) ? 25 : 0) + (sw.is(`CM.CRYO.O2_HTR_${i + 1}`, 'ON') ? 40 : 0);
-      o.p = relax(o.p, o.leak ? target * Math.min(1, o.qty * 3) : target, 0.02, dt);
+      const nominal = 880 + (fansOn(i + 1) ? 25 : 0) + (sw.is(`CM.CRYO.O2_HTR_${i + 1}`, 'ON') ? 40 : 0);
+      // a leaking tank (Apollo 13 tank 1) loses pressure with its contents: no heater keeps up
+      // (≈907 psi per unit quantity: 880 psi full, 120 psi — fuel cells starve — at 13 %)
+      const target = o.qty <= 0.002 ? 0 : o.leak ? Math.min(nominal, 907 * o.qty) : nominal;
+      o.p = relax(o.p, target, 0.02, dt);
     }
     for (const h of this.h2) h.qty = Math.max(0, h.qty - 2e-7 * dt);
     // ---- fuel cells

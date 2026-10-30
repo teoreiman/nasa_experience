@@ -44,12 +44,14 @@ const ICONS = {
 export function icon(name, cls = '') {
   const span = document.createElement('span');
   span.style.display = 'contents';
-  span.innerHTML = `<svg class="${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name] ?? ''}</svg>`;
+  // width/height = 1em so an icon in a container without its own svg rule never falls back to
+  // the 300×150 px default size (that blew up the briefing header); CSS rules still override it
+  span.innerHTML = `<svg class="${cls}" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name] ?? ''}</svg>`;
   return span.firstChild;
 }
 
 export function iconSVG(name) {
-  return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name] ?? ''}</svg>`;
+  return `<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name] ?? ''}</svg>`;
 }
 
 // ------------------------------------------------------------------ mission patches
@@ -398,22 +400,39 @@ export function openSettings({ inGame = false } = {}) {
   });
 }
 
-export function helpContent() {
-  const k = (...keys) => h('span', { class: 'k' }, keys.map((x) => h('kbd', null, x)));
-  const block = (title, rows) => h('div', null, h('h4', null, title), h('div', { class: 'keys' }, rows.flatMap(([keys, d]) => [k(...keys), h('span', null, d)])));
-  return h(
-    'div',
-    { class: 'help-grid' },
-    block('Cabina', [
-      [['Clic'], 'Accionar interruptor / botón (mitad superior o inferior)'],
-      [['Clic der.'], 'Abrir / cerrar la tapa protectora'],
-      [['Rueda'], 'Girar selectores · zoom fuera de los paneles'],
-      [['Arrastrar'], 'Mirar alrededor'],
-      [['F'], 'Acercar la vista al panel'],
-      [['X'], 'Cambiar de asiento'],
+/** Control reference shared by the help overlay (F1) and the briefing cheat-sheet:
+ *  { block: { title, rows: [[keys[], description]] } } */
+export const CONTROLS = {
+  cockpit: {
+    title: 'Cabina',
+    rows: [
+      [['Arrastrar'], 'Mirar: botón izquierdo sobre una zona sin controles, o botón derecho / central en cualquier lugar'],
+      [['Rueda'], 'Zoom (sobre un selector giratorio: girarlo)'],
+      [['← → ↑ ↓'], 'Mirar (en el LM durante P64: redesignar el punto de alunizaje)'],
       [['Z'], 'Centrar la vista'],
-    ]),
-    block('Vuelo', [
+      [['F'], 'Acercarse al panel bajo el cursor'],
+      [['X'], 'Cambiar de asiento'],
+      [['C'], 'Vista exterior'],
+      [['V'], 'Siguiente cámara'],
+      [['Clic'], 'Accionar interruptores y botones (mitad superior / inferior de la palanca)'],
+      [['Clic der.', 'Mantener'], 'Abrir / cerrar la tapa de protección'],
+    ],
+  },
+  dsky: {
+    title: 'DSKY · con el cursor encima',
+    rows: [
+      [['V', 'N'], 'VERB · NOUN'],
+      [['0–9', '+', '−'], 'Dígitos y signo'],
+      [['Intro'], 'ENTR'],
+      [['Retroceso'], 'CLR'],
+      [['P'], 'PRO (proceder)'],
+      [['R'], 'RSET'],
+      [['K'], 'KEY REL'],
+    ],
+  },
+  flight: {
+    title: 'Vuelo',
+    rows: [
       [['W', 'S'], 'Cabeceo'],
       [['A', 'D'], 'Guiñada'],
       [['Q', 'E'], 'Alabeo'],
@@ -422,30 +441,73 @@ export function helpContent() {
       [['U', 'O'], 'Traslación arriba / abajo'],
       [['RePág', 'AvPág'], 'Acelerador manual (LM)'],
       [['Inicio', 'Fin'], 'Velocidad de descenso ±1 pie/s (P66)'],
-      [['← → ↑ ↓'], 'Redesignar punto de alunizaje (P64)'],
-    ]),
-    block('Misión', [
-      [['C'], 'Cabina ⇄ cámara exterior'],
-      [['V'], 'Siguiente cámara'],
+    ],
+  },
+  mocr: {
+    title: 'Houston · sala de control',
+    rows: [
+      [['W', 'A', 'S', 'D'], 'Caminar (también con las flechas)'],
+      [['Shift'], 'Correr'],
+      [['Arrastrar'], 'Mirar'],
+      [['E'], 'Sentarse en la consola más cercana / levantarse (o clic en una consola)'],
+      [['Clic'], 'Sentado: pulsar los botones de la consola'],
+      [['T'], 'Vista de TV de la nave'],
+    ],
+  },
+  eva: {
+    title: 'EVA · superficie lunar',
+    rows: [
+      [['W', 'A', 'S', 'D'], 'Caminar'],
+      [['Shift'], 'Trotar'],
+      [['Espacio'], 'Saltar'],
+      [['Arrastrar'], 'Mirar (o clic para capturar el puntero)'],
+      [['E'], 'Interactuar'],
+      [['V'], 'Tercera persona'],
+      [['C'], 'Cámara Hasselblad (clic = foto)'],
+    ],
+  },
+  mission: {
+    title: 'Misión',
+    rows: [
       [['.', ','], 'Acelerar / frenar el tiempo'],
       [['/'], 'Tiempo real'],
       [['F8'], 'Saltar al siguiente evento'],
       [['Tab'], 'Mostrar / ocultar la lista'],
+      [['B'], 'Manual de procedimientos'],
       [['G'], 'Registro de comunicaciones'],
       [['H'], 'Ocultar el HUD'],
-      [['T'], 'Houston: Control ⇄ TV de la nave'],
+      [['F1'], 'Esta ayuda'],
       [['Esc'], 'Pausa'],
-    ]),
-    block('DSKY (ordenador)', [
-      [['V'], 'VERB'],
-      [['N'], 'NOUN'],
-      [['0–9', '+', '−'], 'Dígitos y signo'],
-      [['Intro'], 'ENTR'],
-      [['P'], 'PRO (proceder)'],
-      [['R'], 'RSET'],
-      [['⌫'], 'CLR'],
-    ]),
-  );
+    ],
+  },
+  touch: {
+    title: 'Pantalla táctil',
+    rows: [
+      [['Tocar'], 'Accionar interruptores'],
+      [['Mantener'], 'Abrir / cerrar la tapa de protección'],
+      [['Arrastrar'], 'Mirar (sobre una zona sin controles)'],
+      [['Pellizcar'], 'Zoom'],
+      [['Palancas'], 'Izquierda: rotación · derecha: traslación'],
+    ],
+  },
+};
+
+/** One titled block of key → description rows (help overlay, briefing). */
+export function controlsBlock(title, rows) {
+  const k = (keys) => h('span', { class: 'k' }, keys.map((x) => h('kbd', null, x)));
+  return h('div', null, title ? h('h4', null, title) : null, h('div', { class: 'keys' }, rows.flatMap(([keys, d]) => [k(keys), h('span', null, d)])));
+}
+
+/** Help overlay content. `focus` puts the blocks of the current place first:
+ *  'cockpit' (astronaut, default) · 'mocr' (controller) · 'eva' (lunar surface). */
+export function helpContent({ focus = 'cockpit' } = {}) {
+  const order = {
+    cockpit: ['cockpit', 'dsky', 'flight', 'mission', 'mocr', 'eva'],
+    mocr: ['mocr', 'mission', 'cockpit', 'dsky', 'flight', 'eva'],
+    eva: ['eva', 'mission', 'cockpit', 'dsky', 'flight', 'mocr'],
+  }[focus] ?? ['cockpit', 'dsky', 'flight', 'mission', 'mocr', 'eva'];
+  if (window.__game?.input?.isTouch) order.splice(1, 0, 'touch');
+  return h('div', { class: 'help-grid' }, order.map((id) => controlsBlock(CONTROLS[id].title, CONTROLS[id].rows)));
 }
 
 export function openCredits() {

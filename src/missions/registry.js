@@ -36,7 +36,7 @@ export const MISSIONS = [
       { id: 'a11-loi', order: 4, title: 'Inserción en órbita lunar', subtitle: 'El encendido del SPS detrás de la Luna', getStart: GET(75, 30), roles: both, controllerRole: 'RETRO', minutes: 20, load: () => import('./apollo11/loi.js') },
       { id: 'a11-undock', order: 5, title: 'El Eagle tiene alas', subtitle: 'Separación y órbita de descenso', getStart: GET(100, 5), roles: both, controllerRole: 'TELMU', minutes: 15, load: () => import('./apollo11/undock.js') },
       { id: 'a11-landing', order: 6, title: 'Descenso motorizado', subtitle: 'Alarmas 1202, rocas y 30 segundos de combustible', getStart: GET(102, 20), roles: both, controllerRole: 'GUIDO', minutes: 25, load: () => import('./apollo11/landing.js') },
-      { id: 'a11-eva', order: 7, title: 'Un pequeño paso', subtitle: 'Caminata lunar en el Mar de la Tranquilidad', getStart: GET(109, 10), roles: ['astronaut'], controllerRole: 'SURGEON', minutes: 20, load: () => import('./apollo11/eva.js') },
+      { id: 'a11-eva', order: 7, title: 'Un pequeño paso', subtitle: 'Caminata lunar en el Mar de la Tranquilidad', getStart: GET(109, 10), roles: ['astronaut'], controllerRole: 'SURGEON', minutes: 20, scene: 'eva', load: () => import('./apollo11/eva.js') },
       { id: 'a11-ascent', order: 8, title: 'Despegue lunar y encuentro', subtitle: 'Un disyuntor roto y la cita con Columbia', getStart: GET(124, 5), roles: both, controllerRole: 'CONTROL', minutes: 20, load: () => import('./apollo11/ascent.js') },
       { id: 'a11-tei', order: 9, title: 'Regreso a casa', subtitle: 'Inyección transterrestre', getStart: GET(135, 10), roles: both, controllerRole: 'RETRO', minutes: 15, load: () => import('./apollo11/tei.js') },
       { id: 'a11-entry', order: 10, title: 'Reentrada y amerizaje', subtitle: '11 km/s hacia el Pacífico', getStart: GET(194, 45), roles: both, controllerRole: 'RETRO', minutes: 20, load: () => import('./apollo11/entry.js') },
@@ -142,6 +142,11 @@ export async function loadChapter(chapterId) {
   const setup = typeof def.setup === 'function' ? await def.setup() : def.setup;
   chapter.setup = { get: found.meta.getStart, ...(setup ?? {}) };
   return { mission: found.mission, chapter };
+}
+
+/** Scene that plays a chapter: 'eva' for the lunar surface walk, 'play' for everything else. */
+export function chapterScene(chapterId) {
+  return findChapter(chapterId)?.meta.scene ?? 'play';
 }
 
 /** No level gating: every chapter is playable from the start (free choice, like a sandbox). */

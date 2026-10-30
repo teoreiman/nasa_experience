@@ -503,10 +503,19 @@ export class MissionRunner {
       const cur = items.find((i) => !i.done && !i.optional) ?? items.find((i) => !i.done);
       this.bus.emit('mission:highlight', { ids: cur ? cur.highlight : [] });
     };
+    // a manual item ticked by the player (or auto-performed) has no condition for the wait loop to
+    // notice: publish the new state right away so the HUD and the next highlight follow
+    const markManualDone = (it) => {
+      if (it.done) return;
+      it.done = true;
+      if (state.state !== 'active') return;
+      snapshot();
+      highlightCurrent();
+    };
     const offConfirm = this.bus.on('mission:checklistConfirm', ({ checklistId, itemId }) => {
       if (checklistId !== cl.id) return;
       const it = items.find((i) => i.id === itemId);
-      if (it && it.manual) it.done = true;
+      if (it && it.manual) markManualDone(it);
     });
     const offAuto = this.bus.on('mission:checklistAuto', ({ checklistId, itemId }) => {
       if (checklistId !== cl.id) return;
@@ -514,7 +523,7 @@ export class MissionRunner {
       if (it && !it.done) {
         autoUsed++;
         it.auto();
-        if (it.manual) it.done = true;
+        if (it.manual) markManualDone(it);
       }
     });
     const cleanup = () => {
@@ -544,14 +553,16 @@ export class MissionRunner {
         highlightCurrent();
         await this._wait(() => {
           let changed = false;
-          for (let i = 0; i < items.length; i++) {
-            const it = items[i];
-            if (it.done || !it.check) continue;
-            if (ordered && items.slice(0, i).some((p) => !p.done && !p.optional)) break;
-            if (it.check()) {
-              it.done = true;
-              changed = true;
+          let open = false; // an earlier mandatory item is still pending (ordered lists wait for it)
+          for (const it of items) {
+            if (!it.done && it.check) {
+              if (ordered && open) break;
+              if (it.check()) {
+                it.done = true;
+                changed = true;
+              }
             }
+            if (!it.done && !it.optional) open = true;
           }
           if (changed) {
             snapshot();

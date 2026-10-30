@@ -22,7 +22,6 @@ const CAMERA_NAMES = {
   onboard: 'Cámara a bordo (S-II)',
   surface: 'Cámara de superficie',
   target: 'Objetivo',
-  surface: 'Superficie',
   free: 'Libre',
 };
 
@@ -109,7 +108,8 @@ export class HUD {
     this.instrEl = h('div', { class: 'frame hud-instr', hidden: true });
     this.padEl = null;
     this.logEl = null;
-    this.modalEl = null;
+    this.modals = new Map(); // decision cards by key ('c:<choice id>' | 'g:<ground task id>')
+    this.helpModal = null;
     this.pollEl = null;
     this.crewLogEl = role === 'controller' ? h('div', { class: 'hud-crewlog' }) : null;
     this.skipEl = h('button', { class: 'btn hud-skip', hidden: true, on: { click: () => bus.emit('mission:skipRequest') } }, icon('skip'), h('span', null, 'Saltar'));
@@ -127,10 +127,13 @@ export class HUD {
       bus.on('mission:sayEnd', ({ id }) => this._sayEnd(id)),
       bus.on('mission:objective', (o) => this._objective(o)),
       bus.on('mission:checklist', (c) => this._checklist(c)),
-      bus.on('mission:choice', (c) => this._decision({ title: c.title, prompt: c.prompt, options: c.options, timeoutS: c.timeoutS, resolve: c.resolve, overline: 'Decisión' })),
-      bus.on('mission:choiceEnd', () => this._closeModal()),
-      bus.on('mission:groundTask', (t) => this._decision({ title: t.title, prompt: t.prompt, options: t.options, timeoutS: t.timeoutS, resolve: t.resolve, overline: `Consola ${t.console}`, evidence: t.evidence, hint: t.hint })),
-      bus.on('mission:groundTaskEnd', () => this._closeModal()),
+      // one card per decision (a ground task can arrive while a choice is open): each closes by id
+      bus.on('mission:choice', (c) => this._decision({ key: `c:${c.id}`, title: c.title, prompt: c.prompt, options: c.options, timeoutS: c.timeoutS, resolve: c.resolve, overline: 'Decisión' })),
+      bus.on('mission:choiceEnd', ({ id }) => this._closeModal(`c:${id}`)),
+      // Mission Control tasks dock without a backdrop: the controller keeps walking, looking and
+      // pressing console buttons (the console's GO / NO GO keys answer them too)
+      bus.on('mission:groundTask', (t) => this._decision({ key: `g:${t.id}`, docked: true, title: t.title, prompt: t.prompt, options: t.options, timeoutS: t.timeoutS, resolve: t.resolve, overline: `Consola ${t.console}`, evidence: t.evidence, hint: t.hint })),
+      bus.on('mission:groundTaskEnd', ({ id }) => this._closeModal(`g:${id}`)),
       bus.on('mission:caption', (c) => this._caption(c)),
       bus.on('mission:alert', (a) => this._alert(a.text, a.level, a.durationS)),
       bus.on('mission:hint', (x) => this._hint(x.text, x.durationS)),
@@ -162,6 +165,10 @@ export class HUD {
         this._alert(`ALARMA MAESTRA (${vehicle}) · ${CW_ES[lamp] ?? lamp.replace(/_/g, ' ')}`, warn ? 'warning' : 'caution', 5);
       }),
       bus.on('agc:alarm', ({ agc, code }) => this._alert(`ALARMA DE PROGRAMA ${code} · ${agc === 'LGC' ? 'ordenador del LM' : 'ordenador del CM'}`, 'caution', 6)),
+      // the crew authorizes every computer-flown ignition: make the 5-second V99 window obvious
+      bus.on('agc:v99', ({ agc }) => {
+        if (role === 'astronaut' && agc === this.sim.gnc?.activeComputer?.id) this._alert('V99 · el ordenador pide permiso para encender: pulsa PRO en el DSKY (tecla P con el cursor encima)', 'caution', 7);
+      }),
       bus.on('vehicle:event', (e) => this._event(e)),
     ];
     this._setCam(view?.cameraMode ?? (role === 'controller' ? null : 'cockpit'), role === 'controller' ? 'Control de Misión' : null);
@@ -461,8 +468,8 @@ export class HUD {
 
   // ---------------------------------------------------------------- decisions / ground tasks / polls
 
-  _decision({ title, prompt, options, timeoutS, resolve, overline, evidence = [], hint }) {
-    this._closeModal();
+  _decision({ key = 'modal', docked = false, title, prompt, options, timeoutS, resolve, overline, evidence = [], hint }) {
+    this._closeModal(key);
     const tm = this.sim.vehicle.tm;
     const evEl = evidence?.length ? h('div', { class: 'evidence' }) : null;
     const renderEv = () => {
@@ -495,7 +502,7 @@ export class HUD {
             on: {
               click: () => {
                 this.game.audio?.sfx?.('button');
-                this._closeModal();
+                this._closeModal(key);
                 resolve(o.id);
               },
             },
@@ -503,18 +510,22 @@ export class HUD {
         ),
       ),
     );
-    this.modalEl = h('div', { class: 'hud-modal-wrap' }, modal);
-    this.root.append(this.modalEl);
-    this.game.input.exitPointerLock();
+    const el = h('div', { class: `hud-modal-wrap ${docked ? 'docked' : ''}` }, modal);
+    this.modals.set(key, { el, timer: evEl ? setInterval(renderEv, 500) : null });
+    this.root.append(el);
+    if (!docked) this.game.input.exitPointerLock();
     if (timer) requestAnimationFrame(() => requestAnimationFrame(() => (timer.firstChild.style.transform = 'scaleX(0)')));
-    if (evEl) this._evTimer = setInterval(renderEv, 500);
     this.game.audio?.sfx?.('uiAttention');
   }
 
-  _closeModal() {
-    clearInterval(this._evTimer);
-    this.modalEl?.remove();
-    this.modalEl = null;
+  /** Close one decision card by key, or all of them. */
+  _closeModal(key = null) {
+    for (const [k, m] of this.modals) {
+      if (key !== null && k !== key) continue;
+      clearInterval(m.timer);
+      m.el.remove();
+      this.modals.delete(k);
+    }
   }
 
   _poll(p) {
@@ -666,8 +677,15 @@ export class HUD {
     );
   }
 
+  /** Controls overlay (F1 toggles it), with the blocks of the current place first. */
   _help() {
-    openModal({ title: 'Controles', wide: true, content: helpContent() });
+    if (this.helpModal) {
+      this.helpModal.close();
+      return;
+    }
+    const focus = this.role === 'controller' ? 'mocr' : this.chapter.setup?.scene === 'eva' || this.chapter.scene === 'eva' ? 'eva' : 'cockpit';
+    this.game.input.exitPointerLock();
+    this.helpModal = openModal({ title: 'Controles', wide: true, content: helpContent({ focus }), onClose: () => (this.helpModal = null) });
   }
 
   setPaused(p) {
@@ -804,16 +822,19 @@ export class HUD {
     if (sig !== this._tlmSig) {
       this._tlmSig = sig;
       clear(this.tlmEl).append(
-        ...F.map(() => h('div', { class: 'tlm' }, h('div', { class: 'lbl' }), h('div', { class: 'val' }), h('div', { class: 'bar', hidden: true }, h('i')))),
+        ...F.map(() => h('div', { class: 'tlm' }, h('div', { class: 'lbl' }), h('div', { class: 'val' }, h('span'), h('small')), h('div', { class: 'bar', hidden: true }, h('i')))),
       );
     }
     F.forEach((f, i) => {
       const el = this.tlmEl.children[i];
-      el.className = `tlm ${f.cls}`;
+      const cls = `tlm ${f.cls}`;
+      if (el.className !== cls) el.className = cls;
       el.children[0].textContent = f.lbl;
+      // value and unit update in place (8 Hz): no new nodes per refresh
       const val = el.children[1];
-      val.textContent = f.val;
-      if (f.unit) val.append(h('small', null, f.unit));
+      val.firstChild.textContent = f.val;
+      val.lastChild.textContent = f.unit ?? '';
+      val.lastChild.hidden = !f.unit;
       const bar = el.children[2];
       bar.hidden = f.bar === null || f.bar === undefined;
       if (!bar.hidden) bar.firstChild.style.width = `${Math.max(0, Math.min(1, f.bar)) * 100}%`;
@@ -1004,7 +1025,8 @@ export class HUD {
   dispose() {
     this._off.forEach((f) => f());
     this.tracker?.dispose();
-    clearInterval(this._evTimer);
+    this._closeModal();
+    this.helpModal?.close();
     clearTimeout(this._hintT);
     this.root.remove();
     for (const ax of ['pitch', 'yaw', 'roll', 'transX', 'transY', 'transZ']) this.game.input.setVirtualAxis(ax, 0);

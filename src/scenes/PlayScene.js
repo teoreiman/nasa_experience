@@ -5,7 +5,7 @@
 
 import { Simulation } from '../sim/Simulation.js';
 import { MissionRunner } from '../missions/MissionRunner.js';
-import { loadChapter } from '../missions/registry.js';
+import { loadChapter, chapterScene } from '../missions/registry.js';
 import { store } from '../core/Store.js';
 
 export default class PlayScene {
@@ -48,7 +48,7 @@ export default class PlayScene {
       mission,
       actions: {
         resume: () => this.setPaused(false),
-        restart: () => game.goto('play', { chapterId, role }),
+        restart: () => game.goto(chapterScene(chapterId), { chapterId, role }),
         quit: () => game.goto('menu', { screen: 'missions' }),
         toggleView: () => this.toggleSecondaryView(),
       },

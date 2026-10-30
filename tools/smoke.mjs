@@ -8,11 +8,17 @@
 //   --viewport 1280x720 | --mobile (844x390 landscape, touch) | --until "window.__APOLO_READY__"
 //   --eval "js expression" (printed) | --click "css selector" | --keys "KeyC,Period" | --hold "KeyW:1500"
 //   --steps '[{"wait":2000},{"click":"#x"},{"keys":"KeyC"},{"shot":"a.png"},{"eval":"1+1"}]'
+//   --steps-file steps.json (same array, avoids shell quoting problems)
+//   step types: wait ms · click "css" · tap [x,y] · mouse [x,y] (+button) · move [x,y] ·
+//   drag [x0,y0,x1,y1] (+button left|right|middle) · keys "KeyC,KeyX" · hold "KeyW:1500" ·
+//   eval "js" · shot "path.png"
 //   --browser msedge|chrome | --timeout 90000 | --base http://localhost:5173 (reuse a running server)
+// Git Bash rewrites arguments that start with "/" into Windows paths: prefix the command with
+// MSYS_NO_PATHCONV=1 (or use PowerShell) when passing --url "/?play=…".
 
 import { chromium } from 'playwright-core';
 import { createServer } from 'vite';
-import { mkdirSync, openSync, closeSync, unlinkSync, statSync, existsSync } from 'node:fs';
+import { mkdirSync, openSync, closeSync, unlinkSync, statSync, existsSync, readFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { tmpdir } from 'node:os';
 
@@ -93,7 +99,7 @@ async function main() {
     const ext = gl?.getExtension('WEBGL_debug_renderer_info');
     return ext ? gl.getParameter(ext.UNMASKED_RENDERER_WEBGL) : 'n/a';
   });
-  const steps = opt('steps') ? JSON.parse(opt('steps')) : [];
+  const steps = opt('steps-file') ? JSON.parse(readFileSync(resolve(opt('steps-file')), 'utf8')) : opt('steps') ? JSON.parse(opt('steps')) : [];
   if (!steps.length) {
     steps.push({ wait: waitMs });
     if (opt('click')) steps.push({ click: opt('click') }, { wait: 1000 });
@@ -107,6 +113,14 @@ async function main() {
     if (s.click) await page.click(s.click, { timeout: 10000 }).catch((e) => report.warnings.push(`click ${s.click}: ${e.message}`));
     if (s.tap) await page.touchscreen.tap(s.tap[0], s.tap[1]);
     if (s.mouse) await page.mouse.click(s.mouse[0], s.mouse[1], { button: s.button ?? 'left' });
+    if (s.move) await page.mouse.move(s.move[0], s.move[1], { steps: 4 });
+    if (s.drag) {
+      const [x0, y0, x1, y1] = s.drag;
+      await page.mouse.move(x0, y0);
+      await page.mouse.down({ button: s.button ?? 'left' });
+      await page.mouse.move(x1, y1, { steps: 14 });
+      await page.mouse.up({ button: s.button ?? 'left' });
+    }
     if (s.keys) for (const k of s.keys.split(',')) await page.keyboard.press(k.trim());
     if (s.hold) {
       const [k, ms] = s.hold.split(':');

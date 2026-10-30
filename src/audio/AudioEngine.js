@@ -30,20 +30,29 @@ class DummyLoop {
 
 const GROUND = new Set(['CAPCOM', 'FLIGHT', 'EECOM', 'GNC', 'GUIDO', 'FIDO', 'RETRO', 'BOOSTER', 'TELMU', 'CONTROL', 'INCO', 'SURGEON', 'NETWORK', 'FAO', 'PROCEDURES', 'BACKROOM', 'RECOVERY']);
 
-// Per-speaker voice character (pitch / rate) so the crew and Houston are distinguishable.
+// Per-speaker voice character (pitch / rate) so the crew and Houston are distinguishable. Every
+// speaker of 1968–70 Apollo radio was a man: synthesized lines use male voices only, pitched low.
 const VOICE_STYLE = {
-  CAPCOM: { pitch: 0.98, rate: 1.06, pref: 0 },
-  CDR: { pitch: 0.9, rate: 1.0, pref: 1 },
-  CMP: { pitch: 1.04, rate: 1.05, pref: 2 },
-  LMP: { pitch: 0.94, rate: 1.04, pref: 3 },
-  FLIGHT: { pitch: 0.86, rate: 1.02, pref: 4 },
-  LCC: { pitch: 0.92, rate: 1.0, pref: 5 },
-  PAO: { pitch: 0.92, rate: 1.0, pref: 5 },
-  NARRATOR: { pitch: 1.0, rate: 1.0, pref: 6 },
+  CAPCOM: { pitch: 0.84, rate: 1.04, pref: 0 },
+  CDR: { pitch: 0.8, rate: 1.0, pref: 1 },
+  CMP: { pitch: 0.88, rate: 1.04, pref: 2 },
+  LMP: { pitch: 0.82, rate: 1.03, pref: 3 },
+  FLIGHT: { pitch: 0.74, rate: 1.0, pref: 4 },
+  LCC: { pitch: 0.8, rate: 1.0, pref: 5 },
+  PAO: { pitch: 0.82, rate: 0.98, pref: 5 },
+  NARRATOR: { pitch: 0.86, rate: 0.98, pref: 6 },
 };
 
-const EN_PREF = ['Google US English', 'Alex', 'Daniel', 'Microsoft Guy', 'Microsoft David', 'Fred', 'Aaron', 'Tom', 'Ralph', 'Google UK English Male', 'Samantha'];
-const ES_PREF = ['Diego', 'Google español de Estados Unidos', 'Juan', 'Jorge', 'Microsoft Raul', 'Microsoft Pablo', 'Google español', 'Paulina', 'Mónica'];
+// Voice names are the only gender hint the Web Speech API gives. Male names of the Windows/Edge
+// (incl. "Online (Natural)"), macOS/iOS, Chrome and Android voices for English and Spanish.
+// (tested on accent-stripped names: JS \b only knows ASCII letters, "Álvaro" would never match)
+const MALE_VOICE = /\b(male|guy|davis|tony|jason|brian|andrew|christopher|eric|roger|steffan|ryan|thomas|george|james|richard|ravi|mark|david|alex|daniel|fred|tom|ralph|aaron|arthur|gordon|oliver|reed|rocko|eddy|grandpa|liam|william|connor|mitchell|luke|prabhat|jorge|juan|diego|carlos|pablo|raul|alvaro|tomas|gonzalo|gerardo|emilio|lorenzo|mateo|alonso|federico|roberto|manuel|andres|mario|luis|saul|sergio|rodrigo|cristian|enrique|jose|esd|eed|iol|iom|tpd)\b/i;
+const FEMALE_VOICE = /\b(female|zira|aria|jenny|michelle|ana|emma|ava|sara|nancy|amber|ashley|cora|elizabeth|jane|monica|paulina|helena|laura|sabina|dalia|elvira|samantha|victoria|karen|moira|tessa|fiona|veena|kathy|princess|vicki|agnes|allison|susan|serena|kate|catherine|hazel|libby|maisie|sonia|natasha|clara|abril|beatriz|isabel|lucia|marta|paloma|renata|salome|valentina|elena|camila|catalina|karla|maria|margarita|marisol|paola|tania|teresa|ximena|yolanda|angelica|soledad|isabela|luciana|carmen|flo|grandma|sandy|shelley|esc|esf|eea|eec|iob|iog|tpc|tpf|sfg)\b/i;
+const plainName = (s) => (s ?? '').normalize('NFD').replace(/[̀-ͯ]/g, '');
+const NOVELTY_VOICE = /Bad News|Bahh|Bells|Boing|Bubbles|Cellos|Good News|Jester|Organ|Superstar|Trinoids|Whisper|Wobble|Zarvox|Albert/i;
+// Preferred locales: American English for the crews; Latin-American Spanish before Spain.
+const EN_LOCALES = ['en-us', 'en-gb', 'en-au', 'en-ca', 'en'];
+const ES_LOCALES = ['es-ar', 'es-mx', 'es-us', 'es-419', 'es-co', 'es-cl', 'es-es', 'es'];
 
 export class AudioEngine {
   constructor(game) {
@@ -376,6 +385,12 @@ export class AudioEngine {
       case 'quindarOut':
         this._tone(dest, 'sine', 2475, t, 0.004, 0.16, 0.24);
         break;
+      case 'squelch':
+        // push-to-talk key click and the receiver's squelch tail, band-limited like the S-band voice
+        this._burst(dest, 'white', t, 0.001, 0.5, 0.012, ['bandpass', 1800, 1.2]);
+        this._burst(dest, 'white', t + 0.012, 0.004, 0.32, 0.11, ['bandpass', 1400, 0.8, 900]);
+        this._tone(dest, 'sine', 120, t, 0.001, 0.12, 0.03);
+        break;
       case 'shutter':
         this._burst(dest, 'white', t, 0.0005, 0.7, 0.02, ['bandpass', 3000, 1.5]);
         this._burst(dest, 'white', t + 0.06, 0.0005, 0.5, 0.03, ['bandpass', 2000, 1.2]);
@@ -644,16 +659,32 @@ export class AudioEngine {
 
   // ---------------------------------------------------------------- radio & clips
 
+  /** → { voice, male } — a male voice whenever the platform has one for `lang`; otherwise the
+   *  voice that is not known to be female (Android names voices by locale only), flagged so the
+   *  caller pitches it further down. Distinct speakers get distinct voices when there are several. */
   _pickVoice(who, lang) {
-    const voices = (this._voices ?? []).filter((v) => v.lang?.toLowerCase().startsWith(lang));
-    if (!voices.length) return null;
-    const pref = lang === 'es' ? ES_PREF : EN_PREF;
-    const ranked = [];
-    for (const name of pref) for (const v of voices) if (v.name.includes(name) && !ranked.includes(v)) ranked.push(v);
-    for (const v of voices) if (!ranked.includes(v) && !/Bad News|Bahh|Bells|Boing|Bubbles|Cellos|Good News|Jester|Organ|Superstar|Trinoids|Whisper|Wobble|Zarvox|Albert/i.test(v.name)) ranked.push(v);
-    if (!ranked.length) return voices[0];
-    const idx = (VOICE_STYLE[who]?.pref ?? who.length) % Math.min(ranked.length, 4);
-    return ranked[idx];
+    const voices = (this._voices ?? []).filter((v) => v.lang?.toLowerCase().startsWith(lang) && !NOVELTY_VOICE.test(v.name));
+    if (!voices.length) return { voice: null, male: false };
+    const locales = lang === 'es' ? ES_LOCALES : EN_LOCALES;
+    const locRank = (v) => {
+      const l = v.lang.toLowerCase().replace('_', '-');
+      const i = locales.findIndex((p) => l.startsWith(p));
+      return i < 0 ? locales.length : i;
+    };
+    // neural "Natural" voices first, then the preferred locales
+    const score = (v) => (/natural|neural|premium|enhanced/i.test(v.name) ? 0 : 10) + locRank(v);
+    const isFemale = (v) => FEMALE_VOICE.test(plainName(v.name)) || FEMALE_VOICE.test(plainName(v.voiceURI));
+    const isMale = (v) => !isFemale(v) && (MALE_VOICE.test(plainName(v.name)) || MALE_VOICE.test(plainName(v.voiceURI)));
+    const pick = (list) => {
+      const ranked = [...list].sort((a, b) => score(a) - score(b));
+      // the best few, so CAPCOM, FLIGHT and each crewman sound different
+      const pool = ranked.slice(0, Math.min(ranked.length, 4));
+      return pool[(VOICE_STYLE[who]?.pref ?? who?.length ?? 0) % pool.length];
+    };
+    const males = voices.filter(isMale);
+    if (males.length) return { voice: pick(males), male: true };
+    const neutral = voices.filter((v) => !isFemale(v));
+    return { voice: pick(neutral.length ? neutral : voices), male: false };
   }
 
   _speak(line, mode) {
@@ -665,11 +696,12 @@ export class AudioEngine {
       const lang = mode === 'es' ? 'es' : 'en';
       const text = lang === 'es' ? line.es ?? line.en : line.en ?? line.es;
       const u = new SpeechSynthesisUtterance(text);
-      const v = this._pickVoice(line.who, lang);
+      const { voice: v, male } = this._pickVoice(line.who, lang);
       if (v) u.voice = v;
       u.lang = v?.lang ?? (lang === 'es' ? 'es-419' : 'en-US');
-      const st = VOICE_STYLE[line.who] ?? { pitch: 0.95 + ((line.who?.length ?? 3) % 5) * 0.03, rate: 1.04 };
-      u.pitch = st.pitch;
+      const st = VOICE_STYLE[line.who] ?? { pitch: 0.8 + ((line.who?.length ?? 3) % 5) * 0.025, rate: 1.02 };
+      // no male voice on this device: push the available one down to a baritone range
+      u.pitch = male ? st.pitch : Math.max(0.5, st.pitch * 0.72);
       u.rate = st.rate * (line.urgent ? 1.12 : 1);
       u.volume = Math.min(1, store.settings.volumeVoice * store.settings.volumeMaster * 1.1);
       let done = false;
@@ -698,14 +730,18 @@ export class AudioEngine {
       this.sfx('quindarIn');
       await new Promise((r) => setTimeout(r, 260));
     }
+    const clip = line.clip && NASA_CLIPS[line.clip];
     if (useStatic) {
+      // a synthesized voice is studio-clean: a denser bed sells the radio link (NASA clips carry their own)
       bed = this.loop('static');
-      bed.setGain(ag ? 0.5 : 0.18, 0.03);
+      bed.setGain(ag ? (clip ? 0.4 : 0.62) : 0.22, 0.03);
+      this.sfx('squelch', { gain: ag ? 0.9 : 0.45 });
     }
     try {
-      if (line.clip && NASA_CLIPS[line.clip]) await this.clip(line.clip, { radio: false });
+      if (clip) await this.clip(line.clip, { radio: false });
       else await this._speak(line, mode);
     } finally {
+      if (useStatic) this.sfx('squelch', { gain: ag ? 0.8 : 0.4 });
       bed?.stop(0.15);
     }
     if (ag && ground && store.settings.quindar && this.ctx) this.sfx('quindarOut');

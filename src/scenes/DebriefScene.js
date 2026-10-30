@@ -4,7 +4,8 @@
 
 import { h } from '../core/dom.js';
 import { MissionClock } from '../core/MissionClock.js';
-import { getMission, loadChapter, isUnlocked } from '../missions/registry.js';
+import { getMission, findChapter, chapterScene, isUnlocked } from '../missions/registry.js';
+import { FREE_VEHICLES, FREE_STARTS } from '../missions/free/index.js';
 import { store } from '../core/Store.js';
 import { createMenuBackdrop } from '../render/MenuBackdrop.js';
 import { icon, patchEl, patchSVG, achievementById } from '../ui/components.js';
@@ -21,16 +22,24 @@ export default class DebriefScene {
 
   async enter({ chapterId, missionId, role, result = {} }) {
     const game = this.game;
-    const m = getMission(missionId);
+    const m = getMission(missionId) ?? findChapter(chapterId)?.mission ?? getMission('free');
     const idx = m.chapters.findIndex((c) => c.id === chapterId);
-    const meta = m.chapters[idx];
+    let meta = m.chapters[idx];
     let chapter = meta;
-    try {
-      chapter = (await loadChapter(chapterId)).chapter;
-    } catch {
-      /* metadata is enough */
+    if (meta) {
+      // the module only for its history notes (its setup may fly a whole trajectory: not needed)
+      try {
+        chapter = { ...meta, ...(await meta.load()).default };
+      } catch {
+        /* metadata is enough */
+      }
+    } else {
+      // free flight ("free:<vehicle>:<start>") is built on demand, not listed in the mission
+      const [, vehId, startId] = chapterId.split(':');
+      const veh = FREE_VEHICLES.find((x) => x.id === vehId) ?? FREE_VEHICLES[0];
+      meta = chapter = { id: chapterId, order: 0, title: `${veh.name} · ${(FREE_STARTS[startId] ?? FREE_STARTS.pad).title}`, roles: ['astronaut'] };
     }
-    const next = m.chapters.slice(idx + 1).find((c) => c.roles.includes(role));
+    const next = idx >= 0 ? m.chapters.slice(idx + 1).find((c) => c.roles.includes(role)) : null;
     const ok = !!result.success;
     this.backdrop = createMenuBackdrop(game);
     this.backdrop.setFocus(0.6);
@@ -60,7 +69,7 @@ export default class DebriefScene {
         h(
           'div',
           null,
-          h('div', { class: 'overline' }, `${m.name} · Capítulo ${String(meta.order).padStart(2, '0')}`),
+          h('div', { class: 'overline' }, meta.order ? `${m.name} · Capítulo ${String(meta.order).padStart(2, '0')}` : m.name),
           h('h2', null, ok ? `${meta.title}: completado` : `${meta.title}: fallido`),
           h('p', { style: { margin: '0 0 0.4rem', lineHeight: 1.55, color: '#dbe3ec' } }, ok ? result.summary || 'Objetivos cumplidos.' : result.reason || 'La misión no pudo completarse.'),
           items.length
@@ -106,7 +115,7 @@ export default class DebriefScene {
             canNext
               ? h('button', { class: 'btn btn-primary', on: { click: () => game.goto('briefing', { chapterId: next.id, role }) } }, 'Siguiente: ', next.title, icon('next'))
               : null,
-            h('button', { class: `btn ${canNext ? '' : 'btn-primary'}`, on: { click: () => game.goto('play', { chapterId, role, loadingText: `${m.name} · ${meta.title}`, loadingPatch: patchSVG(m.patch) }) } }, icon('restart'), 'Repetir'),
+            h('button', { class: `btn ${canNext ? '' : 'btn-primary'}`, on: { click: () => game.goto(chapterScene(chapterId), { chapterId, role, loadingText: `${m.name} · ${meta.title}`, loadingPatch: patchSVG(m.patch) }) } }, icon('restart'), 'Repetir'),
             h('button', { class: 'btn btn-ghost', on: { click: () => game.goto('menu', { screen: 'missions', missionId: m.id }) } }, icon('home'), 'Menú'),
           ),
         ),

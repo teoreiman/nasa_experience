@@ -347,7 +347,7 @@ export class AGC {
         return [0, 0, 0];
       }
       case '68':
-        return [this.host.lmGuidance?.rangeToSite() / 185.2 ?? 0, this.host.lmGuidance?.tgo ?? 0, st.alt / FT];
+        return [(this.host.lmGuidance?.rangeToSite() ?? 0) / 185.2, this.host.lmGuidance?.tgo ?? 0, st.alt / FT];
       case '85':
         return b ? [b.vg.x / FT * 10, b.vg.y / FT * 10, b.vg.z / FT * 10] : [0, 0, 0];
       default:
@@ -711,18 +711,23 @@ export class GNCHost {
       cmd.attitudeTarget = GNCHost.attitudeFor(b.vg.lengthSq() > 0.01 ? b.vg : b.dv, zRef, new Quaternion());
     }
     if (ap === 'BURN' && b && !b.armed && this.clock.get >= b.tig - 5) comp.onProceed();
-    // limit time warp around a loaded burn (attitude maneuver, ullage, ignition, cutoff)
-    const nearBurn = b && !b.done && this.clock.get > b.tig - 600 && this.clock.get < b.tig + (b.pad.burnTime ?? 60) + 60;
-    if (nearBurn !== this._burnLimit) {
-      this._burnLimit = nearBurn;
-      if (nearBurn) this.clock.setLimit('burn', 10);
+    // limit time warp around a loaded burn: ×10 for the attitude maneuver and the burn itself, real
+    // time from TIG−30 s until ignition so a person can answer V99 with PRO before TIG (a late
+    // ignition of a long orbit-referenced burn like TEI misses the entry corridor)
+    const tNow = this.clock.get;
+    const nearBurn = b && !b.done && tNow > b.tig - 600 && tNow < b.tig + (b.pad.burnTime ?? 60) + 60;
+    const burnLimit = !nearBurn ? 0 : !b.firing && tNow > b.tig - 30 ? 1 : 10;
+    if (burnLimit !== this._burnLimit) {
+      this._burnLimit = burnLimit;
+      if (burnLimit) this.clock.setLimit('burn', burnLimit);
       else this.clock.clearLimit('burn');
     }
     if (ap === 'ATT_MANEUVER' && this.autopilot.opts?.dir) cmd.attitudeTarget = GNCHost.attitudeFor(this.autopilot.opts.dir, this.autopilot.opts.zRef ?? st.rRel.clone().negate(), new Quaternion());
     const firing = !!(b && b.firing);
     cmd.sps = v.station === 'CM' && firing;
     const lmFire = v.station === 'LM' && firing;
-    cmd.ullage = !!(b && b.armed && !b.firing && this.clock.get > b.tig - 8 && b.dvMag > 3);
+    // (only before ignition: after cutoff `armed` stays set and the +X jets would push forever)
+    cmd.ullage = !!(b && b.armed && !b.firing && !b.done && this.clock.get > b.tig - 8 && b.dvMag > 3);
     cmd.burnArmed = !!(b && (b.armed || this.clock.get > b.tig - 30) && !b.done);
     if (cmd.ullage) cmd.rcsTrans.x = 1;
 

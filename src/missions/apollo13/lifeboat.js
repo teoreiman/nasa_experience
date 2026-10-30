@@ -39,7 +39,8 @@ export default {
     // the state after the explosion: tank 2 gone, FC 1 & 3 dead, tank 1 venting fast
     csm.exploded = true;
     csm.o2[1] = { p: 0, qty: 0, leak: 0 };
-    csm.o2[0] = { p: 420, qty: 0.3, leak: 1 / (80 * 60) };
+    // ≈420 psi and falling: FC 2 starves at 120 psi in about 25 minutes
+    csm.o2[0] = { p: 420, qty: 0.46, leak: 1 / (80 * 60) };
     for (const i of [0, 2]) {
       csm.fc[i].reac = false;
       csm.fc[i].failed = true;

@@ -45,7 +45,8 @@ async function boot() {
     const role = q.get('role') === 'controller' ? 'controller' : 'astronaut';
     store.session.role = role;
     const chapterId = q.get('play');
-    await game.goto(chapterId === 'a11-eva' ? 'eva' : 'play', { chapterId, role });
+    const { chapterScene } = await import('./missions/registry.js');
+    await game.goto(chapterScene(chapterId), { chapterId, role });
   } else if (q.has('debug')) {
     await game.goto('debug', { name: q.get('debug'), params: Object.fromEntries(q) });
   } else if (q.has('scene')) {

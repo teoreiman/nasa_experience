@@ -71,7 +71,9 @@ body {
   padding: var(--safe-t) var(--safe-r) var(--safe-b) var(--safe-l);
 }
 
-#ui > * {
+/* zero specificity: full-screen layers (.hud) must be able to opt out with pointer-events:none,
+   otherwise they swallow every click/drag meant for the 3D canvas underneath */
+:where(#ui) > * {
   pointer-events: auto;
 }
 

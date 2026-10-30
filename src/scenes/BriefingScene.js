@@ -6,10 +6,10 @@ import { h } from '../core/dom.js';
 import { store } from '../core/Store.js';
 import { MISSION_EPOCH } from '../core/constants.js';
 import { MissionClock } from '../core/MissionClock.js';
-import { loadChapter } from '../missions/registry.js';
+import { loadChapter, chapterScene } from '../missions/registry.js';
 import { createMenuBackdrop } from '../render/MenuBackdrop.js';
 import { createCinematicBackdrop } from '../render/CinematicBackdrop.js';
-import { icon, patchEl, patchSVG } from '../ui/components.js';
+import { icon, patchEl, patchSVG, CONTROLS, controlsBlock } from '../ui/components.js';
 
 const MONTHS = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
 
@@ -31,47 +31,38 @@ export const CONSOLE_INFO = {
   NETWORK: ['Red de seguimiento', 'Las estaciones de la red de vuelos tripulados en todo el mundo.'],
 };
 
+/** Controls cheat-sheet for the chapter and role: [{ title, rows: [[keys[], description]] }]
+ *  (the full reference is the in-mission help, F1 — both read CONTROLS). */
 function controlsFor(chapter, role) {
-  if (role === 'controller') {
-    return [
-      [['W', 'A', 'S', 'D'], 'Caminar por la sala'],
-      [['Ratón'], 'Mirar (clic para capturar el puntero)'],
-      [['E'], 'Sentarse / levantarse de una consola'],
-      [['Clic'], 'Pulsar botones de la consola'],
-      [['T'], 'Ver la TV de la nave'],
-      [['.', ','], 'Acelerar / frenar el tiempo'],
-    ];
-  }
+  const time = [['.', ','], 'Acelerar / frenar el tiempo'];
+  const help = [['F1'], 'Todos los controles'];
+  if (role === 'controller') return [{ title: CONTROLS.mocr.title, rows: [...CONTROLS.mocr.rows, time, help] }];
+  if (chapterScene(chapter.id) === 'eva') return [{ title: CONTROLS.eva.title, rows: [...CONTROLS.eva.rows, help] }];
   const id = chapter.id;
-  const base = [
-    [['Clic'], 'Accionar controles · clic derecho: tapa protectora'],
-    [['Arrastrar'], 'Mirar alrededor · rueda: zoom'],
-    [['C', 'V'], 'Cámara exterior · siguiente cámara'],
-    [['Tab'], 'Lista de comprobación'],
-  ];
+  let flight = [];
   if (/landing/.test(id)) {
-    return [
+    flight = [
       [['W', 'A', 'S', 'D', 'Q', 'E'], 'Actitud del LM (inclinar = moverse)'],
       [['Inicio', 'Fin'], 'Velocidad de descenso ±1 pie/s en P66'],
       [['← → ↑ ↓'], 'Redesignar el punto de alunizaje en P64'],
       [['RePág', 'AvPág'], 'Acelerador manual'],
-      ...base.slice(2),
     ];
-  }
-  if (/docking|tde|ascent|undock/.test(id)) {
-    return [
+  } else if (/docking|tde|ascent|undock/.test(id)) {
+    flight = [
       [['I', 'K', 'J', 'L', 'U', 'O'], 'Traslación RCS (adelante/atrás, lados, arriba/abajo)'],
       [['W', 'A', 'S', 'D', 'Q', 'E'], 'Rotación'],
-      ...base,
     ];
+  } else if (/entry/.test(id)) {
+    flight = [[['Q', 'E'], 'Alabeo: orienta el vector de sustentación']];
+  } else if (/mcc5|freereturn|loi|tei|tli|pc2|earthrise/.test(id)) {
+    flight = [[['W', 'A', 'S', 'D', 'Q', 'E'], 'Rotación manual']];
   }
-  if (/entry/.test(id)) {
-    return [[['Q', 'E'], 'Alabeo: orienta el vector de sustentación'], ...base, [['.', ','], 'Acelerar / frenar el tiempo']];
-  }
-  if (/mcc5|freereturn|loi|tei|tli|pc2/.test(id)) {
-    return [[['W', 'A', 'S', 'D', 'Q', 'E'], 'Rotación manual'], ...base, [['.', ','], 'Acelerar / frenar el tiempo'], [['F8'], 'Saltar al siguiente evento']];
-  }
-  return [...base, [['.', ','], 'Acelerar / frenar el tiempo'], [['F8'], 'Saltar al siguiente evento']];
+  return [
+    flight.length ? { title: 'Pilotaje en este capítulo', rows: flight } : null,
+    { title: CONTROLS.cockpit.title, rows: CONTROLS.cockpit.rows },
+    { title: CONTROLS.dsky.title, rows: [[['V', 'N', '0–9', 'Intro'], 'Verbo, nombre, dígitos, ENTR'], [['P', 'R', 'K', 'Retroceso'], 'PRO · RSET · KEY REL · CLR']] },
+    { title: 'Misión', rows: [[['Tab'], 'Lista de comprobación'], time, [['F8'], 'Saltar al siguiente evento'], help] },
+  ].filter(Boolean);
 }
 
 export default class BriefingScene {
@@ -106,7 +97,7 @@ export default class BriefingScene {
     const start = () => {
       game.audio?.unlock?.();
       game.audio?.sfx?.('uiConfirm');
-      game.goto(chapter.id === 'a11-eva' ? 'eva' : 'play', { chapterId, role, loadingText: `${mission.name} · ${chapter.title}`, loadingPatch: patchSVG(mission.patch) });
+      game.goto(chapterScene(chapter.id), { chapterId, role, loadingText: `${mission.name} · ${chapter.title}`, loadingPatch: patchSVG(mission.patch) });
     };
     this._onKey = (e) => {
       if (e.code === 'Enter' || e.code === 'Space') start();
@@ -157,7 +148,7 @@ export default class BriefingScene {
                 mission.callsigns ? h('p', { class: 'muted', style: { marginTop: '0.6rem', fontSize: '0.85rem' } }, Object.entries(mission.callsigns).map(([k, v]) => `${k} «${v}»`).join(' · ')) : null,
               )
             : null,
-        h('div', { class: 'frame brief-card' }, h('h3', null, 'Controles clave'), h('div', { class: 'keys' }, keys.flatMap(([ks, desc]) => [h('span', { class: 'k' }, ks.map((k) => h('kbd', null, k))), h('span', null, desc)]))),
+        h('div', { class: 'frame brief-card brief-controls' }, h('h3', null, 'Controles clave'), keys.map((b) => controlsBlock(b.title, b.rows))),
         tips.length ? h('div', { class: 'frame brief-card' }, h('h3', null, 'Consejos'), h('ul', { class: 'tip-list' }, tips.map((t) => h('li', null, t)))) : null,
         h(
           'div',
