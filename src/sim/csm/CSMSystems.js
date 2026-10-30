@@ -99,6 +99,10 @@ export class CSMSystems {
     if (id === 'CM.SEQ.DROGUE_DEPLOY' && value === 'DEPLOY') v.request('DROGUE_DEPLOY');
     if (id === 'CM.SEQ.MAIN_DEPLOY' && value === 'DEPLOY') v.request('MAIN_DEPLOY');
     if (id === 'CM.DOCK.PROBE' && value === 'RETRACT') v.request('DOCK_HARD');
+    if (id === 'CM.DOCK.PROBE' && value === 'EXTEND' && (v.config === 'CSM_LM' || v.config === 'CSM_LMASC')) v.request('UNDOCK');
+    // manual SPS: THRUST ON latches the engine on (ΔV THRUST A/B must be NORMAL); both OFF stops it
+    if (id === 'CM.SPS.THRUST_ON' && value === 'PUSHED' && this.spsReady()) this.manualSps = true;
+    if ((id === 'CM.SPS.DV_THRUST_A' || id === 'CM.SPS.DV_THRUST_B') && v.sw.is('CM.SPS.DV_THRUST_A', 'OFF') && v.sw.is('CM.SPS.DV_THRUST_B', 'OFF')) this.manualSps = false;
     // fuel-cell reactant valves (momentary) — closing is irreversible once O2 is gone
     const reac = id.match(/^CM\.EPS\.FC(\d)_REAC$/);
     if (reac) {
@@ -185,9 +189,12 @@ export class CSMSystems {
   /** Electrical load per main bus (A) derived from switch positions. */
   _loads() {
     const sw = this.vehicle.sw;
-    let a = 18;
-    let b = 18;
-    if (this.poweredDown) return { A: 0, B: 0 };
+    // powered-down CM (Apollo 13): nothing draws until the batteries are tied to the main buses,
+    // and then only the essential loads (≈5 A per bus) plus what the crew switches on
+    const batOnly = !!this.poweredDown;
+    if (batOnly && !sw.is('CM.EPS.MAIN_BUS_TIE_AC', 'ON') && !sw.is('CM.EPS.MAIN_BUS_TIE_BC', 'ON')) return { A: 0, B: 0 };
+    let a = batOnly ? 5 : 18;
+    let b = batOnly ? 5 : 18;
     const add = (bus, amps) => (bus === 'A' ? (a += amps) : (b += amps));
     if (sw.is('CM.GN.IMU_PWR', 'ON')) add('A', 6);
     if (sw.is('CM.GN.CMC_PWR', 'ON')) add('B', 4);
@@ -208,6 +215,12 @@ export class CSMSystems {
     const sw = v.sw;
     const tm = v.tm;
     const t = this.clock.get;
+    // Apollo 12: with SCE on AUX and the fuel cells reconnected the electrical system is back
+    if (this.lightning && sw.is('CM.EPS.SCE_PWR', 'AUX') && this.fc.filter((f) => f.online.A || f.online.B).length >= 2) {
+      this.lightning = false;
+      for (const l of ['FC_BUS_DISCONNECT', 'FC_1', 'FC_2', 'FC_3', 'AC_BUS_1', 'AC_BUS_2', 'AC_BUS_1_OVERLOAD', 'AC_BUS_2_OVERLOAD', 'MAIN_BUS_A_UNDERVOLT', 'MAIN_BUS_B_UNDERVOLT', 'BAT_CHARGER']) this._clear(l);
+      this.bus.emit('systems:recovered', { module: 'CSM', name: 'LIGHTNING_STRIKE' });
+    }
     if (this.stirAt && t >= this.stirAt && !this.exploded) {
       this.stirAt = null;
       this.trigger('O2_TANK2_EXPLOSION');
@@ -221,7 +234,8 @@ export class CSMSystems {
         o.qty = o.p < 50 ? 0 : relax(o.qty, 1.05, 1, dt); // off-scale high then dead
         continue;
       }
-      const draw = this.fc.reduce((s, f) => s + (f.reac && !f.failed ? f.amps : 0), 0) * 3.4e-7; // fraction/s
+      // ~1 kg/h of O2 for the fuel cells + cabin at ~60 A: the 2 × 145 kg tanks last ~12 days
+      const draw = this.fc.reduce((s, f) => s + (f.reac && !f.failed ? f.amps : 0), 0) * 1.6e-8; // fraction/s
       o.qty = Math.max(0, o.qty - (draw / 2 + o.leak) * dt);
       const target = o.qty <= 0.002 ? 0 : 880 + (fansOn(i + 1) ? 25 : 0) + (sw.is(`CM.CRYO.O2_HTR_${i + 1}`, 'ON') ? 40 : 0);
       o.p = relax(o.p, o.leak ? target * Math.min(1, o.qty * 3) : target, 0.02, dt);
@@ -374,7 +388,11 @@ export class CSMSystems {
       if (this.hasSM) this.smRcsKg = Math.max(0, this.smRcsKg - use);
       else this.cmRcsKg = Math.max(0, this.cmRcsKg - use);
     }
-    const fire = this.hasSM && cmd.sps && this.spsProp > 0 && this.spsReady() && powered;
+    const sw = v.sw;
+    if (this.hasSM && powered && sw.is('CM.SPS.DIRECT_ULLAGE', 'ULLAGE')) acc.force.x += 4 * 445;
+    const want = cmd.sps || this.manualSps || sw.is('CM.SPS.THRUST_DIRECT_ON', 'ON');
+    const fire = this.hasSM && want && this.spsProp > 0 && this.spsReady() && powered;
+    if (this.manualSps && (!this.spsReady() || this.spsProp <= 0)) this.manualSps = false;
     if (fire) {
       acc.force.x += 91190;
       const mdot = 91190 / (314 * 9.80665);

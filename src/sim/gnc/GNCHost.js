@@ -266,7 +266,11 @@ export class AGC {
 
   /** Load an external ΔV target (P30). pad: { tig, dvECI: Vector3 m/s, name } */
   loadBurn(pad) {
-    this.burn = { pad, tig: pad.tig, dv: pad.dvECI.clone(), vg: pad.dvECI.clone(), armed: false, firing: false, done: false, gained: 0 };
+    // steer: 'inertial' (external ΔV, fixed direction) or 'pro'/'retro' (along the velocity relative to
+    // the primary, rotating with the orbit — long burns like LOI/TEI stay horizontal)
+    this.burn = { pad, tig: pad.tig, dv: pad.dvECI.clone(), vg: pad.dvECI.clone(), dvMag: pad.dvECI.length(), steer: pad.steer ?? 'inertial', lvlh: pad.lvlh ?? null, armed: false, firing: false, done: false, gained: 0 };
+    // never let time acceleration skip past the ignition: stop the clock 90 s before TIG
+    if (pad.tig - 90 > this.clock.get) this.clock.addStop(pad.tig - 90);
     this.bus.emit('agc:burnLoaded', { agc: this.id, pad });
   }
 
@@ -383,6 +387,22 @@ export class AGC {
     if (!b || b.done || !this.powered) return;
     const t = this.clock.get;
     const d = this.dsky.display;
+    if (b.steer !== 'inertial') {
+      // orbit-referenced steering: Vg keeps fixed components in the local frame (±v for pro/retro,
+      // v/r/h mix for LVLH burns); magnitude = what is left of the ΔV
+      const st = this.vehicle.state;
+      const vr = st.vRel;
+      if (vr.lengthSq() > 1) {
+        const left = Math.max(0, b.dvMag - b.gained);
+        if (b.steer === 'lvlh' && b.lvlh) {
+          const ev = _v2.copy(vr).normalize();
+          const eh = _v3.crossVectors(st.rRel, vr).normalize();
+          const er = new Vector3().crossVectors(ev, eh).negate().normalize();
+          b.vg.copy(ev).multiplyScalar(b.lvlh.v).addScaledVector(er, b.lvlh.r).addScaledVector(eh, b.lvlh.h).normalize().multiplyScalar(left);
+        } else b.vg.copy(vr).normalize().multiplyScalar((b.steer === 'retro' ? -1 : 1) * left);
+        if (!b.firing) b.dv.copy(b.vg);
+      }
+    }
     const burnProg = this.program === '40' || this.program === '41' || this.program === '42';
     if (!burnProg) return;
     // V99 at TIG−5 s requests engine enable
@@ -398,13 +418,15 @@ export class AGC {
       b.firing = true;
       this.bus.emit('agc:ignition', { agc: this.id });
     }
-    if (b.firing) {
-      // velocity-to-be-gained bookkeeping from sensed acceleration (body → ECI)
+    if (b.firing || b.armed) {
+      // Average-G: velocity-to-be-gained bookkeeping from sensed acceleration (body → ECI), running
+      // from engine enable (so the RCS ullage counts too)
       const st = this.vehicle.state;
       _v1.copy(st.accel).applyQuaternion(st.q).multiplyScalar(dt);
-      b.vg.sub(_v1);
+      if (b.steer === 'inertial') b.vg.sub(_v1);
       b.gained += _v1.length();
-      if (b.vg.dot(b.dv) <= 0 || b.vg.length() < 0.15) {
+      const finished = b.steer === 'inertial' ? b.vg.dot(b.dv) <= 0 || b.vg.length() < 0.02 : b.gained >= b.dvMag - 0.05;
+      if (finished) {
         b.firing = false;
         b.done = true;
         this.bus.emit('agc:cutoff', { agc: this.id, residual: b.vg.length() });
@@ -453,12 +475,27 @@ class LMDescentGuidance {
     return this._sitePos().distanceTo(this.host.vehicle.state.r);
   }
 
+  /** Move the target `meters` downrange along the current ground track (late PDI lands long). */
+  shiftSiteDownrange(meters) {
+    if (!this.site || !meters) return;
+    const host = this.host;
+    const st = host.vehicle.state;
+    const moonPos = host.dyn.moonPos;
+    const siteR = this._sitePos().clone().sub(moonPos);
+    const h = new Vector3().crossVectors(st.rRel, st.vSurface).normalize();
+    const p = siteR.applyAxisAngle(h, meters / R_MOON).normalize();
+    const ang = host.dyn.moonAngle ?? 0;
+    const c = Math.cos(-ang);
+    const sn = Math.sin(-ang);
+    this.site.local.set(p.x * c - p.y * sn, p.x * sn + p.y * c, p.z).normalize();
+  }
+
   /** Shift the target by LPD clicks (az right +, el long +). */
   redesignate(az, el) {
     if (!this.site || (!az && !el)) return;
     const st = this.host.vehicle.state;
     const up = _v1.copy(this._sitePos()).sub(this.host.dyn.moonPos).normalize();
-    const fwd = _v2.copy(st.vRel).addScaledVector(up, -st.vRel.dot(up)).normalize();
+    const fwd = _v2.copy(st.vSurface).addScaledVector(up, -st.vSurface.dot(up)).normalize();
     const right = _v3.crossVectors(fwd, up).normalize();
     const step = Math.max(30, (st.altTerrain ?? st.alt) * 0.045);
     const p = this.site.r.clone().addScaledVector(right, az * step).addScaledVector(fwd, el * step).sub(this.host.dyn.moonPos).normalize();
@@ -491,13 +528,20 @@ class LMDescentGuidance {
       const aVert = g + 1.2 * (this.rodCmd - st.hdot);
       out.acc.copy(up).multiplyScalar(Math.max(0.3, aVert));
       // horizontal: AI nulls velocity toward the (redesignated) site; human uses the ACA
-      const vh = st.vRel.clone().addScaledVector(up, -st.vRel.dot(up));
+      const vh = st.vSurface.clone().addScaledVector(up, -st.vSurface.dot(up));
       if (host.autopilot.mode === 'LANDING') {
         const toSite = site.clone().sub(st.r);
         toSite.addScaledVector(up, -toSite.dot(up));
+        // creep toward the (redesignated) site, then stop: no horizontal speed in the last metres
         const want = toSite.multiplyScalar(0.12);
-        if (want.length() > 4) want.setLength(4);
-        out.acc.addScaledVector(want.sub(vh), 0.7);
+        const cap = Math.max(0, Math.min(4, (h - 4) * 0.12));
+        if (want.length() > cap) want.setLength(cap);
+        const aMax = (0.925 * 45040) / Math.max(1000, st.mass);
+        const aV = out.acc.dot(up);
+        const aH = want.sub(vh).multiplyScalar(0.7);
+        const aHmax = Math.sqrt(Math.max(0, aMax * aMax - aV * aV));
+        if (aH.length() > aHmax) aH.setLength(aHmax);
+        out.acc.add(aH);
       } else out.manualTilt = true;
       return out;
     }
@@ -505,7 +549,7 @@ class LMDescentGuidance {
     const tNow = host.clock.get;
     const gate = this.phase === '63' ? this.highGate : this.lowGate;
     const toSite = site.clone().sub(moonPos).normalize();
-    const downrange = st.vRel.clone().addScaledVector(up, -st.vRel.dot(up)).normalize();
+    const downrange = st.vSurface.clone().addScaledVector(up, -st.vSurface.dot(up)).normalize();
     let rT;
     let vT;
     let tgo;
@@ -519,17 +563,28 @@ class LMDescentGuidance {
         host.lgc.runProgram('64');
       }
     } else {
-      if (!this.t64) this.t64 = tNow;
-      // P64 approach: velocity command toward the (redesignatable) site, descent rate shaped by height
-      const toS = site.clone().sub(st.r);
-      toS.addScaledVector(up, -toS.dot(up));
-      const tgoEst = Math.max(12, h / 5.5);
-      tgo = tgoEst;
-      const vhDes = toS.clone().multiplyScalar(1.15 / tgoEst);
-      if (vhDes.length() > 160) vhDes.setLength(160);
-      const hdotDes = -Math.min(45, Math.max(1.2, h / tgoEst));
-      const vDes = vhDes.addScaledVector(up, hdotDes);
-      out.acc.copy(vDes.sub(st.vRel)).multiplyScalar(0.45).addScaledVector(up, g);
+      // P64 approach (≈105 s from the high gate on Apollo 11): quadratic guidance to the low gate,
+      // 150 ft above the (redesignatable) site, arriving almost stopped; vertical-priority allocation
+      if (!this.t64) {
+        this.t64 = tNow;
+        this.fwd64 = st.vSurface.clone().addScaledVector(up, -st.vSurface.dot(up)).normalize();
+      }
+      tgo = Math.max(5, this.t64 + 105 - tNow);
+      const siteUp = site.clone().sub(moonPos).normalize();
+      const rT = site.clone().addScaledVector(siteUp, 46).addScaledVector(this.fwd64, -12);
+      const vT = siteUp.clone().multiplyScalar(-1.5).addScaledVector(this.fwd64, 1.0);
+      const aCmd = rT.sub(st.r).addScaledVector(st.vSurface, -tgo).multiplyScalar(6 / (tgo * tgo)).addScaledVector(vT.sub(st.vSurface), -2 / tgo).addScaledVector(up, g);
+      const aMax = (0.925 * 45040) / Math.max(1000, st.mass);
+      const aV = Math.min(aMax * 0.97, Math.max(0.2, aCmd.dot(up)));
+      const aH = aCmd.addScaledVector(up, -aCmd.dot(up));
+      const aHmax = Math.sqrt(Math.max(0, aMax * aMax - aV * aV));
+      if (aH.length() > aHmax) aH.setLength(aHmax);
+      out.acc.copy(aH).addScaledVector(up, aV);
+      // a click on the ROD switch hands over to P66 (manual rate of descent), like the real LM
+      if (v.controls.rodClicks && host.autopilot.mode !== 'LANDING') {
+        this.setPhase('66');
+        host.lgc.runProgram('66');
+      }
       if (h < 150 * FT && (host.autopilot.mode === 'LANDING' || v.sw.get('LM.GNC.MODE_CONTROL_PGNS') === 'AUTO')) {
         this.setPhase('66');
         host.lgc.runProgram('66');
@@ -550,7 +605,7 @@ class LMDescentGuidance {
     }
     this.tgo = tgo;
     const r = st.r;
-    const vRel = st.vRel;
+    const vRel = st.vSurface;
     const a = rT.clone().sub(r).addScaledVector(vRel, -tgo).multiplyScalar(6 / (tgo * tgo)).addScaledVector(vT.clone().sub(vRel), -2 / tgo);
     out.acc.copy(a).addScaledVector(up, g);
     return out;
@@ -612,7 +667,8 @@ export class GNCHost {
   }
 
   startAscent() {
-    this.ascent = { t0: this.clock.get };
+    // the pitch program clock starts at liftoff (staging), not when P12 is keyed
+    this.ascent = { t0: null };
   }
 
   /** IMU gimbal angles (deg) for the station's FDAI: outer=roll, inner=pitch, middle=yaw. */
@@ -655,16 +711,30 @@ export class GNCHost {
       cmd.attitudeTarget = GNCHost.attitudeFor(b.vg.lengthSq() > 0.01 ? b.vg : b.dv, zRef, new Quaternion());
     }
     if (ap === 'BURN' && b && !b.armed && this.clock.get >= b.tig - 5) comp.onProceed();
+    // limit time warp around a loaded burn (attitude maneuver, ullage, ignition, cutoff)
+    const nearBurn = b && !b.done && this.clock.get > b.tig - 600 && this.clock.get < b.tig + (b.pad.burnTime ?? 60) + 60;
+    if (nearBurn !== this._burnLimit) {
+      this._burnLimit = nearBurn;
+      if (nearBurn) this.clock.setLimit('burn', 10);
+      else this.clock.clearLimit('burn');
+    }
     if (ap === 'ATT_MANEUVER' && this.autopilot.opts?.dir) cmd.attitudeTarget = GNCHost.attitudeFor(this.autopilot.opts.dir, this.autopilot.opts.zRef ?? st.rRel.clone().negate(), new Quaternion());
     const firing = !!(b && b.firing);
     cmd.sps = v.station === 'CM' && firing;
     const lmFire = v.station === 'LM' && firing;
-    cmd.ullage = !!(b && b.armed && !b.firing && this.clock.get > b.tig - 8);
+    cmd.ullage = !!(b && b.armed && !b.firing && this.clock.get > b.tig - 8 && b.dvMag > 3);
+    cmd.burnArmed = !!(b && (b.armed || this.clock.get > b.tig - 30) && !b.done);
     if (cmd.ullage) cmd.rcsTrans.x = 1;
 
     // ---- LM powered descent / ascent
     const g = this.lmGuidance;
-    cmd.dps = lmFire;
+    cmd.dps = lmFire && comp.program !== '42';
+    const apsBurn = lmFire && comp.program === '42';
+    // P40 DPS burns: 10 % for the first seconds (trim the gimbal through the c.g.), then the PAD throttle
+    if (cmd.dps && !g.phase && b) {
+      const tb = this.clock.get - b.tig;
+      cmd.dpsThrottle = tb < 5 ? 0.1 : b.pad.throttle ?? (b.dvMag > 60 ? 0.925 : 0.4);
+    }
     if (v.station === 'LM' && g.phase && !st.landed) {
       const out = g.command(dt);
       const m = st.mass;
@@ -679,7 +749,10 @@ export class GNCHost {
         cmd.dpsThrottle = Math.max(0.1, Math.min(0.925, (need * m) / maxThrust));
         cmd.dps = true;
       } else {
-        const T = acc.length() * m;
+        // throttle for the component along the engine's actual axis (no full thrust while slewing)
+        const axis = _v3.set(1, 0, 0).applyQuaternion(st.q);
+        const along = g.phase === '63' ? acc.length() : Math.max(acc.dot(axis), acc.dot(_v2.copy(st.rRel).normalize()) / Math.max(0.3, axis.dot(_v2)) * 0.5);
+        const T = along * m;
         cmd.dpsThrottle = Math.max(0.1, Math.min(0.925, T / maxThrust));
         const windows = out.windowsUp ? _v2.copy(st.rRel).normalize() : _v2.copy(g._sitePos()).sub(st.r).normalize();
         // LM: thrust along +X, windows along +Z
@@ -694,26 +767,42 @@ export class GNCHost {
       g.phase = null;
       cmd.dps = false;
     }
-    // ---- lunar ascent P12: vertical rise then pitch over to a 9 × 45 nmi orbit
-    cmd.aps = false;
-    if (this.ascent && v.station === 'LM') {
+    // ---- lunar ascent P12: 10 s vertical rise, then explicit guidance to the insertion point
+    //      (60,000 ft, +32 ft/s up, 5,535 ft/s horizontal → 9 × 45 nmi), westward in the plane of
+    //      the CSM's orbit (the Moon's orbital plane through the site)
+    cmd.aps = apsBurn;
+    if (this.ascent && v.station === 'LM' && this.ascent.t0 === null && v.config === 'LM_ASC') this.ascent.t0 = this.clock.get;
+    if (this.ascent && v.station === 'LM' && this.ascent.t0 !== null && !this.ascent.done) {
       const tt = this.clock.get - this.ascent.t0;
+      const rr = st.rRel.length();
       const up = _v1.copy(st.rRel).normalize();
-      const vCirc = Math.sqrt(MU_MOON / st.rRel.length());
-      if (st.vHoriz < vCirc * 1.01 || tt < 12) {
-        cmd.aps = true;
-        const fwd = _v2.copy(this.ascent.dir ?? st.vRel).addScaledVector(up, -(this.ascent.dir ?? st.vRel).dot(up));
-        if (fwd.lengthSq() < 1e-6) fwd.set(0, 0, 1).applyQuaternion(st.q);
-        fwd.normalize();
-        if (!this.ascent.dir) this.ascent.dir = fwd.clone();
-        const pitch = tt < 10 ? 0 : Math.min(84, 50 + (tt - 10) * 0.15) * DEG;
-        const hErr = 18000 - st.alt;
-        const tilt = tt < 10 ? 0 : pitch - Math.max(-0.2, Math.min(0.25, hErr * 0.00002 - st.hdot * 0.004));
-        const dir = up.clone().multiplyScalar(Math.cos(tilt)).addScaledVector(fwd, Math.sin(tilt));
-        cmd.attitudeTarget = GNCHost.attitudeFor(dir, fwd, new Quaternion());
-      } else if (!this.ascent.done) {
+      if (!this.ascent.dir) {
+        const hM = new Vector3().crossVectors(this.dyn.moonPos, this.dyn.moonVel).normalize();
+        this.ascent.dir = new Vector3().crossVectors(hM, up).normalize().negate();
+      }
+      const fwd = _v2.copy(this.ascent.dir).addScaledVector(up, -this.ascent.dir.dot(up)).normalize();
+      const vh = st.vRel.dot(fwd);
+      const vhT = 1687;
+      const aT = 15570 / Math.max(1500, st.mass);
+      if (vh >= vhT && tt > 12) {
         this.ascent.done = true;
         this.bus.emit('gnc:insertion', { agc: 'LGC' });
+      } else {
+        cmd.aps = true;
+        let dir;
+        if (tt < 10) dir = up.clone();
+        else {
+          const g = MU_MOON / (rr * rr);
+          const geff = g - (vh * vh) / rr;
+          const tgo = Math.max(8, (vhT - vh) / aT);
+          const hT = 18300;
+          const hdotT = 9.8;
+          let av = (6 * (hT - st.alt - st.hdot * tgo)) / (tgo * tgo) - (2 * (hdotT - st.hdot)) / tgo + geff;
+          av = Math.max(-0.2 * aT, Math.min(0.85 * aT, av));
+          const ah = Math.sqrt(Math.max(0, aT * aT - av * av));
+          dir = up.clone().multiplyScalar(av).addScaledVector(fwd, ah).normalize();
+        }
+        cmd.attitudeTarget = GNCHost.attitudeFor(dir, fwd, new Quaternion());
       }
     }
     // ---- entry (bank-angle) — AI or CMC P64-P67 holds lift vector up until g peaks, then modulates
@@ -746,7 +835,13 @@ export class GNCHost {
     const lat = tel.lateral;
     const closing = -tel.rangeRate;
     const want = tel.range > 15 ? 0.6 : tel.range > 3 ? 0.25 : 0.1;
-    cmd.rcsTrans.set(Math.max(-1, Math.min(1, (want - closing) * 3)), Math.max(-1, Math.min(1, -lat.y * 0.8 - tel.latRate.y * 4)), Math.max(-1, Math.min(1, -lat.z * 0.8 - tel.latRate.z * 4)));
+    // turn first (nose to the target's drogue), translate only once aligned
+    if (tel.misalign > 10) {
+      cmd.rcsTrans.set(0, 0, 0);
+      return;
+    }
+    // lateral = target port − own port (body frame): thrust toward it, damping the relative drift
+    cmd.rcsTrans.set(Math.max(-1, Math.min(1, (want - closing) * 3)), Math.max(-1, Math.min(1, lat.y * 0.8 + tel.latRate.y * 4)), Math.max(-1, Math.min(1, lat.z * 0.8 + tel.latRate.z * 4)));
   }
 
   _fdai() {
@@ -754,7 +849,8 @@ export class GNCHost {
     const [r, p, y] = this.gimbals();
     const w = v.state.w;
     const tm = v.tm;
-    const err = v.cmd.attitudeTarget;
+    // error needles: the autopilot's target, or a crew reference attitude (manual burns)
+    const err = v.cmd.attitudeTarget ?? v.cmd.fdaiTarget ?? null;
     let er = 0;
     let ep = 0;
     let ey = 0;
@@ -790,7 +886,7 @@ export class GNCHost {
       tm['LM.GNC.ALT_FT'] = h / FT;
       tm['LM.GNC.ALTRATE_FPS'] = st.hdot / FT;
       const up = _v1.copy(st.rRel).normalize();
-      const vh = _v2.copy(st.vRel).addScaledVector(up, -st.vRel.dot(up));
+      const vh = _v2.copy(st.vSurface).addScaledVector(up, -st.vSurface.dot(up));
       const fwd = _v3.set(0, 0, 1).applyQuaternion(st.q);
       tm['LM.GNC.XPTR_FWD_FPS'] = vh.dot(fwd) / FT;
       tm['LM.GNC.XPTR_LAT_FPS'] = vh.dot(_v3.set(0, 1, 0).applyQuaternion(st.q)) / FT;

@@ -6,6 +6,15 @@ import { EventBus } from './EventBus.js';
 import { Input } from './Input.js';
 import { store } from './Store.js';
 import { h } from './dom.js';
+import { randomFacts } from '../data/facts.js';
+
+// Saturn V side profile (LES → S-IC), viewBox 0 0 40 230, used by the loading screen.
+const SATURN_PATH =
+  'M20 0 L20.6 7 L21 18 L22.4 18 L22.4 21 L25 33 L25 40 L28.6 40 L28.6 42 L27.4 42 L30.6 60 L30.6 61 ' +
+  'L30.6 94 L33 98 L35.3 101 L35.3 126 L35.3 128 L35.3 158 L35.3 160 L35.3 204 L38.5 208 L39.5 221 L35.5 221 ' +
+  'L34.6 226 L30.2 226 L29.4 221 L24.2 221 L23.4 228 L16.6 228 L15.8 221 L10.6 221 L9.8 226 L5.4 226 L4.5 221 ' +
+  'L0.5 221 L1.5 208 L4.7 204 L4.7 160 L4.7 128 L4.7 101 L7 98 L9.4 94 L9.4 61 L12.6 42 L11.4 42 L11.4 40 ' +
+  'L15 40 L15 33 L17.6 21 L17.6 18 L19 18 L19.4 7 Z';
 
 export const QUALITY_PROFILES = {
   low: { name: 'low', pixelRatio: 0.85, antialias: false, shadows: false, textures: '2k', particles: 0.45, bloom: false, anisotropy: 2, panelPxPerMm: 1.6, terrainDetail: 0.5 },
@@ -18,8 +27,12 @@ function detectGpuTier(gl) {
     const ext = gl.getExtension('WEBGL_debug_renderer_info');
     const name = ext ? gl.getParameter(ext.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER);
     const s = String(name);
+    // Desktop Macs report "Apple M1…M4" (Chrome) or just "Apple GPU" (Safari): all are fast.
+    const mobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
     if (/SwiftShader|llvmpipe|Software|Basic Render/i.test(s)) return { tier: 'low', gpu: s };
-    if (/Intel.*(UHD|HD) Graphics|Mali|Adreno|PowerVR|Apple GPU/i.test(s)) return { tier: 'low', gpu: s };
+    if (/Apple (M\d|GPU)/i.test(s) && !mobile) return { tier: 'high', gpu: s };
+    if (/Apple GPU/i.test(s)) return { tier: 'medium', gpu: s };
+    if (/Intel.*(UHD|HD) Graphics|Mali|Adreno|PowerVR/i.test(s)) return { tier: 'low', gpu: s };
     if (/Iris|Radeon\(TM\) Graphics|Vega [0-9]/i.test(s)) return { tier: 'medium', gpu: s };
     return { tier: 'high', gpu: s };
   } catch {
@@ -152,7 +165,7 @@ export class Game {
   async goto(name, params = {}) {
     if (this._switching) return;
     this._switching = true;
-    const loading = this.showLoading(params.loadingText ?? 'Cargando…');
+    const loading = this.showLoading(params.loadingText ?? 'Cargando…', { patch: params.loadingPatch });
     try {
       const loader = this.scenes.get(name);
       if (!loader) throw new Error(`Escena desconocida: ${name}`);
@@ -183,10 +196,57 @@ export class Game {
     }
   }
 
-  showLoading(text) {
-    const el = h('div', { class: 'loading-overlay' }, h('div', { class: 'loading-spinner' }), h('div', { class: 'loading-text' }, text));
+  /** Mission-style loading screen. Returns { remove() } (fades out). opts: { patch?: svgMarkup } */
+  showLoading(text, opts = {}) {
+    const facts = randomFacts(6);
+    const factEl = h('span', null, facts[0]);
+    const countEl = h('div', { class: 'ls-count' }, 'T−00:00:10');
+    const svg = (cls) => `<svg class="${cls}" viewBox="0 0 40 230" xmlns="http://www.w3.org/2000/svg"><path d="${SATURN_PATH}"/></svg>`;
+    const el = h(
+      'div',
+      { class: 'loading-screen' },
+      h('div', { class: 'ls-stars' }),
+      h('div', { class: 'ls-earth' }),
+      h(
+        'div',
+        { class: 'ls-center' },
+        h('div', { class: 'ls-rocket', html: svg('base') + `<div class="fill">${svg('lit')}</div>` }),
+        h(
+          'div',
+          { class: 'ls-info' },
+          opts.patch ? h('div', { class: 'ls-patch', html: opts.patch }) : null,
+          h('div', { class: 'ls-kicker' }, 'Preparando la misión'),
+          h('div', { class: 'ls-title' }, text),
+          countEl,
+          h('div', { class: 'ls-bar' }, h('i')),
+        ),
+      ),
+      h('div', { class: 'ls-fact' }, h('b', null, '¿Sabías que…? '), factEl),
+    );
     document.body.append(el);
-    return el;
+    let n = 10;
+    let k = 0;
+    const tick = setInterval(() => {
+      if (n > 1) n--;
+      countEl.textContent = n > 1 ? `T−00:00:${String(n).padStart(2, '0')}` : 'T−00:00:01 · HOLD';
+    }, 650);
+    const rot = setInterval(() => {
+      k = (k + 1) % facts.length;
+      factEl.style.opacity = '0';
+      setTimeout(() => {
+        factEl.textContent = facts[k];
+        factEl.style.opacity = '1';
+      }, 350);
+    }, 4600);
+    return {
+      remove: () => {
+        clearInterval(tick);
+        clearInterval(rot);
+        countEl.textContent = 'IGNICIÓN';
+        el.classList.add('done');
+        setTimeout(() => el.remove(), 650);
+      },
+    };
   }
 
   showError(err) {

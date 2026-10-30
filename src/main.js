@@ -11,6 +11,7 @@ import '@fontsource/barlow-condensed/600.css';
 import '@fontsource/barlow-condensed/700.css';
 import '@fontsource/share-tech-mono/400.css';
 import './styles/base.css';
+import './styles/ui.css';
 
 import { Game } from './core/Game.js';
 import { AudioEngine } from './audio/AudioEngine.js';

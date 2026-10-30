@@ -29,6 +29,10 @@
   box-sizing: border-box;
 }
 
+[hidden] {
+  display: none !important;
+}
+
 html,
 body {
   margin: 0;
@@ -209,84 +213,232 @@ body {
   }
 }
 
-/* Architect stubs (removed when the ui agent replaces the menu/HUD). */
-.menu-stub {
-  position: absolute;
+/* ------------------------------------------------------------------ loading screen */
+
+.loading-screen {
+  position: fixed;
   inset: 0;
-  overflow: auto;
-  padding: 2rem;
-  background: radial-gradient(circle at 70% 20%, #13243a, #05070a 70%);
+  z-index: 1000;
+  overflow: hidden;
+  background: radial-gradient(ellipse at 50% 120%, #10233d 0%, #05080e 55%, #020305 100%);
+  animation: lsIn 0.35s ease both;
+  transition: opacity 0.6s ease;
 }
 
-.menu-stub .btn-big {
-  display: block;
-  width: min(32rem, 90%);
-  text-align: left;
-  padding: 1rem 1.4rem;
+.loading-screen.done {
+  opacity: 0;
 }
 
-.hud-stub {
+@keyframes lsIn {
+  from {
+    opacity: 0;
+  }
+}
+
+.ls-stars {
+  position: absolute;
+  inset: -50%;
+  background-image:
+    radial-gradient(1px 1px at 20px 30px, #fff, transparent),
+    radial-gradient(1px 1px at 120px 80px, rgba(255, 255, 255, 0.8), transparent),
+    radial-gradient(1.5px 1.5px at 200px 160px, #fff, transparent),
+    radial-gradient(1px 1px at 280px 40px, rgba(255, 255, 255, 0.6), transparent),
+    radial-gradient(1px 1px at 330px 210px, rgba(200, 220, 255, 0.9), transparent),
+    radial-gradient(1px 1px at 60px 250px, rgba(255, 240, 220, 0.8), transparent);
+  background-size: 360px 280px;
+  animation: lsDrift 90s linear infinite;
+  opacity: 0.8;
+}
+
+@keyframes lsDrift {
+  to {
+    transform: translate(-360px, -140px);
+  }
+}
+
+.ls-earth {
+  position: absolute;
+  left: -20%;
+  right: -20%;
+  bottom: -128vh;
+  height: 150vh;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at 50% 0%, #2c6fb8 0%, #123a6b 22%, #071426 48%, #02050a 70%);
+  box-shadow: 0 -10px 60px rgba(90, 160, 255, 0.45), 0 -2px 6px rgba(160, 210, 255, 0.8);
+  animation: lsEarth 2.2s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@keyframes lsEarth {
+  from {
+    transform: translateY(12vh);
+  }
+}
+
+.ls-center {
   position: absolute;
   inset: 0;
-  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(1.5rem, 5vw, 4.5rem);
+  padding-bottom: 6vh;
+}
+
+.ls-rocket {
+  position: relative;
+  height: min(58vh, 30rem);
+  aspect-ratio: 40 / 230;
+}
+
+.ls-rocket svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.ls-rocket .base path {
+  fill: rgba(255, 255, 255, 0.07);
+  stroke: rgba(255, 255, 255, 0.25);
+  stroke-width: 0.35;
+}
+
+.ls-rocket .fill {
+  position: absolute;
+  inset: 0;
+  clip-path: inset(100% 0 0 0);
+  animation: lsFill 7s cubic-bezier(0.15, 0.6, 0.25, 1) forwards;
+}
+
+.ls-rocket .lit path {
+  fill: #f2f1ec;
+  filter: drop-shadow(0 0 6px rgba(255, 190, 80, 0.35));
+}
+
+.loading-screen.done .ls-rocket .fill {
+  animation: none;
+  clip-path: inset(0 0 0 0);
+}
+
+@keyframes lsFill {
+  to {
+    clip-path: inset(8% 0 0 0);
+  }
+}
+
+.ls-rocket::after {
+  content: '';
+  position: absolute;
+  left: 18%;
+  right: 18%;
+  bottom: -14%;
+  height: 16%;
+  background: radial-gradient(ellipse at 50% 0%, rgba(255, 210, 120, 0.9), rgba(255, 120, 20, 0.4) 40%, transparent 70%);
+  filter: blur(4px);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.loading-screen.done .ls-rocket::after {
+  opacity: 1;
+}
+
+.ls-info {
+  max-width: 26rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.ls-patch svg {
+  width: 5.5rem;
+  height: 5.5rem;
+  filter: drop-shadow(0 6px 20px rgba(0, 0, 0, 0.6));
+  animation: lsPatch 1s cubic-bezier(0.2, 1.3, 0.4, 1) both;
+}
+
+@keyframes lsPatch {
+  from {
+    transform: scale(0.6) rotate(-12deg);
+    opacity: 0;
+  }
+}
+
+.ls-kicker {
+  font-family: var(--font-title);
+  font-size: 0.78rem;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.ls-title {
+  font-family: var(--font-title);
+  font-weight: 700;
+  font-size: clamp(1.6rem, 3.6vw, 2.6rem);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  line-height: 1.05;
+}
+
+.ls-count {
   font-family: var(--font-mono);
-}
-
-.hud-stub > * {
-  pointer-events: auto;
-}
-
-.hud-stub-clock {
-  position: absolute;
-  top: 0.6rem;
-  left: 0.8rem;
+  font-size: 1.35rem;
   color: var(--crt-green);
+  text-shadow: 0 0 12px rgba(89, 255, 138, 0.45);
 }
 
-.hud-stub-obj {
+.ls-bar {
+  width: 100%;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.ls-bar i {
+  display: block;
+  width: 40%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  animation: lsScan 1.4s ease-in-out infinite;
+}
+
+@keyframes lsScan {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(260%);
+  }
+}
+
+.ls-fact {
   position: absolute;
-  top: 2.2rem;
-  left: 0.8rem;
-  max-width: 22rem;
-  font-family: var(--font-ui);
-}
-
-.obj-done {
-  color: var(--ok);
-  text-decoration: line-through;
-}
-
-.hud-stub-cl {
-  position: absolute;
-  top: 0.6rem;
-  right: 0.8rem;
-  max-width: 22rem;
-  background: var(--panel);
-  font-size: 0.85rem;
-}
-
-.cl-item.done {
-  color: var(--ok);
-}
-
-.hud-stub-sub {
-  position: absolute;
-  bottom: 1.2rem;
   left: 50%;
+  bottom: calc(2.2rem + var(--safe-b));
   transform: translateX(-50%);
-  max-width: 70vw;
+  width: min(46rem, 88vw);
   text-align: center;
-  font-family: var(--font-ui);
-  text-shadow: 0 1px 3px #000;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: #c6d2df;
 }
 
-.hud-stub-modal {
-  position: absolute;
-  top: 30%;
-  left: 50%;
-  transform: translateX(-50%);
-  background: var(--panel-solid);
-  border: 1px solid var(--accent);
-  padding: 1rem 1.5rem;
-  text-align: center;
+.ls-fact b {
+  font-family: var(--font-title);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-size: 0.8rem;
+}
+
+.ls-fact span {
+  transition: opacity 0.35s;
+}
+
+@media (max-height: 520px) {
+  .ls-patch {
+    display: none;
+  }
 }

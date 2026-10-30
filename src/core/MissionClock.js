@@ -10,6 +10,7 @@ export class MissionClock {
     this.epochUTC = epochUTC;
     this.warp = 1;
     this.paused = false;
+    this.hold = false; // countdown hold: the simulation keeps stepping but GET does not advance
     this._limits = new Map();
     this._stops = [];
     this.onWarpChange = null; // optional callback(warp)
@@ -87,13 +88,14 @@ export class MissionClock {
   advance(realDt) {
     if (this.paused) return 0;
     let dt = realDt * this.effectiveWarp;
-    while (this._stops.length && this._stops[0] <= this.get) this._stops.shift();
+    // drop reached stops (with a tolerance: float rounding must not leave the clock 1e-10 s short forever)
+    while (this._stops.length && this._stops[0] <= this.get + 1e-6) this._stops.shift();
     if (this._stops.length) dt = Math.min(dt, this._stops[0] - this.get);
     return Math.max(0, dt);
   }
 
   tick(h) {
-    this.get += h;
+    if (!this.hold) this.get += h;
   }
 
   _notify() {

@@ -28,7 +28,8 @@ const url = opt('url', '/');
 const waitMs = Number(opt('wait', '5000'));
 const shot = opt('shot');
 const timeout = Number(opt('timeout', '90000'));
-const browserChannel = opt('browser', 'msedge');
+const browserChannel = opt('browser', process.platform === 'win32' ? 'msedge' : 'chrome');
+const angle = process.platform === 'win32' ? 'd3d11' : process.platform === 'darwin' ? 'metal' : 'gl';
 const [vw, vh] = (opt('viewport', '1280x720')).split('x').map(Number);
 const mobile = flag('mobile');
 
@@ -70,7 +71,7 @@ async function main() {
   browser = await chromium.launch({
     channel: browserChannel,
     headless: true,
-    args: ['--ignore-gpu-blocklist', '--enable-gpu-rasterization', '--use-angle=d3d11', '--autoplay-policy=no-user-gesture-required', '--mute-audio'],
+    args: ['--ignore-gpu-blocklist', '--enable-gpu-rasterization', `--use-angle=${angle}`, '--autoplay-policy=no-user-gesture-required', '--mute-audio'],
   });
   const context = await browser.newContext(
     mobile

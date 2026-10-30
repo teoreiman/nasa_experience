@@ -11,7 +11,7 @@ export const INITIAL_STATE_NAMES = [
   'PAD_39A', 'EARTH_PARKING_ORBIT', 'POST_TLI', 'TLC_COAST', 'PRE_LOI', 'LUNAR_ORBIT', 'PRE_UNDOCK',
   'PRE_PDI', 'LUNAR_SURFACE_TRANQUILITY', 'LUNAR_SURFACE_SURVEYOR', 'PRE_ASCENT', 'PRE_TEI', 'TEC_COAST', 'PRE_ENTRY',
   'A13_TLC_55H', 'A13_PRE_FREE_RETURN', 'A13_PRE_PC2', 'A13_PRE_MCC5', 'A13_PRE_SM_JETT', 'A13_PRE_ENTRY',
-  'A8_PRE_LOI', 'A8_LUNAR_ORBIT', 'TRAINING_DOCKING', 'TRAINING_LANDING',
+  'A8_PRE_LOI', 'A8_LUNAR_ORBIT', 'TRAINING_DOCKING', 'TRAINING_LANDING', 'PAD_39B_IB', 'IB_EARTH_ORBIT',
 ];
 
 function basisQ(x, zRef) {
@@ -29,16 +29,39 @@ function moonFrame(utc) {
   return { mp, mv, ang, toEci };
 }
 
-/** Circular orbit around the Moon through a site, flying west (Apollo approaches from the east). */
+/** Circular orbit around the Moon through a site, flying west (Apollo approaches from the east).
+ *  The plane is the one through the site closest to the Moon's orbital plane — the plane Apollo
+ *  arrived in from the Earth, so a ~1 km/s TEI can bring the spacecraft home. */
 function lunarOrbitOverSite(utc, siteKey, alt, phase) {
   const { mp, mv, toEci } = moonFrame(utc);
   const s = toEci(siteDir(SITES[siteKey]));
-  const east = new Vector3(0, 0, 1).cross(s).normalize();
+  const hM = new Vector3().crossVectors(mp, mv).normalize();
+  const east = hM.clone().cross(s).normalize();
   const west = east.clone().negate();
   const R = R_MOON + alt;
   const pos = s.clone().multiplyScalar(Math.cos(phase)).addScaledVector(west, Math.sin(phase)).multiplyScalar(R);
   const dir = s.clone().multiplyScalar(-Math.sin(phase)).addScaledVector(west, Math.cos(phase)).normalize();
   return { r: pos.add(mp), dirV: dir, mp, mv, up: pos.clone().normalize() };
+}
+
+/** Circular parking orbit in the plane of a launch from LC-39A at the mission epoch (azimuth 72°),
+ *  at the position the spacecraft would have at `get` (insertion at T+11:49, ~1,700 km downrange). */
+export function parkingOrbitState(epochUTC, get, alt = 185500, azDeg = 72.06) {
+  const s = SITES_DEG.LC39A;
+  const r0 = earthFixedToEci(s.lat * DEG, s.lon * DEG, 0, epochUTC, new Vector3());
+  const up = r0.clone().normalize();
+  const east = new Vector3(-up.y, up.x, 0).normalize();
+  const north = new Vector3().crossVectors(up, east);
+  const az = azDeg * DEG;
+  // inertial direction of motion: ground-track azimuth plus the Earth's eastward rotation speed
+  const vdir = north.clone().multiplyScalar(Math.cos(az) * 7400).addScaledVector(east, Math.sin(az) * 7400 + 408).normalize();
+  const hdir = new Vector3().crossVectors(up, vdir).normalize();
+  const R = R_EARTH + alt;
+  const n = Math.sqrt(MU_EARTH / (R * R * R));
+  const theta = 1700e3 / R_EARTH + n * (get - 709);
+  const pos = up.clone().applyAxisAngle(hdir, theta).multiplyScalar(R);
+  const vel = new Vector3().crossVectors(hdir, pos).normalize().multiplyScalar(Math.sqrt(MU_EARTH / R));
+  return { r: pos, v: vel };
 }
 
 function earthOrbit(alt, phase, incl, speedFactor = 1) {
@@ -73,12 +96,20 @@ function propagateMoon(r, v, mp, dt, steps = 400) {
 export function getInitialState(name, { epochUTC, get = 0 } = {}) {
   const utc = epochUTC + get * 1000;
   switch (name) {
-    case 'PAD_39A': {
-      const s = SITES_DEG.LC39A;
+    case 'PAD_39A':
+    case 'PAD_39B_IB': {
+      // ML deck at 29 m above sea level; the Saturn IB stands on the 38.7 m "milkstool" at 39B
+      const ib = name === 'PAD_39B_IB';
+      const s = ib ? SITES_DEG.LC39B : SITES_DEG.LC39A;
+      const alt = ib ? 29 + 38.7 + 20 : 62;
       const r = new Vector3();
       const v = new Vector3();
-      earthFixedToEci(s.lat * DEG, s.lon * DEG, 33, utc, r, v);
-      return { r, v, q: basisQ(r, new Vector3(0, 0, 1)), w: new Vector3(), mode: 'PAD', primary: 'EARTH' };
+      earthFixedToEci(s.lat * DEG, s.lon * DEG, alt, utc, r, v);
+      return { r, v, q: basisQ(r, new Vector3(0, 0, 1)), w: new Vector3(), mode: 'PAD', primary: 'EARTH', pad: { id: ib ? 'B' : 'A', lat: s.lat, lon: s.lon, alt, milkstool: ib } };
+    }
+    case 'IB_EARTH_ORBIT': {
+      const { r, v } = earthOrbit(232000, 0.25, 50 * DEG);
+      return { r, v, q: basisQ(v.clone(), r.clone().normalize().negate()), w: new Vector3(), mode: 'SPACE', primary: 'EARTH' };
     }
     case 'PRE_PDI':
     case 'TRAINING_LANDING': {
@@ -128,14 +159,32 @@ export function getInitialState(name, { epochUTC, get = 0 } = {}) {
     }
     case 'PRE_ENTRY':
     case 'A13_PRE_ENTRY': {
-      // ~2 min before entry interface: 165 km, descending at −6.3°, 10.9 km/s
-      const R = R_EARTH + 165000;
+      // ~1 min before entry interface, at 140 km, on a lunar-return trajectory whose vacuum perigee
+      // is 37 km (≈ −6.5° at 400,000 ft, 11 km/s)
+      const R = R_EARTH + 140000;
+      const rEI = R_EARTH + 121920;
+      const v0 = Math.sqrt(11030 * 11030 + 2 * MU_EARTH * (1 / R - 1 / rEI));
+      const perigee = (g) => {
+        const hh = R * v0 * Math.cos(g);
+        const E = (v0 * v0) / 2 - MU_EARTH / R;
+        const a = -MU_EARTH / (2 * E);
+        const p = (hh * hh) / MU_EARTH;
+        const e = Math.sqrt(Math.max(0, 1 - p / a));
+        return p / (1 + e) - R_EARTH;
+      };
+      let lo = -15 * DEG;
+      let hi = 0;
+      for (let i = 0; i < 50; i++) {
+        const mid = (lo + hi) / 2;
+        if (perigee(mid) > 37000) hi = mid;
+        else lo = mid;
+      }
+      const gamma = (lo + hi) / 2;
       const lat = name === 'A13_PRE_ENTRY' ? -12 : 5;
       const r = new Vector3(Math.cos(lat * DEG), 0, Math.sin(lat * DEG)).multiplyScalar(R);
       const east = new Vector3(0, 1, 0);
       const up = r.clone().normalize();
-      const gamma = -6.6 * DEG;
-      const v = east.clone().multiplyScalar(Math.cos(gamma)).addScaledVector(up, Math.sin(gamma)).multiplyScalar(10950);
+      const v = east.clone().multiplyScalar(Math.cos(gamma)).addScaledVector(up, Math.sin(gamma)).multiplyScalar(v0);
       // heat shield forward: body −X along velocity → +X against it; crew heads-down
       return { r, v, q: basisQ(v.clone().negate(), up), w: new Vector3(), mode: 'SPACE', primary: 'EARTH' };
     }
@@ -177,8 +226,9 @@ export function getInitialState(name, { epochUTC, get = 0 } = {}) {
       const v = radial.clone().multiplyScalar(outbound ? speed * 0.97 : -speed * 0.97).addScaledVector(tang, speed * 0.24);
       return { r, v, q: basisQ(tang, new Vector3(0, 0, 1)), w: new Vector3(0, 0.3 * DEG, 0), mode: 'SPACE', primary: 'EARTH' };
     }
+    case 'EARTH_PARKING_ORBIT':
     default: {
-      const { r, v } = earthOrbit(185000, 0.3, 32.5 * DEG);
+      const { r, v } = parkingOrbitState(epochUTC, get);
       return { r, v, q: basisQ(v.clone(), r.clone().normalize().negate()), w: new Vector3(), mode: 'SPACE', primary: 'EARTH' };
     }
   }

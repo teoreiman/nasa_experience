@@ -51,6 +51,7 @@ export const MISSION_EPOCH = {
 // Geodetic sites (degrees). Convert with DEG when used in sim code.
 export const SITES_DEG = {
   LC39A: { lat: 28.60822, lon: -80.60411, alt: 0, name: 'Complejo de Lanzamiento 39A' },
+  LC39B: { lat: 28.62723, lon: -80.62087, alt: 0, name: 'Complejo de Lanzamiento 39B' },
   HOUSTON_MSC: { lat: 29.5593, lon: -95.0907, alt: 0, name: 'Centro de Naves Tripuladas, Houston' },
   TRANQUILITY: { lat: 0.67408, lon: 23.47297, name: 'Base Tranquilidad (Apolo 11)' },
   SURVEYOR_III_A12: { lat: -3.01239, lon: -23.42157, name: 'Océano de las Tormentas (Apolo 12)' },

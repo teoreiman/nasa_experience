@@ -1,0 +1,20 @@
+// Apollo 11 achievements.
+export const achievements = [
+  { id: 'a11-launch', name: 'Tenemos despegue', desc: 'Lleva al Apolo 11 a la órbita de aparcamiento.', icon: '🚀' },
+  { id: 'a11-orbit-precise', name: 'Órbita de libro', desc: 'Inserción a menos de 2 nmi de la órbita nominal de 100 nmi.', icon: '🎯' },
+  { id: 'a11-tli', name: 'Una cabalgata magnífica', desc: 'Completa la inyección translunar.', icon: '🌙' },
+  { id: 'a11-dock', name: 'Transposición perfecta', desc: 'Acopla con el Eagle a menos de 0,3 m/s.', icon: '🔗' },
+  { id: 'a11-loi', name: 'Fue como perfecto', desc: 'Entra en órbita lunar detrás de la Luna.', icon: '🌑' },
+  { id: 'a11-wings', name: 'El Eagle tiene alas', desc: 'Desacopla y completa la inserción en órbita de descenso.', icon: '🦅' },
+  { id: 'a11-1202', name: 'Seguimos con esa alarma', desc: 'Mantén el GO ante las alarmas 1202 y 1201.', icon: '⚠' },
+  { id: 'a11-landing', name: 'El Eagle ha alunizado', desc: 'Aluniza suavemente en el Mar de la Tranquilidad.', icon: '🌕' },
+  { id: 'a11-manual', name: 'Como Armstrong', desc: 'Aluniza volando el P66 a mano.', icon: '🕹' },
+  { id: 'a11-fuel', name: 'Con margen', desc: 'Aluniza con más del 6 % de propelente en el DPS.', icon: '⛽' },
+  { id: 'a11-step', name: 'Un pequeño paso', desc: 'Pisa la superficie lunar.', icon: '👣' },
+  { id: 'a11-eva', name: 'Base Tranquilidad', desc: 'Completa la caminata lunar del Apolo 11.', icon: '🇺🇸' },
+  { id: 'a11-pen', name: 'Un rotulador salvador', desc: 'Arregla el disyuntor ENG ARM roto.', icon: '🖊' },
+  { id: 'a11-ascent', name: 'Despegue lunar', desc: 'Vuelve a la órbita lunar con el Eagle.', icon: '⬆' },
+  { id: 'a11-rendezvous', name: 'Cita con Columbia', desc: 'Acopla el Eagle con el Columbia en órbita lunar.', icon: '🤝' },
+  { id: 'a11-tei', name: 'Abran las puertas del LRL', desc: 'Completa la inyección transterrestre.', icon: '🏠' },
+  { id: 'a11-splash', name: 'Misión cumplida', desc: 'Amerizaje del Apolo 11 en el Pacífico.', icon: '🌊' },
+];

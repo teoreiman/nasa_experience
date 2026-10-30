@@ -34,7 +34,8 @@ export function flowSections(panel, defs, reserved, area = { x: 10, y: 12, w: pa
     if (!groups.has(g)) groups.set(g, []);
     groups.get(g).push(d);
   }
-  for (let scale = 1; scale > 0.45; scale -= 0.07) {
+  // largest scale that fits: the controls fill the panel (bigger, easier to read and to click)
+  for (let scale = 1.75; scale > 0.45; scale -= 0.05) {
     const placed = [];
     let x = area.x;
     let y = area.y;

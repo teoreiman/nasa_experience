@@ -60,6 +60,16 @@ export function buildLMPanels(ctx) {
   r1.push(add(p1, new PushButton({ switchId: 'LM.CW.MASTER_ALARM_CDR', x: 316, y: 30, w: 34, h: 26, legend: 'MASTER ALARM', color: 'red', lampKey: 'LM.CW.MASTER_ALARM' })));
   r1.push(add(p1, new PushButton({ switchId: 'LM.ENG.ABORT', x: 360, y: 30, w: 34, h: 26, legend: 'ABORT', color: 'red', lampKey: 'LM.ENG.ABORT_CMD' })));
   r1.push(add(p1, new PushButton({ switchId: 'LM.ENG.ABORT_STAGE', x: 404, y: 30, w: 40, h: 26, legend: 'ABORT STAGE', color: 'red', lampKey: 'LM.ENG.ABORT_STAGE_CMD' })));
+  // lower block: propellant quantities and engine status, the gauges the CDR scanned during descent
+  r1.push(add(p1, new Label({ x: 12, y: 318, w: 236, h: 7, text: 'PROPELLANT QUANTITY', size: 3.2 })));
+  [['LM.DPS.FUEL_QTY', 'DES FUEL'], ['LM.DPS.OX_QTY', 'DES OXID'], ['LM.APS.FUEL_QTY', 'ASC FUEL'], ['LM.APS.OX_QTY', 'ASC OXID'], ['LM.RCS.A.QTY', 'RCS A'], ['LM.RCS.B.QTY', 'RCS B']].forEach(([key, label], i) =>
+    r1.push(add(p1, new EdgeMeter({ x: 14 + i * 39, y: 328, w: 30, h: 120, key, label, min: 0, max: 100, unit: '%', scale: 100 }))),
+  );
+  r1.push(add(p1, new Label({ x: 262, y: 318, w: 180, h: 7, text: 'DESCENT ENGINE', size: 3.2 })));
+  r1.push(add(p1, new DigitalReadout({ x: 266, y: 330, w: 80, h: 20, key: 'LM.DPS.THRUST_PCT', digits: 3, label: 'THRUST %' })));
+  r1.push(add(p1, new Lamp({ x: 356, y: 332, w: 84, h: 16, key: 'LM.DPS.FIRING', legend: 'DES ENG ON', color: 'white' })));
+  r1.push(add(p1, new DigitalReadout({ x: 266, y: 372, w: 80, h: 20, key: 'LM.GNC.ALT_FT', digits: 5, label: 'ALT FT' })));
+  r1.push(add(p1, new DigitalReadout({ x: 356, y: 372, w: 84, h: 20, key: 'LM.GNC.ALTRATE_FPS', digits: 4, label: 'ALT RATE' })));
   flowSections(p1, defsFor('LM_P1'), r1);
 
   // P2 — LMP: FDAI 2, C&W, ECS & propellant gauges

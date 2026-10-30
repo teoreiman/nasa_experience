@@ -23,7 +23,7 @@ export const DEFAULT_SETTINGS = {
   mouseSensitivity: 1.0,
   invertY: false,
   units: 'imperial', // HUD units: 'imperial' (authentic) | 'metric'
-  unlockAll: false,
+  unlockAll: true, // every chapter playable from the start (no level gating)
   showFps: false,
   cameraShake: true,
 };

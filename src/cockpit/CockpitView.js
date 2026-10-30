@@ -48,6 +48,15 @@ const LM_LAYOUT = {
   LM_P16: { pos: [5.92, 0.55, 0.45], rot: basis([0, -1, 0], [0, 0, 1]), yaw: 0, tilt: 0 },
 };
 
+// window normals in the cabin frame (where sunlight can come in)
+const CM_WINDOWS = [[1, 0, -0.35], [0, -1, -0.2], [0, 1, -0.2], [0.2, 0, -1]].map((n) => { const l = Math.hypot(...n); return n.map((x) => x / l); });
+const LM_WINDOWS = [[0.15, -0.3, 1], [0.15, 0.3, 1], [1, 0, 0]].map((n) => { const l = Math.hypot(...n); return n.map((x) => x / l); });
+// panel integral lighting (rotary OFF … HIGH) → emissive strength of the legends
+const INTEGRAL = { OFF: 0.04, LOW: 0.12, MED: 0.22, HIGH: 0.34, DIM: 0.14, BRIGHT: 0.3 };
+const _mq = new THREE.Quaternion();
+const _iq = new THREE.Quaternion();
+const _sv = new THREE.Vector3();
+
 const SEATS = {
   CM: [
     { id: 'CDR', name: 'Comandante', pos: [1.25, -0.62, -0.3], base: CAM_CM_FWD, yaw: 8, pitch: -4 },
@@ -77,6 +86,78 @@ function wallTexture(holes, w = 512, h = 512) {
   }
   const t = new THREE.CanvasTexture(c);
   return t;
+}
+
+/** Quilted Beta-cloth insulation blanket (the off-white padding that lined the cabins). */
+function blanketTexture(tone = '#cfc9b8', cells = 6) {
+  const c = document.createElement('canvas');
+  c.width = c.height = 512;
+  const g = c.getContext('2d');
+  g.fillStyle = tone;
+  g.fillRect(0, 0, 512, 512);
+  // fabric grain
+  for (let i = 0; i < 9000; i++) {
+    const v = Math.random() < 0.5 ? 255 : 0;
+    g.fillStyle = `rgba(${v},${v},${v},${Math.random() * 0.05})`;
+    g.fillRect(Math.random() * 512, Math.random() * 512, 2, 1);
+  }
+  const s = 512 / cells;
+  for (let i = 0; i < cells; i++) {
+    for (let j = 0; j < cells; j++) {
+      // puffed cell: lighter middle, shaded seams
+      const x = i * s;
+      const y = j * s;
+      const grd = g.createRadialGradient(x + s * 0.45, y + s * 0.4, s * 0.1, x + s / 2, y + s / 2, s * 0.72);
+      grd.addColorStop(0, 'rgba(255,255,255,0.10)');
+      grd.addColorStop(1, 'rgba(0,0,0,0.22)');
+      g.fillStyle = grd;
+      g.fillRect(x, y, s, s);
+    }
+  }
+  g.strokeStyle = 'rgba(60,55,45,0.55)';
+  g.setLineDash([5, 4]);
+  g.lineWidth = 1.5;
+  for (let i = 0; i <= cells; i++) {
+    g.beginPath();
+    g.moveTo(i * s, 0);
+    g.lineTo(i * s, 512);
+    g.moveTo(0, i * s);
+    g.lineTo(512, i * s);
+    g.stroke();
+  }
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.SRGBColorSpace;
+  t.wrapS = t.wrapT = THREE.RepeatWrapping;
+  t.anisotropy = 4;
+  return t;
+}
+
+/** Window bezel: a dark anodised frame with bolts around a rectangular opening (w × h, metres). */
+function bezel(w, h, depth = 0.05) {
+  const g = new THREE.Group();
+  const mat = new THREE.MeshStandardMaterial({ color: 0x1b1c1f, roughness: 0.45, metalness: 0.55 });
+  const t = 0.035;
+  for (const [sx, sy, px, py] of [[w + 2 * t, t, 0, h / 2 + t / 2], [w + 2 * t, t, 0, -h / 2 - t / 2], [t, h, -w / 2 - t / 2, 0], [t, h, w / 2 + t / 2, 0]]) {
+    const m = new THREE.Mesh(new THREE.BoxGeometry(sx, sy, depth), mat);
+    m.position.set(px, py, 0);
+    m.castShadow = true;
+    g.add(m);
+  }
+  const bolt = new THREE.MeshStandardMaterial({ color: 0x9a9a95, roughness: 0.3, metalness: 0.9 });
+  const bg = new THREE.CylinderGeometry(0.006, 0.006, 0.01, 10);
+  for (let i = 0; i < 4; i++) {
+    for (const s of [-1, 1]) {
+      const b1 = new THREE.Mesh(bg, bolt);
+      b1.rotation.x = Math.PI / 2;
+      b1.position.set(-w / 2 + (i + 0.5) * (w / 4), s * (h / 2 + t / 2), depth / 2);
+      g.add(b1);
+      const b2 = new THREE.Mesh(bg, bolt);
+      b2.rotation.x = Math.PI / 2;
+      b2.position.set(s * (w / 2 + t / 2), -h / 2 + (i + 0.5) * (h / 4), depth / 2);
+      g.add(b2);
+    }
+  }
+  return g;
 }
 
 export class CockpitView {
@@ -150,8 +231,36 @@ export class CockpitView {
       this.scene.add(m);
       return m;
     };
-    this.lights = { amb: new THREE.AmbientLight(0xbfc8d8, 0.55), flood: new THREE.PointLight(0xfff0dd, 1.6, 6, 1.5), sun: new THREE.DirectionalLight(0xffffff, 0) };
-    this.scene.add(this.lights.amb, this.lights.flood, this.lights.sun, this.lights.sun.target);
+    this.lights = {
+      amb: new THREE.AmbientLight(0xbfc8d8, 0.55),
+      flood: new THREE.PointLight(0xfff0dd, 1.6, 6, 1.5),
+      fill: new THREE.PointLight(0xdfe8ff, 0.5, 5, 1.8),
+      sun: new THREE.DirectionalLight(0xfff6e8, 0),
+    };
+    const sun = this.lights.sun;
+    if (this.game.quality?.shadows) {
+      sun.castShadow = true;
+      sun.shadow.mapSize.set(1024, 1024);
+      sun.shadow.camera.near = 0.1;
+      sun.shadow.camera.far = 12;
+      sun.shadow.camera.left = sun.shadow.camera.bottom = -3;
+      sun.shadow.camera.right = sun.shadow.camera.top = 3;
+      sun.shadow.bias = -0.002;
+      sun.shadow.normalBias = 0.02;
+    }
+    this.scene.add(this.lights.amb, this.lights.flood, this.lights.fill, sun, sun.target);
+    const blanket = blanketTexture();
+    const quilt = (rx, ry, tone) => {
+      const t = tone ? blanketTexture(tone) : blanket.clone();
+      t.repeat.set(rx, ry);
+      t.needsUpdate = true;
+      return t;
+    };
+    const shadowy = (m) => {
+      m.castShadow = true;
+      m.receiveShadow = true;
+      return m;
+    };
     if (this.station === 'CM') {
       this.lights.flood.position.set(1.3, 0, -0.9);
       // upper forward bulkhead above the MDC with the two rendezvous windows
@@ -159,18 +268,56 @@ export class CockpitView {
         [[0.2, 0.25], [0.36, 0.25], [0.36, 0.62], [0.2, 0.62]],
         [[0.64, 0.25], [0.8, 0.25], [0.8, 0.62], [0.64, 0.62]],
       ]);
-      add(new THREE.PlaneGeometry(3.2, 0.9), new THREE.MeshStandardMaterial({ color: 0x4a4d51, roughness: 0.85, alphaMap: upper, alphaTest: 0.5, side: THREE.DoubleSide }), [2.0, 0, -1.03], basis([0, 1, 0], [0, 0, -1]));
+      shadowy(add(new THREE.PlaneGeometry(3.2, 0.9), new THREE.MeshStandardMaterial({ color: 0xffffff, map: quilt(5, 1.4, '#bdb8a8'), roughness: 0.95, alphaMap: upper, alphaTest: 0.5, side: THREE.DoubleSide }), [2.0, 0, -1.03], basis([0, 1, 0], [0, 0, -1])));
+      for (const u of [0.28, 0.72]) {
+        const holder = new THREE.Group();
+        holder.position.set(2.0, 0, -1.03);
+        holder.quaternion.copy(basis([0, 1, 0], [0, 0, -1]));
+        const b = bezel(0.16 * 3.2, 0.37 * 0.9, 0.04);
+        b.position.set((u - 0.5) * 3.2, (0.5 - 0.435) * 0.9, 0.02);
+        holder.add(b);
+        this.scene.add(holder);
+      }
       // overhead (toward heads) with the hatch window
       const hatch = wallTexture([[[0.42, 0.35], [0.58, 0.35], [0.58, 0.65], [0.42, 0.65]]]);
       add(new THREE.PlaneGeometry(2.0, 3.2), new THREE.MeshStandardMaterial({ color: 0x45484c, roughness: 0.85, alphaMap: hatch, alphaTest: 0.5, side: THREE.DoubleSide }), [1.0, 0, -1.48], basis([1, 0, 0], [0, 1, 0]));
-      // side walls with side windows
+      // side walls with side windows: quilted insulation blankets, bezels around the windows
       const side = wallTexture([[[0.55, 0.12], [0.75, 0.12], [0.75, 0.32], [0.55, 0.32]]]);
-      add(new THREE.PlaneGeometry(2.2, 2.4), new THREE.MeshStandardMaterial({ color: 0x45484c, roughness: 0.85, alphaMap: side, alphaTest: 0.5, side: THREE.DoubleSide }), [1.1, -1.62, -0.2], basis([1, 0, 0], [0, 0, -1]));
-      add(new THREE.PlaneGeometry(2.2, 2.4), new THREE.MeshStandardMaterial({ color: 0x45484c, roughness: 0.85, alphaMap: side, alphaTest: 0.5, side: THREE.DoubleSide }), [1.1, 1.62, -0.2], basis([-1, 0, 0], [0, 0, -1]));
+      for (const sgn of [-1, 1]) {
+        const mat = new THREE.MeshStandardMaterial({ color: 0xffffff, map: quilt(3, 3), roughness: 0.95, alphaMap: side, alphaTest: 0.5, side: THREE.DoubleSide });
+        const q = basis([sgn, 0, 0], [0, 0, -1]);
+        shadowy(add(new THREE.PlaneGeometry(2.2, 2.4), mat, [1.1, sgn * 1.62, -0.2], q));
+        // bezel around the window (hole centre u = 0.65, v = 0.22 of the wall), on the cabin side
+        const holder = new THREE.Group();
+        holder.position.set(1.1, sgn * 1.62, -0.2);
+        holder.quaternion.copy(q);
+        const b = bezel(0.44, 0.48);
+        b.position.set((0.65 - 0.5) * 2.2, (0.5 - 0.22) * 2.4, -0.025);
+        holder.add(b);
+        this.scene.add(holder);
+      }
       // aft bulkhead (behind the crew), floor toward feet
-      add(new THREE.PlaneGeometry(3.4, 3.0), wall, [0.15, 0, 0]);
+      shadowy(add(new THREE.PlaneGeometry(3.4, 3.0), new THREE.MeshStandardMaterial({ color: 0xffffff, map: quilt(4, 3, '#c4beac'), roughness: 0.95, side: THREE.DoubleSide }), [0.15, 0, 0]));
       this.scene.children.at(-1).quaternion.copy(basis([0, 1, 0], [0, 0, -1]));
-      add(new THREE.PlaneGeometry(2.4, 3.4), dark, [1.0, 0, 1.6], basis([1, 0, 0], [0, 1, 0]));
+      shadowy(add(new THREE.PlaneGeometry(2.4, 3.4), dark, [1.0, 0, 1.6], basis([1, 0, 0], [0, 1, 0])));
+      // handholds and conduit along the MDC
+      const rail = new THREE.MeshStandardMaterial({ color: 0x8a8d90, roughness: 0.35, metalness: 0.8 });
+      for (const y of [-1.2, 1.2]) {
+        const h1 = shadowy(add(new THREE.CylinderGeometry(0.012, 0.012, 0.42, 12), rail, [1.62, y, -0.86]));
+        h1.rotation.z = Math.PI / 2;
+      }
+      const conduit = new THREE.MeshStandardMaterial({ color: 0x2b2d30, roughness: 0.6, metalness: 0.3 });
+      const c1 = shadowy(add(new THREE.CylinderGeometry(0.018, 0.018, 3.0, 10), conduit, [1.93, 0, -0.95]));
+      c1.rotation.x = Math.PI / 2;
+      // checklist books velcroed to the side wall, and the Hasselblad on its bracket
+      const book = new THREE.MeshStandardMaterial({ color: 0xd9d2bf, roughness: 0.9 });
+      const bookCover = new THREE.MeshStandardMaterial({ color: 0x23466e, roughness: 0.7 });
+      shadowy(add(new THREE.BoxGeometry(0.22, 0.03, 0.28), bookCover, [1.35, -1.56, 0.25]));
+      shadowy(add(new THREE.BoxGeometry(0.2, 0.025, 0.26), book, [1.35, -1.53, 0.25]));
+      const cam = new THREE.MeshStandardMaterial({ color: 0x16171a, roughness: 0.4, metalness: 0.6 });
+      shadowy(add(new THREE.BoxGeometry(0.1, 0.1, 0.1), cam, [1.55, 1.5, -0.55]));
+      const lens = shadowy(add(new THREE.CylinderGeometry(0.035, 0.035, 0.08, 16), cam, [1.55, 1.42, -0.55]));
+      lens.rotation.z = Math.PI / 2;
       // MDC lower section (below the main panels) and frames
       add(new THREE.PlaneGeometry(3.2, 0.75), dark, [1.9, 0, 0.3], basis([0, 1, 0], [0, 0, -1]));
       // MDC lower skirt and frames
@@ -196,10 +343,12 @@ export class CockpitView {
       add(new THREE.PlaneGeometry(2.0, 1.6), new THREE.MeshStandardMaterial({ color: 0x6d7175, roughness: 0.85, alphaMap: front, alphaTest: 0.5, side: THREE.DoubleSide }), [5.0, 0, 1.3], basis([0, 1, 0], [1, 0, 0]));
       const ceil = wallTexture([[[0.3, 0.6], [0.45, 0.6], [0.45, 0.85], [0.3, 0.85]]]);
       add(new THREE.PlaneGeometry(1.8, 2.2), new THREE.MeshStandardMaterial({ color: 0x5f6367, roughness: 0.85, alphaMap: ceil, alphaTest: 0.5, side: THREE.DoubleSide }), [6.05, 0, 0.3], basis([0, -1, 0], [0, 0, 1]));
-      add(new THREE.PlaneGeometry(2.4, 1.6), wall, [5.0, -1.12, 0.3], basis([0, 0, 1], [1, 0, 0]));
-      add(new THREE.PlaneGeometry(2.4, 1.6), wall, [5.0, 1.12, 0.3], basis([0, 0, -1], [1, 0, 0]));
-      add(new THREE.PlaneGeometry(2.2, 2.4), dark, [3.7, 0, 0.3], basis([0, 1, 0], [0, 0, 1]));
-      add(new THREE.PlaneGeometry(2.4, 2.2), wall, [5.0, 0, -0.55], basis([0, 1, 0], [1, 0, 0]));
+      const lmWall = () => new THREE.MeshStandardMaterial({ color: 0xffffff, map: quilt(3, 2, '#b9b6ad'), roughness: 0.95, side: THREE.DoubleSide });
+      shadowy(add(new THREE.PlaneGeometry(2.4, 1.6), lmWall(), [5.0, -1.12, 0.3], basis([0, 0, 1], [1, 0, 0])));
+      shadowy(add(new THREE.PlaneGeometry(2.4, 1.6), lmWall(), [5.0, 1.12, 0.3], basis([0, 0, -1], [1, 0, 0])));
+      shadowy(add(new THREE.PlaneGeometry(2.2, 2.4), dark, [3.7, 0, 0.3], basis([0, 1, 0], [0, 0, 1])));
+      shadowy(add(new THREE.PlaneGeometry(2.4, 2.2), lmWall(), [5.0, 0, -0.55], basis([0, 1, 0], [1, 0, 0])));
+
       // LPD scale on the CDR window
       this.lpd = this._lpdScale([5.55, -0.42, 1.28]);
     }
@@ -314,11 +463,32 @@ export class CockpitView {
     const flood = this.station === 'CM' ? v.sw.get('CM.LTG.FLOOD') : 'BRIGHT';
     const powered = this.station === 'CM' ? (v.tm['CM.EPS.MNA.V'] ?? 28) > 18 || (v.tm['CM.EPS.MNB.V'] ?? 28) > 18 : (v.tm['LM.EPS.CDR_BUS.V'] ?? 0) > 18 || (v.tm['LM.EPS.LMP_BUS.V'] ?? 0) > 18;
     this.lights.flood.intensity = !powered ? 0 : flood === 'BRIGHT' ? 2.4 : flood === 'DIM' ? 1.2 : 0.15;
-    this.lights.amb.intensity = powered ? 0.45 : 0.12;
+    this.lights.amb.intensity = powered ? 0.35 : 0.1;
+    this.lights.fill.position.copy(this.camera.position);
+    this.lights.fill.intensity = powered ? 0.35 : 0.08;
+    // sunlight: the Sun's direction in the cabin frame; it reaches inside when it shines on the windows
+    const sunL = this.lights.sun;
+    if (info.sunDir && info.camQ) {
+      const modQ = _mq.copy(info.camQ).multiply(_iq.copy(this.camera.quaternion).invert()).invert();
+      const sl = _sv.copy(info.sunDir).applyQuaternion(modQ).normalize();
+      const wins = this.station === 'CM' ? CM_WINDOWS : LM_WINDOWS;
+      let lit = 0;
+      for (const n of wins) lit = Math.max(lit, sl.x * n[0] + sl.y * n[1] + sl.z * n[2]);
+      const shadowed = v.state.inShadow;
+      const k = shadowed ? 0 : Math.max(0, Math.min(1, (lit - 0.05) * 2.2));
+      sunL.intensity = 2.6 * k;
+      const c = this.station === 'CM' ? [1.2, 0, -0.3] : [5.0, 0, 0.5];
+      sunL.target.position.set(...c);
+      sunL.position.set(c[0] + sl.x * 6, c[1] + sl.y * 6, c[2] + sl.z * 6);
+    }
     const bright = powered ? 1 : 0.35;
+    const integral = powered ? (this.station === 'CM' ? INTEGRAL[v.sw.get('CM.LTG.INTEGRAL')] ?? 0.22 : INTEGRAL[v.sw.get('LM.LTG.INTEGRAL')] ?? 0.22) : 0.02;
     for (const pm of this.panelMeshes) {
       pm.update(dt);
-      for (const t of pm.tiles) t.mesh.material.color.setScalar(bright);
+      for (const t of pm.tiles) {
+        t.mesh.material.color.setScalar(bright);
+        t.mesh.material.emissiveIntensity = integral;
+      }
     }
     if (this.coas) this.coas.visible = !!this.sim.runner?.flags?.coas || v.sw.get('CM.LTG.COAS') === 'ON';
     this._updateArrow();

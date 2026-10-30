@@ -31,9 +31,20 @@ export class PanelMesh {
         tex.anisotropy = 4;
         tex.generateMipmaps = true;
         tex.minFilter = THREE.LinearMipmapLinearFilter;
-        const mat = new THREE.MeshBasicMaterial({ map: tex, color: new THREE.Color(brightness, brightness, brightness) });
+        // lit panel paint (cabin floods, sunlight through the windows) plus a faint emissive term
+        // for the integrally lit legends, so the panels stay readable in the dark
+        const mat = new THREE.MeshStandardMaterial({
+          map: tex,
+          color: new THREE.Color(brightness, brightness, brightness),
+          emissive: new THREE.Color(1, 1, 1),
+          emissiveMap: tex,
+          emissiveIntensity: 0.22,
+          roughness: 0.72,
+          metalness: 0.04,
+        });
         const geo = new THREE.PlaneGeometry((w / canvas.width) * W, (h / canvas.height) * H);
         const mesh = new THREE.Mesh(geo, mat);
+        mesh.receiveShadow = true;
         mesh.position.set(-W / 2 + ((sx + w / 2) / canvas.width) * W, H / 2 - ((sy + h / 2) / canvas.height) * H, 0);
         mesh.userData.panelMesh = this;
         this.group.add(mesh);

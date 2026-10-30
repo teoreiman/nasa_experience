@@ -83,6 +83,9 @@ export class LMSystems {
       v.request('LM_GEAR_DEPLOY');
     }
     if (id === 'LM.ENG.ABORT') this.abort = value === 'PUSHED';
+    // manual engine start/stop (descent or ascent per ENG ARM); STOP latches
+    if (id === 'LM.ENG.START' && value === 'PUSHED') this.manualStart = true;
+    if ((id === 'LM.ENG.STOP_CDR' || id === 'LM.ENG.STOP_LMP') && value === 'PUSHED') this.manualStart = false;
     if (id === 'LM.ENG.ABORT_STAGE' && value === 'PUSHED') {
       this.abortStage = true;
       if (!this.staged) v.request('LM_STAGE');
@@ -217,13 +220,23 @@ export class LMSystems {
     const bus = this.busV() > 0;
     if (v.station === 'LM' && bus) {
       acc.force.addScaledVector(cmd.rcsTrans, 2 * 445);
+      if (v.sw.is('LM.ENG.PLUS_X', 'PUSHED')) acc.force.x += 4 * 445;
       const use = (cmd.rcsRot.length() + cmd.rcsTrans.length()) * 0.25 * dt;
       this.rcsKg.A = Math.max(0, this.rcsKg.A - use / 2);
       this.rcsKg.B = Math.max(0, this.rcsKg.B - use / 2);
     }
     let thrustPct = 0;
-    if (!this.staged && cmd.dps && this.dpsProp > 0 && bus && this.engineArmed('DPS')) {
-      const thr = Math.max(0.1, Math.min(0.925, cmd.dpsThrottle));
+    const stopped = v.sw.is('LM.ENG.STOP_CDR', 'PUSHED') || v.sw.is('LM.ENG.STOP_LMP', 'PUSHED');
+    const manualDps = this.manualStart && !stopped && v.sw.is('LM.ENG.ENG_ARM', 'DES');
+    const manualAps = this.manualStart && !stopped && v.sw.is('LM.ENG.ENG_ARM', 'ASC');
+    this.dpsFiring = false;
+    this.apsFiring = false;
+    if (!this.staged && (cmd.dps || manualDps) && this.dpsProp > 0 && bus && this.engineArmed('DPS')) {
+      // manual throttle (TTCA) when THR CONT is MAN or no guidance is commanding the engine
+      const manThr = v.sw.is('LM.GNC.THR_CONT', 'MAN') || !cmd.dps;
+      const thr = manThr ? Math.max(0.1, Math.min(0.925, 0.1 + v.controls.ttca * 0.825)) : Math.max(0.1, Math.min(0.925, cmd.dpsThrottle));
+      if (manThr) cmd.dpsThrottle = thr;
+      this.dpsFiring = true;
       const T = DPS_MAX * thr;
       acc.force.x += T;
       const mdot = T / (305 * 9.80665);
@@ -231,7 +244,8 @@ export class LMSystems {
       this.dpsProp = Math.max(0, this.dpsProp - mdot * dt);
       thrustPct = thr * 100;
     }
-    if ((cmd.aps || (this.abortStage && v.state.alt > 5)) && this.apsProp > 0 && bus && this.engineArmed('APS') && (this.staged || v.config === 'LM_ASC')) {
+    if ((cmd.aps || manualAps || (this.abortStage && v.state.alt > 5)) && this.apsProp > 0 && bus && this.engineArmed('APS') && (this.staged || v.config === 'LM_ASC')) {
+      this.apsFiring = true;
       acc.force.x += APS_THRUST;
       const mdot = APS_THRUST / (311 * 9.80665);
       acc.mdot += mdot;
@@ -239,6 +253,7 @@ export class LMSystems {
       thrustPct = 100;
     }
     v.tm['LM.ENG.THRUST_PCT'] = thrustPct;
+    v.tm['LM.DPS.FIRING'] = this.dpsFiring;
     v.tm['LM.DPS.THRUST_PCT'] = thrustPct;
   }
 

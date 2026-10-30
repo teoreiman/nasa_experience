@@ -53,11 +53,39 @@ export function siteFeatures(siteKey = 'TRANQUILITY') {
   return res;
 }
 
+// Spatial index (300 m cells) so a height query only visits the craters that can affect it.
+const CELL = 300;
+const grids = new Map();
+function craterGrid(siteKey) {
+  let g = grids.get(siteKey);
+  if (g) return g;
+  g = new Map();
+  for (const c of siteFeatures(siteKey).craters) {
+    const reach = c.r * 1.52;
+    const x0 = Math.floor((c.x - reach) / CELL);
+    const x1 = Math.floor((c.x + reach) / CELL);
+    const y0 = Math.floor((c.y - reach) / CELL);
+    const y1 = Math.floor((c.y + reach) / CELL);
+    for (let i = x0; i <= x1; i++) {
+      for (let j = y0; j <= y1; j++) {
+        const k = i * 100003 + j;
+        let list = g.get(k);
+        if (!list) g.set(k, (list = []));
+        list.push(c);
+      }
+    }
+  }
+  grids.set(siteKey, g);
+  return g;
+}
+
 /** Local height (m) at east/north offset from the site. */
 export function heightLocal(x, y, siteKey = 'TRANQUILITY') {
-  const { craters } = siteFeatures(siteKey);
   let h = Math.sin(x * 0.0011) * 3 + Math.cos(y * 0.0013 + 1) * 2.5 + Math.sin((x + y) * 0.004) * 0.8;
-  for (const c of craters) {
+  const list = craterGrid(siteKey).get(Math.floor(x / CELL) * 100003 + Math.floor(y / CELL));
+  if (!list) return h;
+  for (let i = 0; i < list.length; i++) {
+    const c = list[i];
     const dx = x - c.x;
     const dy = y - c.y;
     const q = (dx * dx + dy * dy) / (c.r * c.r);

@@ -64,10 +64,43 @@ export function panelBackground(style = 'cm') {
     g.fillStyle = noisePattern(g, base);
     g.fillRect(rect.x * 4, rect.y * 4, rect.w * 4, rect.h * 4);
     g.restore();
+    // soft paint shading: lighter toward the top, a little worn toward the edges
+    const W = panel.width;
+    const H = panel.height;
+    g.save();
+    g.beginPath();
+    g.rect(rect.x, rect.y, rect.w, rect.h);
+    g.clip();
+    const lin = g.createLinearGradient(0, 0, 0, H);
+    lin.addColorStop(0, 'rgba(255,255,255,0.07)');
+    lin.addColorStop(0.55, 'rgba(255,255,255,0)');
+    lin.addColorStop(1, 'rgba(0,0,0,0.16)');
+    g.fillStyle = lin;
+    g.fillRect(rect.x, rect.y, rect.w, rect.h);
+    const rad = g.createRadialGradient(W / 2, H * 0.42, Math.min(W, H) * 0.3, W / 2, H / 2, Math.max(W, H) * 0.75);
+    rad.addColorStop(0, 'rgba(0,0,0,0)');
+    rad.addColorStop(1, 'rgba(0,0,0,0.22)');
+    g.fillStyle = rad;
+    g.fillRect(rect.x, rect.y, rect.w, rect.h);
+    g.restore();
+    // bevelled edge
+    g.strokeStyle = 'rgba(255,255,255,0.16)';
+    g.lineWidth = 1.4;
+    g.beginPath();
+    g.moveTo(1.5, H - 1.5);
+    g.lineTo(1.5, 1.5);
+    g.lineTo(W - 1.5, 1.5);
+    g.stroke();
+    g.strokeStyle = 'rgba(0,0,0,0.5)';
+    g.beginPath();
+    g.moveTo(W - 1.5, 1.5);
+    g.lineTo(W - 1.5, H - 1.5);
+    g.lineTo(1.5, H - 1.5);
+    g.stroke();
     g.strokeStyle = 'rgba(0,0,0,0.55)';
     g.lineWidth = 1.2;
-    g.strokeRect(0.6, 0.6, panel.width - 1.2, panel.height - 1.2);
-    for (const [x, y] of [[6, 6], [panel.width - 6, 6], [6, panel.height - 6], [panel.width - 6, panel.height - 6]]) screw(g, x, y);
+    g.strokeRect(0.6, 0.6, W - 1.2, H - 1.2);
+    for (const [x, y] of [[6, 6], [W - 6, 6], [6, H - 6], [W - 6, H - 6], [W / 2, 6], [W / 2, H - 6], [6, H / 2], [W - 6, H / 2]]) screw(g, x, y);
   };
 }
 

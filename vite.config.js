@@ -11,5 +11,4 @@ export default defineConfig({
     sourcemap: false,
     assetsInlineLimit: 0,
   },
-  optimizeDeps: { include: ['three'] },
 });

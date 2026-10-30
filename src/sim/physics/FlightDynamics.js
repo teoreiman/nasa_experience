@@ -9,6 +9,10 @@ import { getInitialState } from './initialStates.js';
 import { heightLocal, boulderAt, siteFrame } from '../terrain/lunarTerrain.js';
 import { CONFIGS, GEOM, moduleTransform } from '../geometry.js';
 
+/** Altitude of the SATURN_V reference point on the pad: ML deck (29 m above sea level) + 33 m. */
+export const PAD_REF_ALT = 62;
+export const MOON_OMEGA = (2 * Math.PI) / (27.321661 * 86400); // sidereal rotation (rad/s)
+
 const _acc = { force: new Vector3(), torque: new Vector3(), mdot: 0 };
 const _tmp = new Vector3();
 const _tmp2 = new Vector3();
@@ -20,6 +24,21 @@ const _by = new Vector3();
 const _bz = new Vector3();
 const _vAir = new Vector3();
 const _m4 = new Matrix4();
+const _mNext = new Vector3();
+const _sl = new Vector3();
+const _sl2 = new Vector3();
+const _rc = new Vector3();
+const _mMid = new Vector3();
+const _r0 = new Vector3();
+const _v0 = new Vector3();
+const _rt = new Vector3();
+const _vt = new Vector3();
+const _v2c = new Vector3();
+const _v3c = new Vector3();
+const _k1 = new Vector3();
+const _k2 = new Vector3();
+const _k3 = new Vector3();
+const _k4 = new Vector3();
 
 export class FlightDynamics {
   constructor({ vehicle, bus, clock, missionId }) {
@@ -48,6 +67,7 @@ export class FlightDynamics {
     st.q.copy(s.q ?? new Quaternion());
     st.w.copy(s.w ?? new Vector3());
     this.site = setup.site ?? s.site ?? 'TRANQUILITY';
+    this.pad = s.pad ?? { id: 'A', lat: SITES_DEG.LC39A.lat, lon: SITES_DEG.LC39A.lon, alt: PAD_REF_ALT };
     this.mode = setup.mode ?? s.mode ?? 'SPACE';
     this._updateEphemeris();
     if (this.mode === 'LANDED') this._captureSurface();
@@ -66,7 +86,8 @@ export class FlightDynamics {
     const v = this.vehicle;
     const st = v.state;
     if (this.mode === 'PAD' || this.mode === 'ASCENT' || this.mode === 'ENTRY') return 0.05;
-    if (v.cmd.sps || v.cmd.dps || v.cmd.aps) return 0.05;
+    if (v.cmd.sps || v.cmd.dps || v.cmd.aps || v.cmd.burnArmed || v.tm['CM.SPS.THRUST'] || v.tm['LM.ENG.THRUST_PCT'] > 0) return 0.05;
+    if (v.modules.saturn && v.isAttached('saturn') && (v.modules.saturn.thrust > 0 || v.modules.saturn.tb6 !== null && this.clock.get > v.modules.saturn.tb6 + 560)) return 0.1;
     if (st.primary === 'MOON' && st.alt < 30000) return 0.05;
     if (st.primary === 'EARTH' && st.alt < 140000) return 0.1;
     if (this.bodies.size && this.nearestBodyDist() < 2000) return 0.05;
@@ -77,7 +98,8 @@ export class FlightDynamics {
     const v = this.vehicle;
     const st = v.state;
     if (this.mode === 'ASCENT' || this.mode === 'ENTRY') return 10;
-    if (v.cmd.sps || v.cmd.dps || v.cmd.aps) return 5;
+    if (v.cmd.sps || v.cmd.dps || v.cmd.aps || v.tm['CM.SPS.THRUST'] || v.tm['LM.ENG.THRUST_PCT'] > 0) return 5;
+    if (v.modules.saturn?.thrust > 0 && v.isAttached('saturn')) return 10;
     if (st.primary === 'MOON' && st.alt < 30000 && !st.landed) return 4;
     if (this.bodies.size && this.nearestBodyDist() < 500) return 2;
     return 10000;
@@ -116,15 +138,58 @@ export class FlightDynamics {
   }
 
   _shift(fromConfig, toConfig, module) {
-    // keep the shared module at the same world place when the reference point moves
+    this._reframe(toConfig, module, module, false);
+  }
+
+  /** World pose of a module datum of the current configuration. */
+  _modulePose(module) {
+    const st = this.vehicle.state;
+    const a = moduleTransform(this.vehicle.config, module);
+    return { P: a.offset.clone().applyQuaternion(st.q).add(st.r), Q: st.q.clone().multiply(a.quat) };
+  }
+
+  /** Switch the player's vehicle to `newCfg` keeping `moduleOld` (now `moduleNew`) fixed in space. */
+  _reframe(newCfg, moduleOld, moduleNew = moduleOld, setConfig = true, info = {}) {
+    const v = this.vehicle;
+    const st = v.state;
+    let pose;
+    let b;
     try {
-      const a = moduleTransform(fromConfig, module);
-      const b = moduleTransform(toConfig, module);
-      const d = a.offset.clone().sub(b.offset.clone().applyQuaternion(a.quat.clone().multiply(b.quat.clone().invert())));
-      this.vehicle.state.r.add(d.applyQuaternion(this.vehicle.state.q));
+      pose = this._modulePose(moduleOld);
+      b = moduleTransform(newCfg, moduleNew);
     } catch {
-      /* modules not shared */
+      if (setConfig) v._setConfig(newCfg, info);
+      return;
     }
+    const wWorld = st.w.clone().applyQuaternion(st.q);
+    const qn = pose.Q.multiply(b.quat.clone().invert());
+    st.q.copy(qn).normalize();
+    st.r.copy(pose.P).sub(b.offset.clone().applyQuaternion(qn));
+    st.w.copy(wWorld.applyQuaternion(qn.clone().invert()));
+    if (setConfig) v._setConfig(newCfg, info);
+  }
+
+  /** Spawn a passive body for a module of the current stack. Pseudo-configs (SIC, SII,
+   *  INTERSTAGE, LES, LM_DESCENT) have their origin at the module datum; real CONFIGS at their ref. */
+  _spawnPart(id, bodyCfg, module, moduleInBody, dvBody, ttl = null, extra = {}) {
+    const st = this.vehicle.state;
+    let r;
+    let q;
+    try {
+      const { P, Q } = this._modulePose(module);
+      r = P;
+      q = Q;
+      if (CONFIGS[bodyCfg]) {
+        const b = moduleTransform(bodyCfg, moduleInBody ?? module);
+        q = Q.clone().multiply(b.quat.clone().invert());
+        r = P.clone().sub(b.offset.clone().applyQuaternion(q));
+      }
+    } catch {
+      r = st.r.clone();
+      q = st.q.clone();
+    }
+    const v = st.v.clone().add(dvBody.clone().applyQuaternion(st.q));
+    return this.addBody({ id, config: bodyCfg, r, v, q, ttl, debris: ttl !== null, ...extra });
   }
 
   handleRequest(req) {
@@ -142,31 +207,33 @@ export class FlightDynamics {
         if (!v.parts.les) return;
         v.parts.les = false;
         v.parts.bpc = false;
-        this._spawn('LES', 'LES', new Vector3(STACK_LES, 0, 0), new Vector3(40, 3, 0), 30);
+        this._spawnPart('LES', 'LES', 'LES', null, new Vector3(32, 2.5, 0.6), 40, { w: new Vector3(0.02, 0.06, 0.03) });
         break;
       case 'SIC_SEP':
-        this._spawn('SIC', 'SIC', new Vector3(-12, 0, 0), new Vector3(-6, 0, 0), 60);
-        this._shift(cfg, 'SATURN_V_SII', 'SII');
-        v._setConfig('SATURN_V_SII', { event: kind });
+        this._spawnPart('SIC', 'SIC', 'SIC', null, new Vector3(-3.5, 0, 0), 150, { w: new Vector3(0.01, 0.012, -0.008) });
+        this._reframe('SATURN_V_SII', 'SII', 'SII', true, { event: kind });
+        break;
+      case 'SIB_SEP':
+        this._spawnPart('SIB', 'SIB', 'SIB', null, new Vector3(-3, 0, 0), 150, { w: new Vector3(0.012, -0.01, 0.006) });
+        this._reframe('SATURN_IB_SIVB', 'SIVB', 'SIVB', true, { event: kind });
         break;
       case 'SII_INTERSTAGE_JETT':
         v.parts.interstage = false;
-        this._spawn('INTERSTAGE', 'INTERSTAGE', new Vector3(-18, 0, 0), new Vector3(-4, 0, 0), 30);
+        this._spawnPart('INTERSTAGE', 'INTERSTAGE', 'SII', null, new Vector3(-2.5, 0, 0), 60, { w: new Vector3(0.05, 0.01, 0.02) });
         break;
       case 'SII_SEP':
-        this._spawn('SII', 'SII', new Vector3(-20, 0, 0), new Vector3(-5, 0, 0), 60);
-        this._shift(cfg, 'SIVB_STACK', 'SIVB');
-        v._setConfig('SIVB_STACK', { event: kind });
+        this._spawnPart('SII', 'SII', 'SII', null, new Vector3(-3, 0, 0), 150, { w: new Vector3(0.006, -0.01, 0.008) });
+        this._reframe('SIVB_STACK', 'SIVB', 'SIVB', true, { event: kind });
         break;
       case 'ORBIT_INSERTION':
         this.setMode('SPACE');
         break;
       case 'CSM_SEP':
-        if (cfg !== 'SIVB_STACK') return;
-        this._spawn('SIVB_LM', 'SIVB_LM', new Vector3(-14, 0, 0), new Vector3(-0.3, 0, 0), null, { label: 'S-IVB / LM' });
-        this._shift(cfg, 'CSM', 'CSM');
+        if (cfg !== 'SIVB_STACK' && cfg !== 'SATURN_IB_SIVB') return;
+        if (cfg === 'SATURN_IB_SIVB') this._spawnPart('SIVB', 'SIVB', 'SIVB', 'SIVB', new Vector3(-0.3, 0, 0), null, { label: 'S-IVB' });
+        else this._spawnPart('SIVB_LM', 'SIVB_LM', 'SIVB', 'SIVB', new Vector3(-0.3, 0, 0), null, { label: 'S-IVB / LM' });
         v.parts.slaPanels = false;
-        v._setConfig('CSM', { event: kind });
+        this._reframe('CSM', 'CSM', 'CSM', true, { event: kind });
         break;
       case 'DOCK_CAPTURE':
         break;
@@ -175,47 +242,58 @@ export class FlightDynamics {
         if (!target || !this._captured) return;
         this.removeBody(target.id);
         this._captured = false;
-        if (target.config === 'SIVB_LM') v._setConfig('CSM_LM_SIVB', { event: kind });
-        else if (target.config === 'LM_ASC') v._setConfig('CSM_LMASC', { event: kind });
-        else if (target.config === 'CSM') v._setConfig(v.station === 'LM' ? 'CSM_LMASC' : 'CSM_LM', { event: kind });
+        if (target.config === 'SIVB_LM') this._reframe('CSM_LM_SIVB', 'CSM', 'CSM_DOCKED_TOP', true, { event: kind });
+        else if (target.config === 'LM_ASC') this._reframe('CSM_LMASC', 'CSM', 'CSM', true, { event: kind });
+        else if (target.config === 'LM') this._reframe('CSM_LM', 'CSM', 'CSM', true, { event: kind });
+        else if (target.config === 'CSM') {
+          if (cfg === 'LM_ASC') this._reframe('CSM_LMASC', 'LM_ASC', 'LM_ASC_DOCKED', true, { event: kind });
+          else this._reframe('CSM_LM', 'LM', 'LM_DOCKED', true, { event: kind });
+        }
+        v.parts.probeExtended = false;
         break;
       }
       case 'LM_EXTRACT':
         if (cfg !== 'CSM_LM_SIVB') return;
-        this._spawn('SIVB', 'SIVB', new Vector3(-18, 0, 0), new Vector3(-0.25, 0, 0), null, { label: 'S-IVB' });
-        v._setConfig('CSM_LM', { event: kind });
+        this._spawnPart('SIVB', 'SIVB', 'SIVB', 'SIVB', new Vector3(-0.25, 0, 0), null, { label: 'S-IVB' });
+        this._reframe('CSM_LM', 'CSM_DOCKED_TOP', 'CSM', true, { event: kind });
         break;
       case 'UNDOCK': {
         if (cfg !== 'CSM_LM' && cfg !== 'CSM_LMASC') return;
-        const lmIsPlayer = v.station === 'LM';
-        if (lmIsPlayer) {
-          this._spawn('CSM', 'CSM', new Vector3(-3, 0, 0), new Vector3(0, 0, 0), null, { label: 'Columbia' });
-          v._setConfig(cfg === 'CSM_LMASC' ? 'LM_ASC' : 'LM', { event: kind });
+        const asc = cfg === 'CSM_LMASC';
+        if (v.station === 'LM') {
+          this._spawnPart('CSM', 'CSM', 'CSM', 'CSM', new Vector3(-0.15, 0, 0), null, { label: req.label ?? 'Columbia' });
+          this._reframe(asc ? 'LM_ASC' : 'LM', asc ? 'LM_ASC_DOCKED' : 'LM_DOCKED', asc ? 'LM_ASC' : 'LM', true, { event: kind });
         } else {
-          this._spawn('LM', 'LM', new Vector3(8, 0, 0), new Vector3(0.3, 0, 0), null, { label: 'Eagle' });
-          v._setConfig('CSM', { event: kind });
+          this._spawnPart('LM', asc ? 'LM_ASC' : 'LM', asc ? 'LM_ASC_DOCKED' : 'LM_DOCKED', asc ? 'LM_ASC' : 'LM', new Vector3(0.15, 0, 0), null, { label: req.label ?? 'Eagle' });
+          this._reframe('CSM', 'CSM', 'CSM', true, { event: kind });
         }
+        v.parts.probeExtended = true;
         break;
       }
       case 'LM_STAGE':
       case 'LM_ASC_LIFTOFF':
         if (cfg === 'LM') {
-          if (st.landed) this.addBody({ id: 'LM_DESCENT', config: 'LM_DESCENT', r: st.r.clone(), v: st.v.clone(), q: st.q.clone(), static: true });
+          if (st.landed) this._spawnPart('LM_DESCENT', 'LM_DESCENT', 'LM', null, new Vector3(), null, { static: true, label: 'Etapa de descenso' });
           v.modules.lm && (v.modules.lm.staged = true);
-          v._setConfig('LM_ASC', { event: kind });
+          this._reframe('LM_ASC', 'LM', 'LM_ASC', true, { event: kind });
+          if (st.landed) this._captureSurface();
         }
         break;
-      case 'LM_JETT':
-        if (cfg !== 'CSM_LM' && cfg !== 'CSM_LMASC') return;
-        this._spawn('LM', cfg === 'CSM_LM' ? 'LM' : 'LM_ASC', new Vector3(10, 0, 0), new Vector3(0.6, 0, 0), null, { label: 'Aquarius' });
+      case 'LM_JETT': {
+        if (cfg !== 'CSM_LM' && cfg !== 'CSM_LMASC' && cfg !== 'CM_LM') return;
+        const asc = cfg === 'CSM_LMASC';
+        this._spawnPart('LM', asc ? 'LM_ASC' : 'LM', asc ? 'LM_ASC_DOCKED' : 'LM_DOCKED', asc ? 'LM_ASC' : 'LM', new Vector3(0.6, 0, 0), null, { label: req.label ?? 'Aquarius' });
         v.setStation('CM');
-        v._setConfig('CSM', { event: kind });
+        if (cfg === 'CM_LM') this._reframe('CM', 'CM', 'CM', true, { event: kind });
+        else this._reframe('CSM', 'CSM', 'CSM', true, { event: kind });
         break;
+      }
       case 'CM_SM_SEP':
         if (cfg !== 'CSM' && cfg !== 'CSM_LM') return;
-        this._spawn('SM', 'SM', new Vector3(-2.5, 0, 0), new Vector3(-1.2, 0, 0.3), null, { label: 'Módulo de servicio', damaged: v.parts.smDamaged });
+        this._spawnPart('SM', 'SM', cfg === 'CSM' ? 'CSM' : 'CSM', 'SM', new Vector3(-0.6, 0, 0.15), null, { label: 'Módulo de servicio', damaged: v.parts.smDamaged, w: new Vector3(0.004, 0.01, 0) });
         if (v.modules.csm) v.modules.csm.hasSM = false;
-        v._setConfig('CM', { event: kind });
+        if (cfg === 'CSM_LM') this._reframe('CM_LM', 'CSM', 'CM', true, { event: kind });
+        else this._reframe('CM', 'CSM', 'CM', true, { event: kind });
         break;
       case 'APEX_COVER_JETT':
         v.parts.apexCover = false;
@@ -265,7 +343,7 @@ export class FlightDynamics {
   /** Local site coordinates (east, north metres) of a moon-relative position. */
   siteLocal(rRel) {
     const f = siteFrame(this.site);
-    const dir = this.eciToMoonFixed(_tmp.copy(rRel).normalize());
+    const dir = this.eciToMoonFixed(_sl.copy(rRel).normalize(), _sl2);
     const ang = Math.acos(Math.max(-1, Math.min(1, dir.dot(f.up))));
     const tang = dir.clone().addScaledVector(f.up, -dir.dot(f.up));
     if (tang.lengthSq() < 1e-12) return { x: 0, y: 0, dist: 0 };
@@ -289,6 +367,38 @@ export class FlightDynamics {
     const m3 = Math.pow(this.moonPos.lengthSq(), 1.5);
     out.addScaledVector(this.moonPos, -MU_MOON / m3);
     return out;
+  }
+
+  _gravityAt(r, moon, out) {
+    const r3 = Math.pow(r.lengthSq(), 1.5);
+    out.copy(r).multiplyScalar(-MU_EARTH / r3);
+    _gm.subVectors(r, moon);
+    out.addScaledVector(_gm, -MU_MOON / Math.pow(_gm.lengthSq(), 1.5));
+    out.addScaledVector(moon, -MU_MOON / Math.pow(moon.lengthSq(), 1.5));
+    return out;
+  }
+
+  _rk4(st, h, aExtra) {
+    const m0 = this.moonPos;
+    const m1 = moonPosition(this.clock.utcMs + h * 1000, _mNext);
+    const mh = _mMid.addVectors(m0, m1).multiplyScalar(0.5);
+    const r0 = _r0.copy(st.r);
+    const v0 = _v0.copy(st.v);
+    const a1 = this._gravityAt(r0, m0, _k1).add(aExtra);
+    const r2 = _rt.copy(v0).multiplyScalar(h / 2).add(r0);
+    const v2 = _vt.copy(a1).multiplyScalar(h / 2).add(v0);
+    const a2 = this._gravityAt(r2, mh, _k2).add(aExtra);
+    const v2c = _v2c.copy(v2);
+    const r3 = _rt.copy(v2c).multiplyScalar(h / 2).add(r0);
+    const v3 = _vt.copy(a2).multiplyScalar(h / 2).add(v0);
+    const a3 = this._gravityAt(r3, mh, _k3).add(aExtra);
+    const v3c = _v3c.copy(v3);
+    const r4 = _rt.copy(v3c).multiplyScalar(h).add(r0);
+    const v4 = _vt.copy(a3).multiplyScalar(h).add(v0);
+    const a4 = this._gravityAt(r4, m1, _k4).add(aExtra);
+    // r += h/6 (v0 + 2 v2 + 2 v3 + v4) ; v += h/6 (a1 + 2 a2 + 2 a3 + a4)
+    st.r.addScaledVector(v0, h / 6).addScaledVector(v2c, h / 3).addScaledVector(v3c, h / 3).addScaledVector(v4, h / 6);
+    st.v.addScaledVector(a1, h / 6).addScaledVector(a2, h / 3).addScaledVector(a3, h / 3).addScaledVector(a4, h / 6);
   }
 
   _massProps() {
@@ -326,8 +436,8 @@ export class FlightDynamics {
     st.mass = mass;
 
     if (this.mode === 'PAD') {
-      const s = SITES_DEG.LC39A;
-      earthFixedToEci(s.lat * DEG, s.lon * DEG, 33, this.clock.utcMs, st.r, st.v);
+      const s = this.pad;
+      earthFixedToEci(s.lat * DEG, s.lon * DEG, s.alt, this.clock.utcMs, st.r, st.v);
       if (mods.saturn) {
         mods.saturn.update?.(0);
         this._ascentAttitude(h, 1);
@@ -344,7 +454,7 @@ export class FlightDynamics {
         this.moonFixedToEci(this.landedLocal, st.r).add(this.moonPos);
         const rot = _q.setFromAxisAngle(_tmp.set(0, 0, 1), this.moonAngle);
         st.q.copy(rot).multiply(this.landedQ);
-        st.v.copy(this.moonVel).add(_tmp2.set(0, 0, 2.66e-6).cross(st.r.clone().sub(this.moonPos)));
+        st.v.copy(this.moonVel).add(_tmp2.set(0, 0, MOON_OMEGA).cross(st.r.clone().sub(this.moonPos)));
         st.w.set(0, 0, 0);
         st.accel.set(0, 0, 0);
       }
@@ -352,13 +462,18 @@ export class FlightDynamics {
       st.v.set(-7.2921159e-5 * st.r.y, 7.2921159e-5 * st.r.x, 0);
       st.r.addScaledVector(st.v, h);
     } else {
-      if (this.mode === 'ASCENT' && mods.saturn && v.isAttached('saturn')) this._ascentAttitude(h, 2);
+      // the IU flies the stack: ascent steering, TLI steering, and an orbital-rate prograde hold while
+      // coasting in the parking orbit (the crew only takes over with LV GUID = CMC)
+      const iu = mods.saturn && v.isAttached('saturn') && (this.mode === 'ASCENT' || ((mods.saturn.stage === 'SIVB_TLI' || mods.saturn.stage === 'SIVB_COAST') && v.sw.get('CM.LV.LV_GUID') !== 'CMC'));
+      if (iu) this._ascentAttitude(h, this.mode === 'ASCENT' ? 2 : 0.5);
       else this._rotate(h);
       this._translate(h, mass);
       this._contacts(h);
     }
     for (const b of this.bodies.values()) {
       if (b.static) continue;
+      const wl = b.w.length();
+      if (wl > 1e-7) b.q.multiply(_q2.setFromAxisAngle(_tmp.copy(b.w).divideScalar(wl), wl * h)).normalize();
       const g = this._gravity(b.r, _tmp2.set(0, 0, 0));
       b.v.addScaledVector(g, h);
       if (b.debris && b.r.length() - R_EARTH < 120000) b.v.multiplyScalar(1 - Math.min(0.9, h * 0.02));
@@ -392,9 +507,24 @@ export class FlightDynamics {
     const cmd = v.cmd;
     const rcsOk = v.station === 'LM' ? !!v.modules.lm && ((v.tm['LM.EPS.CDR_BUS.V'] ?? 0) > 18 || (v.tm['LM.EPS.LMP_BUS.V'] ?? 0) > 18) : true;
     if (cmd.attitudeTarget && rcsOk) {
-      const ang = 2 * Math.acos(Math.min(1, Math.abs(st.q.dot(cmd.attitudeTarget))));
+      // swing-twist slew: bring the thrust axis (+X) onto the target by the shortest rotation first,
+      // then roll about it — the DAP never wanders off-axis while the target's roll changes
       const maxStep = (v.station === 'LM' ? 8 : 3) * DEG * h;
-      if (ang > 1e-6) st.q.slerp(cmd.attitudeTarget, Math.min(1, maxStep / ang));
+      const x = _bx.set(1, 0, 0).applyQuaternion(st.q);
+      const xt = _by.set(1, 0, 0).applyQuaternion(cmd.attitudeTarget);
+      const ang = Math.acos(Math.max(-1, Math.min(1, x.dot(xt))));
+      if (ang > 1e-6) {
+        const axis = _bz.crossVectors(x, xt);
+        if (axis.lengthSq() < 1e-12) axis.set(0, 0, 1).applyQuaternion(st.q);
+        st.q.premultiply(_q.setFromAxisAngle(axis.normalize(), Math.min(ang, maxStep)));
+      }
+      if (ang < 0.1) {
+        const z = _tmp2.set(0, 0, 1).applyQuaternion(st.q);
+        const zt = _gm.set(0, 0, 1).applyQuaternion(cmd.attitudeTarget);
+        const xb = _bx.set(1, 0, 0).applyQuaternion(st.q);
+        const roll = Math.atan2(_bz.crossVectors(z, zt).dot(xb), z.dot(zt));
+        if (Math.abs(roll) > 1e-6) st.q.premultiply(_q.setFromAxisAngle(xb, Math.sign(roll) * Math.min(Math.abs(roll), maxStep * 0.6)));
+      }
       st.w.set(0, 0, 0);
       st.q.normalize();
       return;
@@ -417,8 +547,8 @@ export class FlightDynamics {
     const v = this.vehicle;
     const thrustEci = _tmp.copy(_acc.force).applyQuaternion(st.q).divideScalar(mass);
     st.accel.copy(_acc.force).divideScalar(mass);
-    const g = this._gravity(st.r, _tmp2.set(0, 0, 0));
-    st.v.addScaledVector(g, h).addScaledVector(thrustEci, h);
+    // RK4 on gravity (Earth + Moon, Moon position interpolated across the step) + constant thrust
+    this._rk4(st, h, thrustEci);
     const alt = st.r.length() - R_EARTH;
     if (alt < 125000) {
       _vAir.set(st.v.x + 7.2921159e-5 * st.r.y, st.v.y - 7.2921159e-5 * st.r.x, st.v.z);
@@ -474,7 +604,6 @@ export class FlightDynamics {
         if (alt < 3050 && !v.parts.mains) this.handleRequest({ kind: 'MAIN_DEPLOY', source: 'els' });
       }
     } else st.dynPressure = 0;
-    st.r.addScaledVector(st.v, h);
     st.gLoad = st.accel.length() / 9.80665;
   }
 
@@ -492,7 +621,7 @@ export class FlightDynamics {
       return;
     }
     // Moon: touchdown (footpads at the LM datum)
-    const rRel = _tmp.subVectors(st.r, this.moonPos);
+    const rRel = _rc.subVectors(st.r, this.moonPos);
     const d = rRel.length();
     if (d - R_MOON > 2000) return;
     const terr = this.terrainHeightAt(rRel);
@@ -503,7 +632,7 @@ export class FlightDynamics {
     st.altTerrain = hFoot;
     if (hFoot <= 0 && !st.landed) {
       const up = rRel.clone().normalize();
-      const vRel = st.v.clone().sub(this.moonVel);
+      const vRel = st.v.clone().sub(this.moonVel).sub(new Vector3(-MOON_OMEGA * rRel.y, MOON_OMEGA * rRel.x, 0));
       const vVert = vRel.dot(up);
       const vHor = vRel.clone().addScaledVector(up, -vVert).length();
       const bodyUp = new Vector3(1, 0, 0).applyQuaternion(st.q);
@@ -614,7 +743,11 @@ export class FlightDynamics {
     st.speed = st.vRel.length();
     const up = _tmp.copy(st.rRel).normalize();
     st.hdot = st.vRel.dot(up);
-    st.vHoriz = Math.sqrt(Math.max(0, st.speed * st.speed - st.hdot * st.hdot));
+    // velocity relative to the rotating surface (the Moon turns once per 27.3 days: 4.6 m/s at the equator)
+    if (st.primary === 'MOON') st.vSurface.copy(st.vRel).sub(_tmp2.set(-MOON_OMEGA * st.rRel.y, MOON_OMEGA * st.rRel.x, 0));
+    else st.vSurface.copy(st.vRel).sub(_tmp2.set(-7.2921159e-5 * st.rRel.y, 7.2921159e-5 * st.rRel.x, 0));
+    const vs = st.primary === 'MOON' ? st.vSurface : st.vRel;
+    st.vHoriz = Math.sqrt(Math.max(0, vs.lengthSq() - st.hdot * st.hdot));
     // two-body orbit about the primary
     const r = st.rRel.length();
     const energy = (st.speed * st.speed) / 2 - mu / r;
@@ -664,7 +797,6 @@ export class FlightDynamics {
   }
 }
 
-const STACK_LES = 13;
 
 /** Attitude with +X along `x` and body +Z toward `zRef` (or along −zRef when flip). */
 function GNCQuat(x, zRef, flip = false) {

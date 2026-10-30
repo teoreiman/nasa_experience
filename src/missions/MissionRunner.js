@@ -82,6 +82,7 @@ export class MissionRunner {
     this.startReal = 0;
     this.realTime = 0;
     this.skip = null; // { get, label }
+    this.achievements = []; // unlocked during this chapter (shown in the debrief)
     this.ctx = this._createContext();
   }
 
@@ -338,7 +339,10 @@ export class MissionRunner {
       score: (key, points, max, note = '') => r.score(key, points, max, note),
       penalty: (key, points, note = '') => r.score(key, -Math.abs(points), 0, note),
       achievement: (id) => {
-        if (store.unlockAchievement(id)) r.bus.emit('mission:achievement', { id });
+        if (store.unlockAchievement(id)) {
+          r.achievements.push(id);
+          r.bus.emit('mission:achievement', { id });
+        }
       },
       flag: (k, v) => {
         if (v !== undefined) r.flags[k] = v;
@@ -476,6 +480,10 @@ export class MissionRunner {
         optional: !!it.optional,
         highlight: it.highlight ?? sws.map((s) => s.id),
         manual: !check,
+        // monitoring item (only a condition, nothing to flip): the AI crew waits for it to happen
+        passive: (!!check && !sws.length && !it.do) || !!it.aiPassive,
+        // a flying task the crew can hand to the autopilot ("Ayuda" button)
+        assist: !!it.do && !sws.length,
         done: false,
         check,
         auto,
@@ -488,7 +496,7 @@ export class MissionRunner {
     const snapshot = () =>
       this.bus.emit('mission:checklist', {
         ...state,
-        items: items.map(({ id, text, hint, optional, done, manual }) => ({ id, text, hint, optional, done, manual })),
+        items: items.map(({ id, text, hint, optional, done, manual, assist }) => ({ id, text, hint, optional, done, manual, assist })),
       });
     const highlightCurrent = () => {
       if (aiMode || !store.settings.highlightControls || store.settings.difficulty === 'realistic') return;
@@ -526,7 +534,8 @@ export class MissionRunner {
             continue;
           }
           await ctx.wait(a + Math.random() * (b - a));
-          it.auto();
+          if (it.passive) await this._wait(() => it.check(), { timeout: cl.aiWait ?? 6 * 3600 });
+          else it.auto();
           it.done = true;
           this.bus.emit('mission:crewAction', { checklistId: cl.id, text: it.text });
           snapshot();
@@ -727,7 +736,7 @@ export class MissionRunner {
     if (this.ended) return;
     const score = this._finalScore();
     const grade = GRADES.find(([r]) => score.ratio >= r)[1];
-    this.result = { success: true, summary, score, grade, stats: { get: this.clock.get, realTime: this.realTime, ...stats } };
+    this.result = { success: true, summary, score, grade, achievements: this.achievements, stats: { get: this.clock.get, realTime: this.realTime, ...stats } };
     store.recordChapterResult(this.chapter.id, this.role, { completed: true, score: Math.round(score.ratio * 100), grade });
     this.bus.emit('mission:end', this.result);
     this.cancel('complete');
@@ -736,7 +745,7 @@ export class MissionRunner {
   fail(reason = 'Misión fallida', { summary = '', stats = {} } = {}) {
     if (this.ended) return;
     const score = this._finalScore();
-    this.result = { success: false, reason, summary, score, grade: 'F', stats: { get: this.clock.get, realTime: this.realTime, ...stats } };
+    this.result = { success: false, reason, summary, score, grade: 'F', achievements: this.achievements, stats: { get: this.clock.get, realTime: this.realTime, ...stats } };
     store.recordChapterResult(this.chapter.id, this.role, { completed: false, score: 0, grade: 'F' });
     this.bus.emit('mission:end', this.result);
     this.cancel('fail');

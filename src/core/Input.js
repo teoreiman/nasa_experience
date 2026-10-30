@@ -16,6 +16,8 @@ const DEFAULT_BINDINGS = {
     toggleHud: ['KeyH'],
     toggleMap: ['KeyM'],
     toggleChecklist: ['Tab'],
+    toggleLog: ['KeyG'],
+    procedures: ['KeyB'],
     help: ['F1'],
     screenshot: ['F2'],
     toggleView: ['KeyT'], // controller mode: MOCR ↔ spacecraft TV view

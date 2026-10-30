@@ -22,7 +22,7 @@ test('LM powered descent (P63→P64→P66 autopilot) lands softly near Tranquili
     sim.dyn.step(h);
     sim.clock.tick(h);
     const st = sim.vehicle.state;
-    if (Math.round((sim.clock.get - t0) * 10) % 600 === 0) log.push(`${(sim.clock.get - t0).toFixed(0)}s h=${(st.altTerrain / 0.3048).toFixed(0)}ft hdot=${(st.hdot / 0.3048).toFixed(0)} vh=${(st.vHoriz / 0.3048).toFixed(0)} thr=${sim.vehicle.cmd.dpsThrottle.toFixed(2)} fuel=${(sim.lm.dpsProp / 82).toFixed(0)}% range=${(sim.gnc.lmGuidance.rangeToSite() / 1000).toFixed(1)}km`);
+    if (Math.round((sim.clock.get - t0) * 10) % (sim.clock.get - t0 > 480 ? 50 : 600) === 0) log.push(`${(sim.clock.get - t0).toFixed(0)}s h=${(st.altTerrain / 0.3048).toFixed(0)}ft hdot=${(st.hdot / 0.3048).toFixed(0)} vh=${(st.vHoriz / 0.3048).toFixed(0)} thr=${sim.vehicle.cmd.dpsThrottle.toFixed(2)} fuel=${(sim.lm.dpsProp / 82).toFixed(0)}% range=${(sim.gnc.lmGuidance.rangeToSite() / 1000).toFixed(1)}km`);
   }
   console.log(log.join('\n'));
   console.log(phases, td && { ...td, local: undefined, x: td.local.x.toFixed(0), y: td.local.y.toFixed(0) }, 'time', (sim.clock.get - t0).toFixed(0), 'fuel', (sim.lm.dpsProp / 82).toFixed(1));

@@ -40,6 +40,19 @@ export const STACK = {
   lmDatum: 85.8, // LM footpad-plane datum while stowed in the SLA (legs folded)
 };
 
+// Saturn IB (Skylab / ASTP vehicles on the LC-39B "milkstool"): stations from the H-1 exit plane.
+export const STACK_IB = {
+  sibBase: 0.0,
+  sibTop: 25.3,
+  sivbDatum: 22.3,
+  slaDatum: 41.1,
+  slaTop: 49.6,
+  csmDatum: 53.55,
+  lesTop: 64.9,
+  milkstool: 38.7, // pedestal height above the ML deck
+};
+const IB_STATIONS = { SIB: STACK_IB.sibBase, SIVB: STACK_IB.sivbDatum, SLA: STACK_IB.slaDatum, CSM: STACK_IB.csmDatum, LES: STACK_IB.csmDatum };
+
 export const GEOM = {
   saturnV: {
     diameter: 10.06,
@@ -114,6 +127,9 @@ export const CONFIGS = {
     modules: ['SII', 'SIVB', 'SLA', 'LM_STOWED', 'CSM', 'LES'],
     stack: true,
   },
+  // Saturn IB: S-IB + S-IVB-200 + SLA + CSM + LES, and after S-IB separation.
+  SATURN_IB: { ref: 20.0, modules: ['SIB', 'SIVB', 'SLA', 'CSM', 'LES'], stack: true, stations: IB_STATIONS },
+  SATURN_IB_SIVB: { ref: 38.0, modules: ['SIVB', 'SLA', 'CSM', 'LES'], stack: true, stations: IB_STATIONS },
   // S-IVB + IU + SLA + LM + CSM (Earth parking orbit, TLI).
   SIVB_STACK: {
     ref: 84.0,
@@ -131,6 +147,8 @@ export const CONFIGS = {
   LM_ASC: { ref: 4.9, modules: ['LM_ASC'], stack: false },
   CSM_LMASC: { ref: 0.6, modules: ['CSM', 'LM_ASC_DOCKED'], stack: false },
   CM: { ref: 1.0, modules: ['CM'], stack: false },
+  // Apollo 13 after the SM jettison: CM still docked to the LM lifeboat.
+  CM_LM: { ref: 3.6, modules: ['CM', 'LM_DOCKED'], stack: false },
   SM: { ref: -2.0, modules: ['SM'], stack: false },
 };
 
@@ -145,7 +163,7 @@ export function moduleTransform(config, module) {
   const c = CONFIGS[config];
   if (!c) throw new Error(`Unknown config ${config}`);
   if (c.stack) {
-    const st = {
+    const st = c.stations?.[module] ?? {
       SIC: STACK.sicBase,
       SII: STACK.siiDatum,
       SIVB: STACK.sivbDatum,
