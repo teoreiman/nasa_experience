@@ -470,6 +470,31 @@ answer task, phone ring...). Telemetry dropouts during LOS/blackout and the A13 
 Wall displays: world map with ground track + station coverage (Earth orbit), Earth–Moon trajectory plot
 (cislunar), event timeline, consumables board.
 
+### 12.1 Implementation notes (MOCR-2)
+
+- `src/mocr/MOCRView.js` — the view: seated focus views (`seat`, `crt0..2`, `keys`, `wall`; keys 1–5,
+  tap a CRT), walking with collisions over the tiers (`E` stand/sit, touch joystick), NPCs, status
+  lamps that show poll answers, the TV screen fed by an observer `FlightView` (`feed: true`,
+  `renderToTarget(rt)`; PlayScene's T view reuses it as `view.tvView`), bloom on medium/high.
+- `src/mocr/MOCRData.js` — live data for every screen: telemetry with LOS/blackout/garble rules,
+  A/G and loop logs, events, alarms, objectives, polls, tasks per console, sub-spacecraft track,
+  MSFN station in view, crew heart rates.
+- `src/mocr/room.js` (tiers, consoles, walls, ceiling, viewing room, plaques; merged geometry),
+  `src/mocr/people.js` (controllers), `src/mocr/wall.js` (main plot: world map / Earth–Moon plot /
+  lunar map with predicted coast; boards; GMT/GET clocks), `src/mocr/consoles/pages.js` (CRT pages
+  and `CONSOLE_PAGES`), `src/mocr/consoles/index.js` (keyboard shelf Panel: display request,
+  comm keyset, event lights, GO / NO GO and 1–4 message keys answering `mission:groundTask`).
+
+### 12.2 Hand-flown Saturn V and entry (game modes)
+
+- `SaturnV.manual` — the crew steers the thrust vector with the RHC (rate commands); the IU solution,
+  rate-limited, is the flight-director target (`guideTheta/Psi`). `qAlpha` above `QALPHA_LIMIT`
+  for ~1 s emits `saturn:breakup`. tm: `SAT.MANUAL, SAT.THETA_DEG, SAT.GUIDE_THETA_DEG, SAT.QALPHA…`.
+  `runLaunch` asks the astronaut who flies (`ctx.choice`), fails on breakup / lost trajectory /
+  low perigee and scores tracking. HUD: `src/ui/FlightDirector.js` (`P` toggles manual ↔ IU).
+- Entry: `askEntryPilot(ctx)` (kit.js) sets SC CONT to SCS at 125 km; the HUD `EntryDirector`
+  shows the lift vector vs. the CMC bank law and the g-meter; >12 g or skip-out fails the chapter.
+
 ## 13. Audio (agent **audio**)
 
 `AudioEngine` (keep stub API): WebAudio graph with master/sfx/voice/music/ambience buses bound to settings;
@@ -487,7 +512,10 @@ so a missing voice never blocks), `clip(name)`, `music(name|null)` (generative a
 `public/audio/nasa/`): `a11_countdown_liftoff` (~25 s "…ignition sequence start… liftoff, we have a liftoff…"),
 `a11_eagle_has_landed` (~3 s), `a11_eagle_has_landed_ext` (~15 s), `a11_one_small_step` (~13 s),
 `a13_houston_problem` (~17 s), `a08_merry_christmas`, `jfk_we_choose_launch`, `jfk_we_choose`,
-`jfk_return_safely`. `SimAudio` maps sim → sound (engines by thrust & camera distance & atmosphere
+`jfk_return_safely`. Real recordings: `REAL_SAMPLES` (`playSample(name, opts)`, and the F-1 roar loop layered into
+`rumbleSIC/SII`). Music: in-mission cues from SimAudio (`launch`, `reentry`, `tension`, `triumph`);
+a player-supplied file in `public/audio/music/` (see `USER_TRACKS`) replaces a cue and is stripped
+from builds by vite.config.js. `SimAudio` maps sim → sound (engines by thrust & camera distance & atmosphere
 (silence in vacuum outside, structure-borne rumble inside), staging bangs, RCS thumps, pumps/fans by EPS
 state, C&W tone from `CM.CW.TONE`/`LM.CW.TONE`, entry roar, landing dust hiss, MOCR room murmur + selected
 voice loops in controller mode).

@@ -1,6 +1,9 @@
 // Apollo 11 achievements.
 export const achievements = [
   { id: 'a11-launch', name: 'Tenemos despegue', desc: 'Lleva al Apolo 11 a la órbita de aparcamiento.', icon: '🚀' },
+  { id: 'manual-ascent', name: 'Mano firme', desc: 'Pilota el Saturn V a mano desde el despegue hasta la órbita.', icon: '🕹' },
+  { id: 'manual-ace', name: 'Piloto de pruebas', desc: 'Llega a la órbita a mano con un error medio de guía menor de 1°.', icon: '🎖' },
+  { id: 'manual-entry', name: 'Piloto de reentrada', desc: 'Vuela a mano la reentrada hasta los paracaídas.', icon: '☄' },
   { id: 'a11-orbit-precise', name: 'Órbita de libro', desc: 'Inserción a menos de 2 nmi de la órbita nominal de 100 nmi.', icon: '🎯' },
   { id: 'a11-tli', name: 'Una cabalgata magnífica', desc: 'Completa la inyección translunar.', icon: '🌙' },
   { id: 'a11-dock', name: 'Transposición perfecta', desc: 'Acopla con el Eagle a menos de 0,3 m/s.', icon: '🔗' },

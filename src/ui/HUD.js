@@ -9,6 +9,7 @@ import { store } from '../core/Store.js';
 import { FT, NMI, R_EARTH, R_MOON } from '../core/constants.js';
 import { icon, iconSVG, openSettings, openModal, helpContent, toast, achievementById } from './components.js';
 import { ProcedureTracker } from './ProcedureTracker.js';
+import { FlightDirector, EntryDirector } from './FlightDirector.js';
 import { PROCEDURES } from '../missions/common/procedures.js';
 import { availableServices } from '../missions/free/index.js';
 
@@ -120,6 +121,8 @@ export class HUD {
     if (this.crewLogEl) this.root.append(this.crewLogEl);
     game.uiRoot.append(this.root);
     if (game.input.isTouch && role === 'astronaut') this._buildTouch();
+    this.fd = role === 'astronaut' && sim.saturn ? new FlightDirector({ game, sim, root: this.root }) : null;
+    this.ed = role === 'astronaut' && sim.csm ? new EntryDirector({ game, sim, root: this.root }) : null;
 
     // ---- bus
     this._off = [
@@ -843,7 +846,8 @@ export class HUD {
   }
 
   _renderInstrument(ph) {
-    const show = ph === 'descent' || ph === 'docking';
+    // controllers read these numbers on their CRTs (the MOCR view buttons live on that side)
+    const show = this.role !== 'controller' && (ph === 'descent' || ph === 'docking');
     this.instrEl.hidden = !show;
     if (!show) return;
     if (!this.instrCanvas) {
@@ -933,15 +937,16 @@ export class HUD {
 
   _buildTouch() {
     const input = this.game.input;
-    const wrap = h('div', { class: 'touch-ui hud-keep' });
+    const wrap = h('div', { class: 'touch-ui hud-keep mode-off' });
     const stick = (side, axX, axY, label) => {
       const knob = h('i');
-      const el = h('div', { class: `touch-stick ${side}` }, h('span', null, label), knob);
+      const lbl = h('span', null, label);
+      const el = h('div', { class: `touch-stick ${side}` }, lbl, knob);
       let id = null;
       let cx = 0;
       let cy = 0;
       const set = (dx, dy) => {
-        const r = el.clientWidth / 2;
+        const r = el.clientWidth / 2 || 50;
         const mx = Math.max(-1, Math.min(1, dx / r));
         const my = Math.max(-1, Math.min(1, dy / r));
         knob.style.transform = `translate(${mx * r * 0.6}px, ${my * r * 0.6}px)`;
@@ -954,30 +959,81 @@ export class HUD {
         cx = b.left + b.width / 2;
         cy = b.top + b.height / 2;
         el.setPointerCapture(id);
+        el.classList.add('active');
         set(e.clientX - cx, e.clientY - cy);
       });
       el.addEventListener('pointermove', (e) => e.pointerId === id && set(e.clientX - cx, e.clientY - cy));
       const up = (e) => {
         if (e.pointerId !== id) return;
         id = null;
+        el.classList.remove('active');
         set(0, 0);
       };
       el.addEventListener('pointerup', up);
       el.addEventListener('pointercancel', up);
+      el.label = lbl;
       return el;
     };
-    const hold = (label, action) => {
-      const b = h('button', { class: 'btn btn-sm' }, label);
+    const hold = (label, action, cls = '') => {
+      const b = h('button', { class: `btn btn-sm ${cls}` }, label);
       b.addEventListener('pointerdown', () => input.virtualHold(action, true));
       for (const ev of ['pointerup', 'pointercancel', 'pointerleave']) b.addEventListener(ev, () => input.virtualHold(action, false));
       return b;
     };
+    const tap = (label, action, cls = '') => {
+      const b = h('button', { class: `btn btn-sm ${cls}` }, label);
+      b.addEventListener('pointerdown', (e) => {
+        e.preventDefault();
+        input.virtualPress(action);
+      });
+      return b;
+    };
+    this.touchLeft = stick('left', 'yaw', 'pitch', 'ROTACIÓN');
+    this.touchRight = stick('right', 'transY', 'transX', 'TRASLACIÓN');
+    this.touchToggle = h('button', { class: 'btn btn-sm touch-toggle', on: { click: () => this._toggleTouch() } }, '🕹 Mandos');
     wrap.append(
-      stick('left', 'yaw', 'pitch', 'ROTACIÓN'),
-      stick('right', 'transY', 'transX', 'TRASLACIÓN'),
-      h('div', { class: 'touch-btns' }, hold('↺ Alabeo', 'rollLeft'), hold('Alabeo ↻', 'rollRight'), hold('▲ Acel.', 'throttleUp'), hold('▼ Acel.', 'throttleDown')),
+      this.touchLeft,
+      this.touchRight,
+      h('div', { class: 'touch-btns roll' }, hold('↺ Alabeo', 'rollLeft'), hold('Alabeo ↻', 'rollRight')),
+      h('div', { class: 'touch-btns throttle' }, hold('▲ Acel.', 'throttleUp'), hold('▼ Acel.', 'throttleDown')),
+      h('div', { class: 'touch-btns rod' }, tap('ROD ▲ más lento', 'rodUp'), tap('ROD ▼ más rápido', 'rodDown')),
+      this.touchToggle,
     );
+    this.touchEl = wrap;
+    this._touchForce = false;
     this.root.append(wrap);
+  }
+
+  _toggleTouch() {
+    this._touchForce = !this._touchForce;
+    this.game.audio?.sfx?.('uiClick');
+  }
+
+  /** Which hand controllers make sense right now (phones show only those). */
+  _touchMode() {
+    const v = this.sim.vehicle;
+    const st = v.state;
+    const sat = v.modules.saturn;
+    if (sat && v.isAttached('saturn')) return st.liftoff && sat.manual && !sat.brokenUp ? 'ascent' : 'off';
+    if (v.config === 'CM' && st.primary === 'EARTH' && st.alt < 140000) return 'entry';
+    if (v.station === 'LM' && st.primary === 'MOON' && this.sim.dyn?.mode !== 'LANDED' && (st.altTerrain < 16000 || v.tm['LM.DPS.FIRING'])) return 'landing';
+    return 'rcs';
+  }
+
+  _updateTouch() {
+    if (!this.touchEl) return;
+    let mode = this._touchMode();
+    const auto = mode;
+    if (this._touchForce) mode = mode === 'off' ? 'rcs' : mode === 'rcs' ? 'off' : mode;
+    if (mode !== this._touchModeCur) {
+      this._touchModeCur = mode;
+      this.touchEl.className = `touch-ui hud-keep mode-${mode}`;
+      this.touchLeft.label.textContent = mode === 'ascent' ? 'DIRECCIÓN' : 'ROTACIÓN';
+      const input = this.game.input;
+      for (const ax of ['pitch', 'yaw', 'roll', 'transX', 'transY', 'transZ']) input.setVirtualAxis(ax, 0);
+    }
+    this.touchToggle.hidden = auto === 'ascent' || auto === 'landing' || auto === 'entry';
+    this.touchToggle.textContent = mode === 'off' ? '🕹 Mandos' : '✕ Mandos';
   }
 
   // ---------------------------------------------------------------- frame
@@ -993,6 +1049,9 @@ export class HUD {
     if (input.pressed('toggleLog')) this._toggleLog();
     if (input.pressed('procedures')) this._openProcedures();
     this.tracker?.update(dt);
+    this.fd?.update(dt);
+    this.ed?.update(dt);
+    this._updateTouch();
     this._render();
     this._tlmAcc += dt;
     if (this._tlmAcc > 0.12) {
@@ -1025,6 +1084,8 @@ export class HUD {
   dispose() {
     this._off.forEach((f) => f());
     this.tracker?.dispose();
+    this.fd?.dispose();
+    this.ed?.dispose();
     this._closeModal();
     this.helpModal?.close();
     clearTimeout(this._hintT);

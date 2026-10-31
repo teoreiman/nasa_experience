@@ -6,7 +6,7 @@ import { GET } from '../../core/MissionClock.js';
 import { MISSION_EPOCH, FT } from '../../core/constants.js';
 import { entryApproach, basisQ, geoOf, geoDistanceKm } from '../common/states.js';
 import { Vector3 } from 'three';
-import { radio, procedure, grade } from '../common/kit.js';
+import { radio, procedure, grade, askEntryPilot } from '../common/kit.js';
 
 const HORNET = { lat: 13.32, lon: -169.15 };
 const EI = GET(195, 3, 6);
@@ -39,6 +39,7 @@ export default {
     const sim = ctx.sim;
     const v = ctx.vehicle;
     ctx.caption('REENTRADA Y AMERIZAJE', 'Apolo 11 · GET 194:47', 6);
+    const manualEntry = await askEntryPilot(ctx);
     radio(ctx, 'CAPCOM', 'Apollo 11, Houston. You are GO for CM/SM separation.', 'Apolo 11, Houston. Tienen GO para la separación CM/SM.');
 
     // ---- separation and entry configuration (P62 orients the CM heat shield forward)
@@ -106,6 +107,7 @@ export default {
     const miss = geoDistanceKm(geo.lat, geo.lon, HORNET.lat, HORNET.lon);
     ctx.score('splash', grade(miss, 25, 400, 100), 100, `Amerizaje a ${miss.toFixed(0)} km del Hornet`);
     ctx.achievement('a11-splash');
+    if (manualEntry && (ctx.vehicle.state.splashed || ctx.vehicle.parts.mains)) ctx.achievement('manual-entry');
     await ctx.say('RECOVERY', 'Apollo 11, Hornet. Welcome home.', 'Apolo 11, aquí el Hornet. Bienvenidos a casa.');
     await ctx.say('PAO', 'Apollo 11 is down. The flight lasted 195 hours, 18 minutes. Man has walked on the Moon and returned.', 'El Apolo 11 amerizó. 195 horas y 18 minutos de vuelo. El hombre caminó sobre la Luna y volvió.');
     ctx.complete({

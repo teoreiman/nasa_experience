@@ -2914,3 +2914,578 @@ kbd {
   width: auto;
   filter: drop-shadow(0 0 18px rgba(255, 176, 0, 0.35));
 }
+
+/* ------------------------------------------------------------------ Mission Control (MOCR) view */
+
+.mocr-ui {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 4;
+}
+
+.mocr-side {
+  position: absolute;
+  right: calc(0.8rem + var(--safe-r));
+  top: 50%;
+  transform: translateY(-46%);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.45rem;
+  width: 8.6rem;
+  pointer-events: auto;
+}
+
+.mocr-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.45rem;
+}
+
+.mocr-view-name {
+  font-family: var(--font-title);
+  font-size: 0.74rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--amber);
+  padding: 0.3rem 0.4rem;
+  background: var(--glass);
+  border: 1px solid var(--edge);
+  border-radius: var(--r);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mocr-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+  min-height: 3.1rem;
+  padding: 0.35rem 0.4rem;
+  color: var(--text);
+  background: var(--glass);
+  border: 1px solid var(--edge-2);
+  border-radius: var(--r);
+  font-family: var(--font-title);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+  touch-action: manipulation;
+}
+
+.mocr-btn svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.mocr-btn:hover {
+  border-color: var(--amber);
+}
+
+.mocr-btn.on,
+.mocr-btn:active {
+  background: var(--amber-dim);
+  border-color: var(--amber);
+  color: #fff3d6;
+}
+
+.mocr-btn[hidden],
+.mocr-pages[hidden],
+.mocr-prompt[hidden],
+.mocr-stick[hidden] {
+  display: none !important;
+}
+
+.mocr-pages {
+  position: absolute;
+  right: calc(10rem + var(--safe-r));
+  top: 50%;
+  transform: translateY(-46%);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(4.6rem, auto));
+  gap: 0.35rem;
+  padding: 0.5rem;
+  background: var(--glass-strong);
+  border: 1px solid var(--edge);
+  border-radius: var(--r);
+  pointer-events: auto;
+  animation: fadeIn 0.2s ease both;
+}
+
+.mocr-pages-title {
+  grid-column: 1 / -1;
+  font-family: var(--font-title);
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  text-align: center;
+}
+
+.mocr-page {
+  min-height: 2.3rem;
+  padding: 0.25rem 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: #dcecff;
+  background: rgba(20, 30, 42, 0.85);
+  border: 1px solid rgba(160, 200, 240, 0.25);
+  border-radius: 4px;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.mocr-page.on {
+  color: #0b1218;
+  background: #dcecff;
+  border-color: #fff;
+  box-shadow: 0 0 10px rgba(200, 225, 255, 0.5);
+}
+
+.mocr-prompt {
+  position: absolute;
+  left: 50%;
+  bottom: calc(9.5rem + var(--safe-b));
+  transform: translateX(-50%);
+  padding: 0.75rem 1.4rem;
+  font-family: var(--font-title);
+  font-size: 1rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #1a1204;
+  background: var(--amber);
+  border: none;
+  border-radius: var(--r);
+  box-shadow: 0 6px 24px rgba(255, 176, 0, 0.35);
+  pointer-events: auto;
+  cursor: pointer;
+  animation: riseIn 0.25s ease both;
+}
+
+.mocr-tip {
+  position: absolute;
+  left: 50%;
+  top: calc(4.6rem + var(--safe-t));
+  transform: translate(-50%, -6px);
+  max-width: min(36rem, 70vw);
+  padding: 0.45rem 0.9rem;
+  font-size: 0.86rem;
+  text-align: center;
+  color: var(--text);
+  background: var(--glass);
+  border: 1px solid var(--edge);
+  border-radius: 999px;
+  opacity: 0;
+  transition: opacity 0.4s, transform 0.4s;
+  pointer-events: none;
+}
+
+.mocr-tip.on {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+.mocr-stick {
+  position: absolute;
+  left: calc(1.2rem + var(--safe-l));
+  bottom: calc(5.2rem + var(--safe-b));
+  width: 8rem;
+  height: 8rem;
+  border-radius: 50%;
+  border: 1px solid var(--edge-2);
+  background: rgba(10, 16, 24, 0.4);
+  pointer-events: auto;
+  touch-action: none;
+}
+
+.mocr-stick i {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 3rem;
+  height: 3rem;
+  margin: -1.5rem 0 0 -1.5rem;
+  border-radius: 50%;
+  background: rgba(255, 176, 0, 0.35);
+  border: 1px solid rgba(255, 176, 0, 0.75);
+}
+
+@media (max-width: 900px), (max-height: 520px) {
+  .mocr-side {
+    width: 6.6rem;
+    gap: 0.35rem;
+    transform: translateY(-58%);
+  }
+
+  .mocr-btn {
+    min-height: 2.6rem;
+    font-size: 0.62rem;
+    padding: 0.25rem;
+  }
+
+  .mocr-btn svg {
+    width: 1.05rem;
+    height: 1.05rem;
+  }
+
+  .mocr-view-name {
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+  }
+
+  .mocr-pages {
+    right: calc(7.8rem + var(--safe-r));
+    grid-template-columns: repeat(2, minmax(3.9rem, auto));
+    transform: translateY(-58%);
+  }
+
+  .mocr-page {
+    min-height: 2rem;
+    font-size: 0.72rem;
+  }
+
+  .mocr-prompt {
+    bottom: calc(7.4rem + var(--safe-b));
+  }
+
+  .mocr-stick {
+    width: 6.6rem;
+    height: 6.6rem;
+    bottom: calc(4.4rem + var(--safe-b));
+  }
+
+  .mocr-tip {
+    top: calc(3.8rem + var(--safe-t));
+    font-size: 0.76rem;
+  }
+}
+
+/* compact Mission Control task card on phones (landscape) */
+@media (max-height: 520px) {
+  .hud-modal-wrap.docked {
+    inset: calc(3.7rem + var(--safe-t)) auto auto calc(0.6rem + var(--safe-l));
+    justify-content: flex-start;
+  }
+
+  .hud-modal-wrap.docked .hud-modal {
+    width: min(26rem, 50vw);
+    max-height: calc(100vh - 8.6rem - var(--safe-t) - var(--safe-b));
+    padding: 0.55rem 0.7rem 0.65rem;
+  }
+
+  .hud-modal-wrap.docked .hud-modal .overline {
+    font-size: 0.62rem;
+    letter-spacing: 0.22em;
+  }
+
+  .hud-modal-wrap.docked .hud-modal h3 {
+    font-size: 1rem;
+    margin: 0.15rem 0 0.35rem;
+  }
+
+  .hud-modal-wrap.docked .hud-modal p {
+    font-size: 0.8rem;
+    line-height: 1.38;
+    margin-bottom: 0.45rem;
+  }
+
+  .hud-modal-wrap.docked .hud-modal .timer {
+    margin: -0.2rem 0 0.5rem;
+  }
+
+  .hud-modal-wrap.docked .hud-modal .opts {
+    gap: 0.35rem;
+  }
+
+  .hud-modal-wrap.docked .hud-modal .opt {
+    padding: 0.42rem 0.6rem;
+    font-size: 0.84rem;
+  }
+
+  .hud-modal-wrap.docked .hud-modal .opt small {
+    font-size: 0.7rem;
+  }
+
+  .hud-modal-wrap.docked .evidence {
+    grid-template-columns: repeat(auto-fill, minmax(7rem, 1fr));
+    margin-bottom: 0.5rem;
+  }
+
+  /* the poll board steps aside while your own answer card is open */
+  .hud:has(.hud-modal-wrap.docked) .hud-poll {
+    display: none;
+  }
+
+  .hud-poll {
+    width: 11.5rem;
+    padding: 0.45rem 0.55rem;
+  }
+
+  .poll-row {
+    font-size: 0.74rem;
+    padding: 0.05rem 0;
+  }
+}
+
+/* ------------------------------------------------------------------ Saturn V flight director */
+
+.hud-fd {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -60%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.hud-fd[hidden],
+.fd-btn-wrap[hidden],
+.fd-help[hidden] {
+  display: none !important;
+}
+
+.fd-canvas {
+  filter: drop-shadow(0 0 6px rgba(0, 0, 0, 0.7));
+}
+
+.fd-read {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: #dcecff;
+  padding: 0.2rem 0.6rem;
+  background: rgba(5, 9, 14, 0.55);
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.fd-msg {
+  order: -1;
+  min-height: 1.6rem;
+  font-family: var(--font-title);
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-shadow: 0 0 8px rgba(0, 0, 0, 0.9);
+}
+
+.fd-msg.good {
+  color: #6dffa0;
+}
+
+.fd-msg.caution {
+  color: #ffd27a;
+}
+
+.fd-msg.warn {
+  color: #ff5340;
+  animation: blinkWarn 0.5s steps(2, start) infinite;
+}
+
+@keyframes blinkWarn {
+  to {
+    visibility: hidden;
+  }
+}
+
+.fd-help {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  background: rgba(5, 9, 14, 0.55);
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+}
+
+.fd-btn-wrap {
+  position: absolute;
+  left: 50%;
+  top: calc(4.3rem + var(--safe-t));
+  transform: translateX(-50%);
+  pointer-events: auto;
+  z-index: 6;
+}
+
+.fd-btn.on {
+  border-color: var(--amber);
+  color: #fff3d6;
+  background: var(--amber-dim);
+}
+
+@media (max-height: 520px) {
+  .fd-btn-wrap {
+    top: calc(3.6rem + var(--safe-t));
+  }
+
+  .fd-read {
+    font-size: 0.66rem;
+  }
+
+  .fd-msg {
+    font-size: 0.92rem;
+    min-height: 1.2rem;
+  }
+}
+
+/* ------------------------------------------------------------------ touch controls: context modes */
+
+.touch-ui .touch-stick {
+  bottom: calc(4.4rem + var(--safe-b));
+  width: 7.4rem;
+  height: 7.4rem;
+  opacity: 0.85;
+  transition: opacity 0.2s;
+}
+
+.touch-ui .touch-stick.active {
+  opacity: 1;
+}
+
+.touch-ui .touch-stick i {
+  width: 2.8rem;
+  height: 2.8rem;
+  margin: -1.4rem 0 0 -1.4rem;
+}
+
+.touch-ui .touch-btns {
+  right: calc(1.2rem + var(--safe-r));
+  bottom: calc(12.4rem + var(--safe-b));
+  flex-direction: row;
+  display: none;
+}
+
+.touch-ui .touch-btns .btn {
+  min-height: 2.6rem;
+  touch-action: none;
+}
+
+.touch-ui .touch-btns.rod {
+  left: calc(1.2rem + var(--safe-l));
+  right: auto;
+  flex-direction: column;
+}
+
+.touch-toggle {
+  position: absolute;
+  right: calc(1.2rem + var(--safe-r));
+  bottom: calc(4.4rem + var(--safe-b));
+  pointer-events: auto;
+}
+
+/* off: no hand controller needed (countdown, IU-guided ascent, checklists) */
+.touch-ui.mode-off .touch-stick {
+  display: none;
+}
+
+/* hand-flown Saturn V: one stick, pitch and heading */
+.touch-ui.mode-ascent .touch-stick.right {
+  display: none;
+}
+
+.touch-ui.mode-ascent .touch-stick.left {
+  width: 8.6rem;
+  height: 8.6rem;
+}
+
+/* entry: bank the lift vector with the roll buttons */
+.touch-ui.mode-entry .touch-stick {
+  display: none;
+}
+
+.touch-ui.mode-entry .touch-btns.roll {
+  display: flex;
+  bottom: calc(4.4rem + var(--safe-b));
+}
+
+/* free flight (docking, manual burns): both sticks and roll */
+.touch-ui.mode-rcs .touch-btns.roll {
+  display: flex;
+}
+
+.touch-ui.mode-rcs .touch-toggle {
+  bottom: calc(12.4rem + var(--safe-b) + 3.2rem);
+}
+
+/* lunar landing: attitude stick, rate-of-descent clicks, manual throttle */
+.touch-ui.mode-landing .touch-stick.right {
+  display: none;
+}
+
+.touch-ui.mode-landing .touch-btns.rod,
+.touch-ui.mode-landing .touch-btns.throttle {
+  display: flex;
+}
+
+.touch-ui.mode-landing .touch-btns.rod {
+  bottom: calc(12.4rem + var(--safe-b));
+}
+
+.touch-ui.mode-landing .touch-btns.throttle {
+  bottom: calc(4.4rem + var(--safe-b));
+  flex-direction: column;
+}
+
+@media (max-height: 520px) {
+  .touch-ui .touch-stick {
+    width: 6.6rem;
+    height: 6.6rem;
+    bottom: calc(3.9rem + var(--safe-b));
+  }
+
+  .touch-ui.mode-ascent .touch-stick.left {
+    width: 7.6rem;
+    height: 7.6rem;
+  }
+
+  .touch-ui .touch-btns {
+    bottom: calc(10.8rem + var(--safe-b));
+  }
+
+  .touch-ui .touch-btns .btn {
+    min-height: 2.3rem;
+    padding: 0.3rem 0.6rem;
+    font-size: 0.78rem;
+  }
+
+  .touch-toggle {
+    bottom: calc(3.9rem + var(--safe-b));
+  }
+
+  .hud-subs {
+    width: min(40rem, 58vw);
+    bottom: calc(4rem + var(--safe-b));
+  }
+
+  .sub-line {
+    padding: 0.3rem 0.6rem 0.35rem;
+  }
+
+  .sub-line .es {
+    font-size: 0.86rem;
+  }
+
+  .sub-line .en {
+    font-size: 0.68rem;
+  }
+
+  .hud-objectives {
+    top: calc(3.9rem + var(--safe-t));
+    width: min(18rem, 34vw);
+  }
+
+  .hud-obj {
+    font-size: 0.78rem;
+    padding: 0.3rem 0.5rem;
+  }
+}

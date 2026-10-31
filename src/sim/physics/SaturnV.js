@@ -18,7 +18,18 @@ const SIVB2 = { dry: 11600 + 2000 + 1800, prop: 104000, thrust: 1.0e6, isp: 421 
 
 export const TB6_TO_IGNITION = 578; // s: TB6 start → J-2 restart (O2/H2 burner, repressurisation, ullage)
 
+// Manual piloting ("CMC takeover" game mode): the crew flies the thrust vector with the hand
+// controller while the IU solution is shown as a flight-director target. The stack breaks up when
+// the aerodynamic load q·α stays above the structural limit (the IU's own profile peaks ≈ 270).
+export const QALPHA_LIMIT = 420; // kPa·deg
+const MANUAL_RATE_PITCH = 2.2 * DEG; // rad/s at full stick
+const MANUAL_RATE_YAW = 1.4 * DEG;
+const ASSIST = { cadet: 0.32, astronaut: 0.07, realistic: 0 };
+
 const _up = new Vector3();
+const _g = new Vector3();
+const _right = new Vector3();
+const _hd = new Vector3();
 const _east = new Vector3();
 const _north = new Vector3();
 const _h = new Vector3();
@@ -49,6 +60,18 @@ export class SaturnV {
     this.lat = SITES_DEG.LC39A.lat * DEG;
     this.tb6 = null; // GET at which TB6 (TLI restart sequence) started
     this.tliTargetC3 = null; // m²/s² target energy for TLI cutoff
+    this.manual = false; // the crew steers (game mode); the IU solution becomes the guide
+    this.assist = ASSIST[setup.difficulty] ?? ASSIST.astronaut;
+    this.manualTheta = 0; // rad from local vertical
+    this.manualPsi = 0; // rad, heading offset from the launch azimuth (+ right)
+    this.guideTheta = 0;
+    this.guidePsi = 0;
+    this.guideDir = new Vector3();
+    this.alpha = 0;
+    this.qAlpha = 0;
+    this.overloadT = 0;
+    this.brokenUp = false;
+    this.trackErr = { sum: 0, t: 0, max: 0 };
     // starting in orbit (free flight / later chapters): S-IVB coasting with its first burn done
     if (cfg === 'SIVB_STACK' || cfg === 'SATURN_IB_SIVB' && setup.state && setup.state !== 'PAD_39B_IB') {
       this.stage = 'SIVB_COAST';
@@ -210,11 +233,19 @@ export class SaturnV {
         this.bus.emit('saturn:tliCutoff', { c3: target, residualKg: this.sivbProp });
       }
     }
+    if (this.brokenUp) {
+      thrust = 0;
+      mdot = 0;
+      this.enginesOn = 0;
+    }
     this.thrust = thrust;
     this.mdot = mdot;
 
-    // ---- IU guidance
-    if (st.liftoff && this.stage !== 'SIVB_COAST') this._steer(t, st);
+    // ---- IU guidance (and the crew's hand when flying manually)
+    if (st.liftoff && this.stage !== 'SIVB_COAST') {
+      this._steer(t, st);
+      this._manual(t, st, dt);
+    }
     else if (!st.liftoff) {
       this._frame(st);
       this.steerDir.copy(_up);
@@ -245,6 +276,95 @@ export class SaturnV {
     tm['SAT.ENGINES_ON'] = this.enginesOn;
     tm['SAT.PROP_KG'] = this.stage === 'SIC' ? this.sicProp : this.stage === 'SIB' ? this.sibProp : this.stage === 'SII' ? this.siiProp : this.sivbProp;
     tm['SAT.TB6'] = this.tb6 ?? NaN;
+    tm['SAT.MANUAL'] = this.manual;
+    tm['SAT.THETA_DEG'] = this.manualTheta / DEG;
+    tm['SAT.PSI_DEG'] = this.manualPsi / DEG;
+    tm['SAT.GUIDE_THETA_DEG'] = this.guideTheta / DEG;
+    tm['SAT.GUIDE_PSI_DEG'] = this.guidePsi / DEG;
+    tm['SAT.ALPHA_DEG'] = this.alpha;
+    tm['SAT.QALPHA'] = this.qAlpha;
+  }
+
+  /** Angle of attack of the thrust line and the aerodynamic bending load q·α (kPa·deg). */
+  _aeroLoad(st) {
+    const vs = st.vSurface;
+    const sp = vs.length();
+    if (sp > 40 && st.dynPressure > 50) {
+      this.alpha = (Math.acos(Math.max(-1, Math.min(1, this.steerDir.dot(vs) / (sp * Math.max(1e-9, this.steerDir.length()))))) * 180) / Math.PI;
+      this.qAlpha = (st.dynPressure / 1000) * this.alpha;
+    } else {
+      this.alpha = 0;
+      this.qAlpha = 0;
+    }
+  }
+
+  /** Angles of a thrust direction in the launch frame: θ from the local vertical, ψ from the
+   *  launch azimuth (+ to the right). */
+  _angles(dir, out) {
+    const th = Math.acos(Math.max(-1, Math.min(1, dir.dot(_up))));
+    _hd.copy(_north).multiplyScalar(Math.cos(this.azimuth)).addScaledVector(_east, Math.sin(this.azimuth));
+    _right.crossVectors(_hd, _up);
+    const ps = Math.atan2(dir.dot(_right), dir.dot(_hd));
+    out.theta = th;
+    out.psi = th < 0.5 * DEG ? 0 : ps;
+    return out;
+  }
+
+  /** Manual steering: rate commands from the RHC integrate the thrust direction; the IU solution
+   *  (filtered so it can be followed by hand) is the flight-director target. */
+  _manual(t, st, dt) {
+    this._frame(st);
+    this.guideDir.copy(this.steerDir);
+    const a = this._angles(this.guideDir, (this._ang ??= {}));
+    const powered = this.stage === 'SIC' || this.stage === 'SIB' || this.stage === 'SII' || this.stage === 'SIVB';
+    // the guide moves at a pace a human can follow
+    const maxStep = 1.6 * DEG * dt;
+    const k = Math.min(1, dt / 2.5);
+    const dTh = Math.max(-maxStep, Math.min(maxStep, (a.theta - this.guideTheta) * k * 4));
+    this.guideTheta += t < 12 ? a.theta - this.guideTheta : dTh;
+    let dPs = a.psi - this.guidePsi;
+    dPs = Math.atan2(Math.sin(dPs), Math.cos(dPs));
+    this.guidePsi += t < 12 ? dPs : Math.max(-maxStep, Math.min(maxStep, dPs * k * 4));
+    if (!this.manual || !powered) {
+      // follow the IU so taking over is seamless
+      this.manualTheta = a.theta;
+      this.manualPsi = a.psi;
+      this._aeroLoad(st);
+      return;
+    }
+    if (t >= 12) {
+      const rhc = this.vehicle.controls.rhc;
+      const pitchIn = Math.abs(rhc.y) > 0.04 ? rhc.y : 0; // + = nose up (toward the vertical)
+      const yawIn = Math.abs(rhc.z) > 0.04 ? rhc.z : 0; // + = nose right
+      this.manualTheta += (-pitchIn * MANUAL_RATE_PITCH + this.assist * (this.guideTheta - this.manualTheta)) * dt;
+      let e = this.guidePsi - this.manualPsi;
+      e = Math.atan2(Math.sin(e), Math.cos(e));
+      this.manualPsi += (yawIn * MANUAL_RATE_YAW + this.assist * e) * dt;
+      this.manualTheta = Math.max(0, Math.min(125 * DEG, this.manualTheta));
+      this.manualPsi = Math.max(-45 * DEG, Math.min(45 * DEG, this.manualPsi));
+    } else {
+      this.manualTheta = 0;
+      this.manualPsi = 0;
+    }
+    const th = this.manualTheta;
+    _hd.copy(_north).multiplyScalar(Math.cos(this.azimuth + this.manualPsi)).addScaledVector(_east, Math.sin(this.azimuth + this.manualPsi));
+    this.steerDir.copy(_up).multiplyScalar(Math.cos(th)).addScaledVector(_hd, Math.sin(th)).normalize();
+    this.headingDir.copy(_hd);
+    this._aeroLoad(st);
+    // tracking score and structural load
+    if (t > 12 && this.thrust > 0) {
+      const err = Math.hypot(this.manualTheta - this.guideTheta, (this.manualPsi - this.guidePsi) * Math.sin(Math.max(0.2, th))) / DEG;
+      this.trackErr.sum += err * dt;
+      this.trackErr.t += dt;
+      this.trackErr.max = Math.max(this.trackErr.max, err);
+    }
+    if (this.qAlpha > QALPHA_LIMIT && !this.brokenUp) {
+      this.overloadT += dt;
+      if (this.overloadT > 0.9) {
+        this.brokenUp = true;
+        this.bus.emit('saturn:breakup', { get: t, qAlpha: this.qAlpha, alpha: this.alpha, q: st.dynPressure });
+      }
+    } else this.overloadT = Math.max(0, this.overloadT - dt * 0.6);
   }
 
   _steer(t, st) {

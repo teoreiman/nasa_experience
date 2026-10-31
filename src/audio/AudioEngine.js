@@ -21,6 +21,21 @@ export const NASA_CLIPS = {
   jfk_return_safely: 'audio/nasa/jfk_return_safely.mp3',
 };
 
+// Real recordings used as sound layers (public domain, NASA): the pad microphone of a Saturn-class
+// launch (liftoff one-shot and a crossfaded loop of the full-thrust roar).
+export const REAL_SAMPLES = {
+  launch_liftoff: 'audio/real/launch_liftoff.m4a',
+  launch_roar_loop: 'audio/real/launch_roar_loop.m4a',
+};
+
+// Music the player supplies (not shipped, not published): drop the files into public/audio/music/.
+// When a file is missing the original generative cue of the same moment plays instead.
+export const USER_TRACKS = {
+  launch: ['all_systems_go', 'all-systems-go', 'launch'],
+  reentry: ['reentry', 're-entry', 'reentry_and_splashdown'],
+};
+const TRACK_EXT = ['mp3', 'm4a', 'ogg'];
+
 class DummyLoop {
   setGain() {}
   setRate() {}
@@ -457,6 +472,7 @@ export class AudioEngine {
     out.connect(amb ? this.simAmb : this.simBus);
     const nodes = [];
     const params = {};
+    let stopped = false;
     const start = (s) => {
       s.start(0, Math.random() * 1.5);
       nodes.push(s);
@@ -500,6 +516,24 @@ export class AudioEngine {
         lfo.start();
         nodes.push(sub, lfo);
         params.sub = sg.gain;
+        // the real pad recording on top: its roar and crackle replace most of the synthetic noise
+        const real = this._gain(big ? 1.25 : 0.7);
+        real.connect(master);
+        params.real = real.gain;
+        this._sample('launch_roar_loop').then((buf) => {
+          if (!buf || stopped) return;
+          const s = c.createBufferSource();
+          s.buffer = buf;
+          s.loop = true;
+          s.loopStart = 0.06;
+          s.loopEnd = buf.duration - 0.06;
+          s.playbackRate.value = big ? 1 : 1.18;
+          s.connect(real);
+          s.start(0, 0.06 + Math.random() * (buf.duration - 0.5));
+          nodes.push(s);
+          rg.gain.setTargetAtTime(big ? 0.35 : 0.3, c.currentTime, 0.3);
+          cg.gain.setTargetAtTime(big ? 0.45 : 0.2, c.currentTime, 0.3);
+        });
         break;
       }
       case 'sps':
@@ -638,6 +672,7 @@ export class AudioEngine {
       },
       setParam: (k, v, tc = 0.1) => params[k]?.setTargetAtTime?.(v, c.currentTime, tc),
       stop: (fade = 0.3) => {
+        stopped = true;
         out.gain.setTargetAtTime(0, c.currentTime, fade / 3);
         setTimeout(() => {
           for (const n of nodes) {
@@ -654,6 +689,62 @@ export class AudioEngine {
     };
     if (opts.gain !== undefined) handle.setGain(opts.gain, 0.05);
     this._loops.add(handle);
+    return handle;
+  }
+
+  // ---------------------------------------------------------------- real recordings
+
+  /** Decoded real recording (cached). Resolves null when it cannot be loaded. */
+  _sample(name) {
+    const url = REAL_SAMPLES[name];
+    if (!url || !this.ctx) return Promise.resolve(null);
+    this._samples ??= new Map();
+    if (!this._samples.has(name)) {
+      const p = fetch(`${import.meta.env.BASE_URL}${url}`)
+        .then((r) => (r.ok ? r.arrayBuffer() : null))
+        .then((ab) => (ab ? this.ctx.decodeAudioData(ab) : null))
+        .catch((err) => {
+          console.warn('[audio] sample unavailable', name, err?.message ?? err);
+          return null;
+        });
+      this._samples.set(name, p);
+    }
+    return this._samples.get(name);
+  }
+
+  /** Play a real recording once on the simulation bus. opts: { gain, muffle (Hz lowpass), rate }.
+   *  Returns { setGain, setMuffle, stop }. */
+  playSample(name, { gain = 1, muffle = 20000, rate = 1 } = {}) {
+    const handle = { node: null, stopped: false, setGain() {}, setMuffle() {}, stop() {} };
+    if (!this.ctx) return handle;
+    const c = this.ctx;
+    const g = this._gain(gain);
+    const lp = this._filter('lowpass', muffle, 0.6);
+    lp.connect(g).connect(this.simBus);
+    handle.setGain = (v, tc = 0.2) => g.gain.setTargetAtTime(Math.max(0, v), c.currentTime, tc);
+    handle.setMuffle = (hz, tc = 0.2) => lp.frequency.setTargetAtTime(hz, c.currentTime, tc);
+    handle.stop = (fade = 0.4) => {
+      handle.stopped = true;
+      g.gain.setTargetAtTime(0, c.currentTime, fade / 3);
+      setTimeout(() => {
+        try {
+          handle.node?.stop();
+        } catch {
+          /* ok */
+        }
+        g.disconnect();
+      }, fade * 1000 + 200);
+    };
+    this._sample(name).then((buf) => {
+      if (!buf || handle.stopped) return;
+      const src = c.createBufferSource();
+      src.buffer = buf;
+      src.playbackRate.value = rate;
+      src.connect(lp);
+      src.start();
+      src.onended = () => g.disconnect();
+      handle.node = src;
+    });
     return handle;
   }
 
@@ -798,7 +889,66 @@ export class AudioEngine {
     if (name === this._musicName) return;
     this._musicName = name;
     this._music?.stop();
-    this._music = name ? this._startMusic(name) : null;
+    this._music = null;
+    if (!name) return;
+    // a track the player dropped into public/audio/music/ wins over the generated cue
+    this._userTrack(name).then((url) => {
+      if (this._musicName !== name || this._music) return;
+      this._music = url ? this._playTrack(url) : this._startMusic(name);
+    });
+  }
+
+  /** URL of a player-supplied music file for this cue, or null. Probed once per cue. */
+  _userTrack(name) {
+    const bases = USER_TRACKS[name];
+    if (!bases) return Promise.resolve(null);
+    this._tracks ??= new Map();
+    if (!this._tracks.has(name)) {
+      const probe = async () => {
+        for (const b of bases) {
+          for (const ext of TRACK_EXT) {
+            const url = `${import.meta.env.BASE_URL}audio/music/${b}.${ext}`;
+            try {
+              const r = await fetch(url, { method: 'HEAD' });
+              if (r.ok && /^audio\//.test(r.headers.get('content-type') ?? '')) return url;
+            } catch {
+              /* offline / not found */
+            }
+          }
+        }
+        return null;
+      };
+      this._tracks.set(name, probe());
+    }
+    return this._tracks.get(name);
+  }
+
+  /** Stream a long music file (no full decode in memory) through the music bus. */
+  _playTrack(url) {
+    const c = this.ctx;
+    const el = new Audio(url);
+    el.crossOrigin = 'anonymous';
+    el.preload = 'auto';
+    const g = this._gain(0);
+    try {
+      c.createMediaElementSource(el).connect(g);
+      g.connect(this.musicBus);
+    } catch {
+      el.volume = store.settings.volumeMusic * store.settings.volumeMaster;
+    }
+    g.gain.setTargetAtTime(1.6, c.currentTime, 1.2);
+    this._trackEl = el;
+    el.play().catch(() => {});
+    return {
+      stop: () => {
+        g.gain.setTargetAtTime(0, c.currentTime, 1.2);
+        setTimeout(() => {
+          el.pause();
+          g.disconnect();
+          if (this._trackEl === el) this._trackEl = null;
+        }, 4500);
+      },
+    };
   }
 
   _startMusic(name) {
@@ -816,18 +966,25 @@ export class AudioEngine {
       tension: [[38, 45, 50, 51], [38, 44, 50, 53], [36, 43, 48, 51], [37, 44, 49, 52]],
       triumph: [[48, 55, 60, 64, 67, 74], [53, 60, 65, 69, 72], [55, 62, 67, 71, 74], [48, 55, 60, 64, 67, 76]],
       sad: [[45, 52, 57, 60], [41, 48, 53, 57], [38, 45, 50, 53], [40, 47, 52, 56]],
+      // original cues for the big moments: a heroic D-major climb for the launch, a tense D-minor
+      // ostinato for entry and blackout
+      launch: [[38, 45, 50, 54, 57], [35, 42, 47, 50, 54], [31, 38, 43, 47, 50, 55], [33, 40, 45, 49, 52, 57], [31, 38, 43, 47, 50], [30, 38, 42, 45, 50], [28, 40, 43, 47, 52], [33, 40, 45, 49, 52, 57]],
+      reentry: [[38, 45, 50, 53], [34, 41, 46, 50], [36, 43, 48, 52], [33, 40, 45, 49], [38, 45, 50, 53], [34, 41, 46, 53], [31, 38, 43, 46], [33, 40, 45, 49, 52]],
     };
     const prog = progressions[name] ?? progressions.menu;
-    const dur = name === 'tension' ? 6 : name === 'triumph' ? 5 : 9;
+    const dur = name === 'tension' ? 6 : name === 'triumph' ? 5 : name === 'launch' ? 4.2 : name === 'reentry' ? 4.8 : 9;
+    const epic = name === 'launch' || name === 'reentry';
     const mtof = (m) => 440 * Math.pow(2, (m - 69) / 12);
     const pad = (notes, t, d) => {
       for (const m of notes) {
         for (const det of [-7, 6]) {
           const o = c.createOscillator();
-          o.type = name === 'tension' ? 'sawtooth' : 'triangle';
+          o.type = name === 'tension' || epic ? 'sawtooth' : 'triangle';
           o.frequency.value = mtof(m);
           o.detune.value = det;
-          const f = this._filter('lowpass', name === 'tension' ? 500 : 1400, 0.6);
+          // the launch cue opens up (brighter brass) as the climb goes on
+          const bright = name === 'launch' ? 700 + Math.min(1, (t - t0) / 70) * 1900 : name === 'reentry' ? 650 : name === 'tension' ? 500 : 1400;
+          const f = this._filter('lowpass', bright, 0.6);
           const g = this._gain(0);
           const peak = 0.05 / notes.length;
           g.gain.setValueAtTime(0.0001, t);
@@ -862,6 +1019,33 @@ export class AudioEngine {
       o.stop(t + 3.6);
       o2.stop(t + 3.6);
     };
+    const timp = (m, t, a) => {
+      const o = c.createOscillator();
+      o.type = 'sine';
+      o.frequency.setValueAtTime(mtof(m) * 1.5, t);
+      o.frequency.exponentialRampToValueAtTime(mtof(m), t + 0.08);
+      const g = this._gain(0);
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.linearRampToValueAtTime(a, t + 0.008);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + 1.6);
+      o.connect(g).connect(out);
+      o.start(t);
+      o.stop(t + 1.7);
+      this._burst(out, 'brown', t, 0.004, a * 0.8, 0.25, this._filter('lowpass', 180));
+    };
+    const pluck = (m, t, a) => {
+      const o = c.createOscillator();
+      o.type = 'sawtooth';
+      o.frequency.value = mtof(m);
+      const f = this._filter('lowpass', 900, 1.2);
+      const g = this._gain(0);
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.linearRampToValueAtTime(a, t + 0.01);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + 0.26);
+      o.connect(f).connect(g).connect(out);
+      o.start(t);
+      o.stop(t + 0.3);
+    };
     let i = 0;
     let next = t0 + 0.1;
     const tick = () => {
@@ -875,6 +1059,12 @@ export class AudioEngine {
         } else if (Math.random() < 0.7) {
           // low pulse
           for (let k = 0; k < 4; k++) bell(26, next + k * 1.5, 0.08);
+        }
+        if (epic) {
+          // timpani on the downbeat, a roll into every other bar, string ostinato for the entry
+          timp(chord[0] - 12, next, name === 'launch' ? 0.22 : 0.16);
+          if (i % 2 === 1) for (let k = 0; k < 6; k++) timp(chord[0] - 12, next + dur - 0.6 + k * 0.1, 0.04 + k * 0.012);
+          if (name === 'reentry') for (let k = 0; k < Math.floor(dur / 0.3); k++) pluck(chord[1] + (k % 2 ? 12 : 0), next + k * 0.3, 0.035);
         }
         next += dur;
         i++;
@@ -930,6 +1120,10 @@ export class AudioEngine {
     for (const a of this._clips ?? []) {
       if (p) a.pause();
       else a.play().catch(() => {});
+    }
+    if (this._trackEl) {
+      if (p) this._trackEl.pause();
+      else this._trackEl.play().catch(() => {});
     }
   }
 

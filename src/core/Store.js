@@ -20,6 +20,7 @@ export const DEFAULT_SETTINGS = {
   difficulty: 'astronaut', // 'cadet' | 'astronaut' | 'realistic'
   hints: true,
   highlightControls: true,
+  guidedCamera: true, // cockpit: turn the head toward the control the checklist asks for
   mouseSensitivity: 1.0,
   invertY: false,
   units: 'imperial', // HUD units: 'imperial' (authentic) | 'metric'

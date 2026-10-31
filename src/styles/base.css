@@ -21,7 +21,8 @@
   --safe-r: env(safe-area-inset-right, 0px);
   --safe-t: env(safe-area-inset-top, 0px);
   --safe-b: env(safe-area-inset-bottom, 0px);
-  --ui-scale: clamp(0.72, 0.5vw + 0.62vh, 1.15);
+  /* UI text size follows the viewport: ≈12.6px on a phone in landscape, ≈17px at 1280×720, 18.4px max */
+  --ui-font: clamp(11.5px, calc(0.5vw + 0.62vh + 6px), 18.4px);
   color-scheme: dark;
 }
 
@@ -41,7 +42,7 @@ body {
   background: var(--bg);
   color: var(--text);
   font-family: var(--font-ui);
-  font-size: calc(16px * var(--ui-scale));
+  font-size: var(--ui-font);
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
   overscroll-behavior: none;

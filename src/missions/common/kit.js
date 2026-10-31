@@ -165,3 +165,52 @@ export function waitAOS(ctx) {
 export function waitLOS(ctx) {
   return ctx.waitUntil(() => ctx.vehicle.state.losEarth);
 }
+
+/**
+ * Entry chapters (astronaut): fly the entry by hand — bank the lift vector with the hand controller
+ * on SCS, following the entry director — or let the CMC (P64–P67) fly it as in the real missions.
+ * Hand-flown entries can skip out of the atmosphere or exceed the crew's g limit.
+ * @returns {Promise<boolean>} true when the player flies it
+ */
+export async function askEntryPilot(ctx) {
+  if (!ctx.isAstronaut) return false;
+  const touch = ctx.game?.input?.isTouch;
+  const pick = await ctx.choice({
+    id: `${ctx.chapter.id}.entrypilot`,
+    title: '¿Quién vuela la reentrada?',
+    prompt:
+      'El módulo de mando planea: girando sobre sí mismo apunta su sustentación hacia arriba (frena más suave y se aleja) o hacia abajo (baja más rápido). ' +
+      'El ordenador lo hacía solo, pero los comandantes sabían volarlo a mano. Si lo haces tú, no pases de 7 g y no dejes que la cápsula rebote fuera de la atmósfera; cuanto mejor sigas la guía, más cerca del barco amerizarás.',
+    options: [
+      { id: 'manual', label: 'La vuelo yo', hint: touch ? 'Botones de alabeo · flecha naranja sobre la verde' : 'Q / E giran el vector de sustentación' },
+      { id: 'cmc', label: 'Que la vuele el ordenador (histórico)', hint: 'Programas P64 a P67 del CMC' },
+    ],
+    timeout: 45,
+    defaultOption: 'cmc',
+  });
+  if (pick !== 'manual') return false;
+  ctx.flag('manualEntry', true);
+  ctx.spawn(async () => {
+    await ctx.waitUntil(() => ctx.vehicle.state.alt < 125000);
+    ctx.sw.set('CM.GNC.SC_CONT', 'SCS', 'crew');
+    ctx.alert('Reentrada manual: lleva la flecha naranja a la guía verde', 'info', 6);
+    let ended = false;
+    const stop = ctx.every(0.5, () => {
+      const v = ctx.vehicle;
+      const st = v.state;
+      if (ended || v.parts.drogues || st.splashed) {
+        stop();
+        return;
+      }
+      if (st.gLoad > 12) {
+        ended = true;
+        ctx.fail(`La desaceleración llegó a ${st.gLoad.toFixed(1)} g: demasiada sustentación hacia abajo. Cuando las g suben hay que girar la sustentación hacia arriba.`);
+      } else if (st.alt > 135000 && st.hdot > 0) {
+        ended = true;
+        ctx.fail('La cápsula rebotó fuera de la atmósfera (skip-out): con la sustentación arriba y subiendo, hay que girarla hacia abajo.');
+      }
+    });
+  });
+  return true;
+}
+

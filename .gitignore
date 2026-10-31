@@ -4,3 +4,7 @@ dist/
 tools/screenshots/
 *.log
 .check-out/
+
+# player-supplied music (copyrighted, personal use only)
+public/audio/music/*
+!public/audio/music/LEEME.txt

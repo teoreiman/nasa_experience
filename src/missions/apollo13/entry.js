@@ -7,7 +7,7 @@ import { Vector3 } from 'three';
 import { GET } from '../../core/MissionClock.js';
 import { FT } from '../../core/constants.js';
 import { apollo13State, basisQ, geoOf, geoDistanceKm } from '../common/states.js';
-import { radio, procedure, grade } from '../common/kit.js';
+import { radio, procedure, grade, askEntryPilot } from '../common/kit.js';
 
 const IWO_JIMA = { lat: -21.63, lon: -165.37 };
 
@@ -39,6 +39,7 @@ export default {
     ctx.csm.hasSM = false;
     ctx.csm.poweredDown = false;
     ctx.caption('REENTRADA', 'Apolo 13 · GET 141:20', 6);
+    const manualEntry = await askEntryPilot(ctx);
 
     // ---- farewell, Aquarius
     const obj1 = ctx.objective('lmjett', 'Separa el LM Aquarius');
@@ -110,6 +111,7 @@ export default {
     const geo = geoOf(v.state.r, ctx.clock.utcMs);
     const miss = geoDistanceKm(geo.lat, geo.lon, IWO_JIMA.lat, IWO_JIMA.lon);
     ctx.achievement('a13-home');
+    if (manualEntry && (ctx.vehicle.state.splashed || ctx.vehicle.parts.mains)) ctx.achievement('manual-entry');
     await ctx.say('RECOVERY', 'Odyssey, this is Iwo Jima. We have you in sight. Welcome home.', 'Odyssey, aquí el Iwo Jima. Los tenemos a la vista. Bienvenidos a casa.');
     await ctx.say('PAO', 'Apollo 13 is home. A successful failure.', 'El Apolo 13 está en casa. Un fracaso exitoso.');
     ctx.complete({

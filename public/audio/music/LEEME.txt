@@ -1,0 +1,13 @@
+Música propia (opcional)
+========================
+
+El juego no incluye música con copyright. Si tienes tus propias copias (por ejemplo, compradas)
+de la banda sonora de "Apollo 13" de James Horner, copia aquí los archivos con estos nombres:
+
+  all_systems_go.mp3   → suena en el encendido del Saturn V (y en la inyección translunar)
+  reentry.mp3          → suena al entrar en la atmósfera (reentrada y apagón de radio)
+
+También sirven .m4a u .ogg. Si un archivo no está, el juego usa su propia música original.
+
+Estos archivos son solo para tu uso personal: están excluidos de git (.gitignore) y del build
+publicado (npm run build / npm run deploy los quita de dist/), así que no se suben a GitHub.

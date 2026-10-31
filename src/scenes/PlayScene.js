@@ -80,12 +80,18 @@ export default class PlayScene {
   async toggleSecondaryView() {
     if (this.role !== 'controller') return;
     if (!this.secondary) {
-      const { FlightView } = await import('../render/FlightView.js');
-      this.secondary = new FlightView({ game: this.game, sim: this.sim, role: this.role, chapter: this.chapter, mission: this.mission, observer: true });
-      await this.secondary.init();
-      this.secondary.resize?.(this.game.width, this.game.height);
+      // reuse Mission Control's TV feed when it is up (one exterior renderer instead of two)
+      const shared = this.view.tvView;
+      if (shared) this.secondary = shared;
+      else {
+        const { FlightView } = await import('../render/FlightView.js');
+        this.secondary = new FlightView({ game: this.game, sim: this.sim, role: this.role, chapter: this.chapter, mission: this.mission, observer: true });
+        await this.secondary.init();
+      }
     }
     this.showingSecondary = !this.showingSecondary;
+    if (this.secondary === this.view.tvView) this.secondary.feed = !this.showingSecondary;
+    this.secondary.resize?.(this.game.width, this.game.height);
     this.view.setActive?.(!this.showingSecondary);
     this.secondary.setActive?.(this.showingSecondary);
     this.sim.bus.emit('view:changed', { view: this.showingSecondary ? 'tv' : 'primary' });
@@ -131,8 +137,8 @@ export default class PlayScene {
     this.runner?.cancel('exit');
     this.simAudio?.dispose();
     this.hud?.dispose();
+    if (this.secondary !== this.view?.tvView) this.secondary?.dispose();
     this.view?.dispose();
-    this.secondary?.dispose();
     this.sim?.dispose();
     this.game.audio?.stopAll?.();
   }

@@ -49,6 +49,7 @@ const DEFAULT_BINDINGS = {
     seatNext: ['KeyX'], // next seat / station view
     panelFocus: ['KeyF'], // zoom to the panel under the cursor / flat panel view
     freeLook: ['KeyZ'],
+    pilotToggle: ['KeyP'], // Saturn V ascent: manual piloting ↔ IU guidance
   },
   walk: {
     forward: ['KeyW', 'ArrowUp'],

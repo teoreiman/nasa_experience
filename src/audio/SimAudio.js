@@ -52,6 +52,23 @@ export class SimAudio {
     switch (e.kind) {
       case 'IGNITION_SEQUENCE':
         a.sfx('ignition', { gain: near });
+        // the real pad recording: ignition, hold-down release and the climb away from the pad
+        // (Mission Control hears it through the TV feed's small speaker)
+        this._liftoff = a.playSample?.('launch_liftoff', this.role === 'controller' ? { gain: 0.3, muffle: 2800 } : { gain: this.inside ? 0.75 : 1.1, muffle: this.inside ? 520 : 20000 });
+        this._cue('launch', 0);
+        break;
+      case 'ORBIT_INSERTION':
+        this._cue(null, 30);
+        break;
+      case 'ENTRY_INTERFACE':
+      case 'BLACKOUT_START':
+        this._cue('reentry', 0);
+        break;
+      case 'TLI_IGNITION':
+        this._cue('launch', 0);
+        break;
+      case 'TLI_CUTOFF':
+        this._cue(null, 20);
         break;
       case 'LIFTOFF':
         a.sfx('clunk', { gain: 0.8 * near }); // hold-down arms release
@@ -94,6 +111,7 @@ export class SimAudio {
         break;
       case 'TOUCHDOWN':
         a.sfx(e.crash ? 'bang' : 'thud', { gain: e.crash ? 1.2 : 1 });
+        if (!e.crash) this._cue('triumph', 14);
         break;
       case 'DROGUE_DEPLOY':
       case 'MAIN_DEPLOY':
@@ -108,6 +126,7 @@ export class SimAudio {
       case 'O2_TANK2_EXPLOSION':
         a.sfx('bang', { gain: 1.4 });
         setTimeout(() => a.sfx('clunk', { gain: 1 }), 200);
+        this._cue('tension', 25);
         break;
       case 'LIGHTNING_STRIKE':
         a.sfx('bang', { gain: 1.1 });
@@ -115,6 +134,16 @@ export class SimAudio {
       default:
         break;
     }
+  }
+
+  /** Mission music for the big moments (after `delayS` real seconds; null fades it out). */
+  _cue(name, delayS = 0) {
+    clearTimeout(this._cueT);
+    const go = () => {
+      if (!this._disposed) this.audio?.music?.(name);
+    };
+    if (delayS > 0) this._cueT = setTimeout(go, delayS * 1000);
+    else go();
   }
 
   _switch({ source, id }) {
@@ -142,7 +171,14 @@ export class SimAudio {
     const stage = sat?.stage;
     const kSIC = stage === 'SIC' ? Math.min(1, satThrust / 3.4e7) : stage === 'SIB' ? Math.min(1, satThrust / 7.5e6) * 0.8 : 0;
     const kUpper = stage === 'SII' || stage === 'SIVB' || stage === 'SIVB_TLI' ? Math.min(1, satThrust / (stage === 'SII' ? 5e6 : 1e6)) : 0;
-    if (inside) {
+    if (this.role === 'controller') {
+      // Houston only hears the vehicle through the TV / net audio
+      const g1 = kSIC * air * 0.22;
+      const l1 = this._loop('rumbleSIC', g1 > 0.005, g1);
+      l1?.setParam('muffle', 2600);
+      l1?.setParam('crackle', 0.4);
+      this._loop('rumbleSII', false);
+    } else if (inside) {
       // structure-borne: low, heavy, muffled; strongest near the pad (ground reflection) and max-Q
       const q = st.dynPressure / 33000;
       const g1 = kSIC * (0.55 + 0.45 * air + 0.25 * q);
@@ -164,8 +200,15 @@ export class SimAudio {
       l2?.setParam('muffle', 4000);
     }
 
+    if (this._liftoff && !this._liftoff.stopped && this.role !== 'controller') this._liftoff.setMuffle(inside ? 520 : 20000, 0.15);
+    if (this.role === 'controller') {
+      // the control room: murmur, air handling and the voice loops (the vehicle is only on TV)
+      this._loop('mocrRoom', true, 0.55);
+      return;
+    }
+
     // ---- spacecraft engines (heard through the structure; faint when viewed from outside)
-    const k = inside ? 1 : 0.35;
+    const k = this.role === 'controller' ? 0 : inside ? 1 : 0.35;
     const sps = !!tm['CM.SPS.THRUST'];
     this._loop('sps', sps, 0.8 * k)?.setParam('muffle', inside ? 600 : 400);
     const dps = !!tm['LM.DPS.FIRING'] && v.isAttached('lm');
@@ -200,10 +243,12 @@ export class SimAudio {
     this._loop('pumps', inside && ((station === 'CM' && cmPowered) || (station === 'LM' && lmPowered)), 0.35);
     const tone = station === 'LM' ? tm['LM.CW.TONE'] : tm['CM.CW.TONE'];
     this._loop('masterAlarmTone', !!tone && this.role === 'astronaut', 0.55);
-    if (this.role === 'controller') this._loop('mocrRoom', true, 0.55);
   }
 
   dispose() {
+    this._disposed = true;
+    clearTimeout(this._cueT);
+    this._liftoff?.stop?.(0.5);
     this._off.forEach((f) => f());
     for (const l of Object.values(this.loops)) l?.stop?.(0.3);
     this.loops = {};

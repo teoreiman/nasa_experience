@@ -9,6 +9,8 @@ Texturas
 
 Audio
 - Grabaciones históricas de las misiones Apolo 8, 11 y 13 y discursos de J. F. Kennedy: NASA "Historical Sounds" — dominio público.
+- Rugido real del despegue (audio/real/): grabación de la cámara de plataforma 4 del lanzamiento del SLS Artemis II, NASA KSC, 1 de abril de 2026 (Wikimedia Commons, «Artemis II Live Launch Coverage - Pad Camera Site 4») — dominio público. Recortada y normalizada para el juego.
+- Música: original del juego (generada en tiempo real). El juego no incluye música con copyright; ver audio/music/LEEME.txt.
 
 Software
 - three.js (MIT), Vite (MIT), fuentes Barlow / Barlow Condensed / Share Tech Mono (SIL Open Font License) vía Fontsource.

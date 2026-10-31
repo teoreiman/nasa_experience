@@ -49,7 +49,7 @@ async function runChapter(id, role, { warp = 1000, maxReal = 40000, log = false 
     bus.on('mission:sayEnd', () => (speaking = Math.max(0, speaking - 1)));
     bus.on('mission:objective', (o) => log && console.log(`   objective ${o.id} ${o.state}: ${o.text}`));
     bus.on('mission:alert', (a) => log && console.log(`   alert: ${a.text}`));
-    bus.on('mission:choice', (c) => setTimeout(() => c.resolve(c.options[0].id), 0));
+    bus.on('mission:choice', (c) => setTimeout(() => c.resolve((c.options.find((o) => o.id === 'iu' || o.id === 'cmc') ?? c.options[0]).id), 0));
     bus.on('mission:groundTask', (t) => setTimeout(() => t.resolve(t.options[0].id), 0));
     let checklist = null;
     bus.on('mission:checklist', (c) => (checklist = c.state === 'active' && c.mode === 'player' ? c : checklist?.id === c.id ? null : checklist));

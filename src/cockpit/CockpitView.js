@@ -215,7 +215,13 @@ export class CockpitView {
     });
     this.setSeat(this.seats[0].id);
     this.arrow = document.createElement('div');
-    this.arrow.style.cssText = 'position:fixed;z-index:40;pointer-events:none;width:0;height:0;border-left:14px solid transparent;border-right:14px solid transparent;border-bottom:26px solid rgba(255,190,0,0.9);display:none;filter:drop-shadow(0 0 4px #000)';
+    this.arrow.style.cssText = 'position:fixed;z-index:40;pointer-events:auto;cursor:pointer;width:0;height:0;border-left:16px solid transparent;border-right:16px solid transparent;border-bottom:30px solid rgba(255,190,0,0.95);display:none;filter:drop-shadow(0 0 4px #000)';
+    this.arrow.title = 'Mirar el control que pide la lista';
+    this.arrow.addEventListener('pointerdown', (e) => {
+      e.stopPropagation();
+      e.preventDefault();
+      this.aimAt(this.highlightIds);
+    });
     document.body.append(this.arrow);
   }
 
@@ -413,8 +419,68 @@ export class CockpitView {
   }
 
   highlight(ids) {
+    const prev = this.highlightIds.join('|');
     this.highlightIds = ids ?? [];
     for (const p of this.panels) p.setHighlights(ids);
+    // guided camera: glide to the control the checklist asks for (a new item, not a repeat)
+    const key = this.highlightIds.join('|');
+    if (key && key !== prev && store.settings.guidedCamera !== false && store.settings.difficulty !== 'realistic') {
+      clearTimeout(this._aimT);
+      this._aimT = setTimeout(() => this.aimAt(this.highlightIds), 350);
+    } else if (!key && prev && this._aimed) {
+      this._aimed = false;
+      this.head.tFov = store.settings.fov ?? 70;
+    }
+  }
+
+  /** World position (cabin frame) of the first widget matching a switch / widget id. */
+  _widgetWorld(ids) {
+    for (const pm of this.panelMeshes ?? []) {
+      const w = pm.panel.widgets.find((x) => ids.includes(x.switchId) || ids.includes(x.id));
+      if (w) {
+        const lx = ((w.x + w.w / 2) / pm.panel.width - 0.5) * pm.width;
+        const ly = (0.5 - (w.y + w.h / 2) / pm.panel.height) * pm.height;
+        return pm.group.localToWorld(new THREE.Vector3(lx, ly, 0));
+      }
+    }
+    return null;
+  }
+
+  /** Head yaw/pitch (deg) that centres `target` for a seat, or null when out of the head's reach. */
+  _aimFor(seat, target) {
+    const d = target.clone().sub(new THREE.Vector3(...seat.pos)).applyQuaternion(seat.base.clone().invert());
+    const yaw = Math.atan2(-d.x, -d.z) / D;
+    const pitch = Math.atan2(d.y, Math.hypot(d.x, d.z)) / D;
+    if (Math.abs(yaw) > 112 || Math.abs(pitch) > 78) return null;
+    return { yaw, pitch, cost: Math.abs(yaw - seat.yaw) + Math.abs(pitch - seat.pitch), dist: d.length() };
+  }
+
+  /** Turn the head (changing seat when needed) and zoom in on a control. */
+  aimAt(ids) {
+    const target = this._widgetWorld([].concat(ids ?? []));
+    if (!target) return false;
+    let seat = this.seats[this.seatIndex];
+    let aim = this._aimFor(seat, target);
+    if (!aim || aim.cost > 150) {
+      let best = null;
+      for (const s of this.seats) {
+        const a = this._aimFor(s, target);
+        if (a && (!best || a.cost < best.a.cost)) best = { s, a };
+      }
+      if (best && (!aim || best.a.cost + 40 < aim.cost)) {
+        this.setSeat(best.s.id);
+        seat = best.s;
+        aim = best.a;
+      }
+    }
+    if (!aim) return false;
+    this.head.tYaw = aim.yaw;
+    this.head.tPitch = aim.pitch;
+    // close enough that a switch is a comfortable tap target, also on a phone
+    const touch = this.game.input.isTouch;
+    this.head.tFov = Math.max(26, Math.min(store.settings.fov ?? 70, (touch ? 26 : 34) * Math.max(0.6, Math.min(1.6, aim.dist / 0.9))));
+    this._aimed = true;
+    return true;
   }
 
   getEyeTransform() {
@@ -542,6 +608,7 @@ export class CockpitView {
   }
 
   dispose() {
+    clearTimeout(this._aimT);
     this.interactor?.dispose();
     this.arrow?.remove();
     for (const pm of this.panelMeshes ?? []) pm.dispose();

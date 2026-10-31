@@ -72,8 +72,9 @@ function bodyModel(body, parts) {
 
 export class FlightView {
   /** @param {{ game, sim, role, chapter, mission, observer?: boolean }} o */
-  constructor({ game, sim, role, chapter, mission, observer = false }) {
+  constructor({ game, sim, role, chapter, mission, observer = false, feed = false }) {
     this.game = game;
+    this.feed = feed; // Mission Control TV feed: rendered into a target, silent on the bus
     this.sim = sim;
     this.role = role;
     this.chapter = chapter;
@@ -166,7 +167,7 @@ export class FlightView {
     this._rebuildVehicle();
 
     // ---- post
-    this.post = q.name !== 'low' ? createPostFX(game, { bloom: true, strength: 0.32, radius: 0.5, threshold: 2.2 }) : null;
+    this.post = q.name !== 'low' && !this.feed ? createPostFX(game, { bloom: true, strength: 0.32, radius: 0.5, threshold: 2.2 }) : null;
 
     this._subscribe();
     if (!this.observer) await this._makeCockpit();
@@ -242,7 +243,7 @@ export class FlightView {
     window.addEventListener('wheel', this._onWheel, { passive: true });
     this._drag = null;
     this._onDown = (e) => {
-      if (this.cameraMode !== 'cockpit' && e.target === game.canvas) this._drag = { x: e.clientX, y: e.clientY, id: e.pointerId };
+      if (this.active && this.cameraMode !== 'cockpit' && e.target === game.canvas) this._drag = { x: e.clientX, y: e.clientY, id: e.pointerId };
     };
     this._onMove = (e) => {
       if (!this._drag || e.pointerId !== this._drag.id) return;
@@ -465,7 +466,7 @@ export class FlightView {
     if (this.observer && mode === 'cockpit') mode = 'exterior:chase';
     this.cameraMode = mode;
     this.cockpit?.setActive(this.active && mode === 'cockpit');
-    this.sim.bus.emit('view:camera', { mode });
+    if (!this.feed) this.sim.bus.emit('view:camera', { mode });
   }
 
   availableCameras() {
@@ -1061,6 +1062,33 @@ export class FlightView {
       }
       for (const f of this._captureQ.splice(0)) f(url);
     }
+  }
+
+  /** Low-res exterior feed (the Mission Control TV): render into `rt` without post-processing. */
+  renderToTarget(rt) {
+    const r = this.game.renderer;
+    const cams = [this.farCam, this.midCam, this.nearCam];
+    const aspect = rt.width / rt.height;
+    const prev = cams.map((c) => c.aspect);
+    for (const c of cams) {
+      c.aspect = aspect;
+      c.updateProjectionMatrix();
+    }
+    r.setRenderTarget(rt);
+    r.setClearColor(0x000000, 1);
+    r.clear();
+    r.render(this.far, this.farCam);
+    if (this.lunar?.group.visible) {
+      r.clearDepth();
+      r.render(this.mid, this.midCam);
+    }
+    r.clearDepth();
+    r.render(this.near, this.nearCam);
+    r.setRenderTarget(null);
+    cams.forEach((c, i) => {
+      c.aspect = prev[i];
+      c.updateProjectionMatrix();
+    });
   }
 
   resize(w, h) {

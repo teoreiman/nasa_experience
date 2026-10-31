@@ -3,7 +3,7 @@
 // jettison after S-II ignition, orbit insertion and the post-insertion checklist. Missions add their
 // own drama through `during(ctx)` (spawned at liftoff).
 
-import { NMI } from '../../core/constants.js';
+import { NMI, DEG } from '../../core/constants.js';
 import { procedure, radio, ascentCallouts, grade, orbitText } from './kit.js';
 
 /**
@@ -17,6 +17,45 @@ export async function runLaunch(ctx, o) {
   const { callsign, es } = o;
   const target = o.target ?? { apo: 100.4, peri: 98.9 };
   ascentCallouts(ctx);
+
+  // ---- who flies the Saturn V: the Instrument Unit (as in 1969) or the player, by hand
+  let manualUsed = false;
+  let lostT = 0;
+  if (ctx.isAstronaut && sat) {
+    const pick = await ctx.choice({
+      id: `${ctx.chapter.id}.pilot`,
+      title: '¿Quién pilota el Saturn V?',
+      prompt:
+        'En 1969 la Unidad de Instrumentos guió el cohete sola. Puedes dejarlo así o tomar el control y llevar el Saturn V a la órbita con tus manos: ' +
+        'mantén la mira sobre el rombo de la guía de vuelo, sobre todo en la máxima presión dinámica (≈ 1 min 20 s), o la estructura no aguantará.',
+      options: [
+        { id: 'manual', label: 'Lo piloto yo', hint: ctx.game?.input?.isTouch ? 'Joystick izquierdo · llevas la mira al rombo' : 'W / S cabeceo · A / D rumbo · P cede el control' },
+        { id: 'iu', label: 'Que lo guíe la computadora (histórico)', hint: 'Durante el ascenso puedes tomar el control con P' },
+      ],
+      timeout: 45,
+      defaultOption: 'iu',
+    });
+    if (pick === 'manual') {
+      sat.manual = true;
+      manualUsed = true;
+      ctx.hint('Tras el despegue, sigue el rombo: mantén la mira encima y vigila la barra de carga q·α.', { durationS: 9 });
+    }
+  }
+  ctx.on('saturn:manual', ({ manual }) => {
+    if (manual) manualUsed = true;
+    ctx.alert(manual ? 'Control manual: llevas tú el Saturn V' : 'La Unidad de Instrumentos vuelve a guiar el cohete', 'info', 4);
+  });
+  ctx.on('saturn:breakup', () => {
+    ctx.view?.flash?.(0.6);
+    ctx.view?.shake?.(4, 3);
+    ctx.audio?.sfx?.('bang', { gain: 1.5 });
+    ctx.alert('FALLA ESTRUCTURAL · el Saturn V se partió por la carga aerodinámica', 'warning', 8);
+    ctx.say('CDR', 'Abort! Abort!', '¡Aborto! ¡Aborto!', { channel: 'ag', force: true, wait: false });
+    ctx.spawn(async () => {
+      await ctx.waitReal(3);
+      ctx.fail('El Saturn V se partió: el ángulo de ataque fue demasiado grande en plena máxima presión dinámica (q·α por encima del límite estructural). Mantén la mira sobre el rombo, sobre todo entre los 50 s y los 100 s.');
+    });
+  });
 
   // ---- cockpit configuration and the poll (the count holds at T−1:00 until both are done)
   const obj1 = ctx.objective('prelaunch', 'Configura la cabina para el lanzamiento');
@@ -41,7 +80,7 @@ export async function runLaunch(ctx, o) {
     consoles: o.pollConsoles ?? ['BOOSTER', 'RETRO', 'FIDO', 'GUIDO', 'SURGEON', 'EECOM', 'GNC', 'CAPCOM'],
     intro: { en: 'Okay, all flight controllers, go/no-go for launch.', es: 'Muy bien, controladores: GO / NO GO para el lanzamiento.' },
     outro: { en: 'Launch control, Houston is go for launch.', es: 'Control de lanzamiento, Houston está GO para el lanzamiento.' },
-    astronautSummary: { who: 'LCC', en: `${callsign}, this is launch control. Good luck and Godspeed.`, es: `${es}, aquí control de lanzamiento. Buena suerte y que Dios os acompañe.` },
+    astronautSummary: { who: 'LCC', en: `${callsign}, this is launch control. Good luck and Godspeed.`, es: `${es}, aquí control de lanzamiento. Buena suerte y que Dios los acompañe.` },
   });
   ready = true;
 
@@ -63,6 +102,23 @@ export async function runLaunch(ctx, o) {
   await ctx.waitUntil(() => ctx.vehicle.state.liftoff);
   radio(ctx, 'CDR', 'Liftoff. The clock is running.', 'Despegue. El reloj está en marcha.');
   if (o.during) ctx.spawn(o.during);
+  if (sat.manual) {
+    ctx.spawn(async () => {
+      await ctx.wait(7);
+      if (sat.manual && ctx.view?.cameraMode === 'cockpit') ctx.view?.setCamera?.('exterior:chase');
+    });
+  }
+  // a hand-flown ascent that wanders far from the guide cannot reach orbit any more
+  ctx.every(1, () => {
+    if (!sat.manual || sat.brokenUp || sat.done.has('SIVB_CUTOFF')) {
+      lostT = 0;
+      return;
+    }
+    const err = Math.abs(sat.manualTheta - sat.guideTheta) / DEG;
+    lostT = err > 25 ? lostT + 1 : Math.max(0, lostT - 2);
+    if (lostT === 6) ctx.alert('Te alejas de la trayectoria: vuelve al rombo o pulsa P para ceder el control', 'caution', 6);
+    if (lostT >= 18) ctx.fail('Perdimos la trayectoria: el Saturn V se alejó demasiado de la guía y ya no puede llegar a la órbita.');
+  });
 
   // ---- ascent callouts (historical timeline)
   ctx.spawn(async () => {
@@ -127,9 +183,21 @@ export async function runLaunch(ctx, o) {
   obj3.done();
   await ctx.wait(4);
   const st = ctx.vehicle.state;
+  if (manualUsed && st.periAlt / NMI < 70) {
+    ctx.fail(`La órbita quedó demasiado baja (perigeo ${(st.periAlt / NMI).toFixed(0)} nmi): la atmósfera nos frenaría en unas horas. Hay que seguir la guía hasta el apagado del S-IVB.`);
+    return { st, cfgTime: res.time, errA: 99, errP: 99 };
+  }
   const errA = Math.abs(st.apoAlt / NMI - target.apo);
   const errP = Math.abs(st.periAlt / NMI - target.peri);
   ctx.score('orbit', grade(errA + errP, 2, 30, 150), 150, `Órbita ${orbitText(st)}`);
+  if (manualUsed) {
+    const avg = sat.trackErr.sum / Math.max(1, sat.trackErr.t);
+    ctx.score('piloting', grade(avg, 0.8, 8, 150), 150, `Pilotaje manual · error medio ${avg.toFixed(1)}°`);
+    if (sat.manual) {
+      ctx.achievement('manual-ascent');
+      if (avg < 1) ctx.achievement('manual-ace');
+    }
+  }
   ctx.say('CAPCOM', `${callsign}, Houston. You are confirmed GO for orbit.`, `${es}, Houston. Confirmado: tienen GO para la órbita.`, { wait: false });
   ctx.say('CDR', 'Roger. Shutdown. We are in orbit.', 'Recibido. Apagado. Estamos en órbita.', { wait: false });
   if (o.postInsertion !== false) {

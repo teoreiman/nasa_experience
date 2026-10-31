@@ -45,7 +45,7 @@ export class Simulation {
     const wantsLM = setup.lm !== null && (setup.lm !== undefined || mods.some((m) => m.startsWith('LM')));
     const wantsSaturn = mods.some((m) => m === 'SIC' || m === 'SII' || m === 'SIVB');
 
-    if (wantsSaturn) v.modules.saturn = new SaturnV({ vehicle: v, bus, clock, missionId: this.missionId, setup });
+    if (wantsSaturn) v.modules.saturn = new SaturnV({ vehicle: v, bus, clock, missionId: this.missionId, setup: { ...setup, difficulty: this.difficulty } });
     if (wantsCSM) {
       v.modules.csm = new CSMSystems({ vehicle: v, bus, clock, missionId: this.missionId });
       v.modules.csm.reset(setup.csm ?? 'TLC');
