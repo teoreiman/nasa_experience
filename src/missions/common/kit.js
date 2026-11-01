@@ -5,6 +5,7 @@
 import { procedureById } from './procedures.js';
 import { contextFromSim, fmtGET, predictEntry } from '../../sim/physics/targeting.js';
 import { NMI, FT } from '../../core/constants.js';
+import { padReadout } from './callouts.js';
 
 /** Fire-and-forget radio line. */
 export const radio = (ctx, who, en, es, o = {}) => ctx.say(who, en, es, { wait: false, ...o });
@@ -44,7 +45,7 @@ export async function houstonPad(ctx, planFn, { who = 'CAPCOM', intro = true, lo
   if (load) sim.gnc.activeComputer.loadBurn(pad);
   ctx.pad({ ...pad, engine: pad.engine ?? c.engine });
   const fps = (pad.dvTotal / FT).toFixed(1);
-  await ctx.say(who, `${pad.name} PAD: TIG ${fmtGET(pad.tig)}, delta-V ${fps} feet per second, burn time ${Math.round(pad.burnTime)} seconds.`, `PAD de ${pad.name}: TIG ${fmtGET(pad.tig)}, ΔV ${fps} pies/s, ${Math.round(pad.burnTime)} s de encendido con el ${engineName(pad.engine ?? c.engine)}.`);
+  await ctx.say(who, `${pad.name} PAD: TIG ${fmtGET(pad.tig)}, delta-V ${fps} feet per second, burn time ${Math.round(pad.burnTime)} seconds.`, `PAD de ${pad.name}: TIG ${fmtGET(pad.tig)}, ΔV ${fps} pies/s, ${Math.round(pad.burnTime)} s de encendido con el ${engineName(pad.engine ?? c.engine)}.`, { voiceEn: padReadout(pad, 'en'), voiceEs: padReadout(pad, 'es') });
   return pad;
 }
 

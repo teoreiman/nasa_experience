@@ -7,6 +7,7 @@ import { Vector3 } from 'three';
 import { GET } from '../../core/MissionClock.js';
 import { apollo13State, basisQ } from '../common/states.js';
 import { radio, procedure, grade } from '../common/kit.js';
+import { anglesReadout } from '../common/callouts.js';
 
 const fmt = (x) => (((x % 360) + 360) % 360).toFixed(1).padStart(5, '0');
 
@@ -79,7 +80,7 @@ export default {
       await ctx.say('CAPCOM', 'Aquarius, the CM platform is gone. We will have to align on the Sun and the Moon later.', 'Aquarius, la plataforma del CM se perdió. Tendremos que alinear con el Sol y la Luna más adelante.');
     } else {
       const [r, p, y] = sim.gnc.gimbals('CM');
-      await ctx.say('CMP', `Okay, Aquarius. CM gimbal angles: roll ${fmt(r)}, pitch ${fmt(p)}, yaw ${fmt(y)}.`, `Aquarius, ángulos del CM: alabeo ${fmt(r)}, cabeceo ${fmt(p)}, guiñada ${fmt(y)}.`);
+      await ctx.say('CMP', `Okay, Aquarius. CM gimbal angles: roll ${fmt(r)}, pitch ${fmt(p)}, yaw ${fmt(y)}.`, `Aquarius, ángulos del CM: alabeo ${fmt(r)}, cabeceo ${fmt(p)}, guiñada ${fmt(y)}.`, { voiceEn: anglesReadout('Okay, Aquarius. CM gimbal angles.', [r, p, y], 'en'), voiceEs: anglesReadout('Aquarius, ángulos del CM.', [r, p, y], 'es') });
       const right = `${fmt(r + 180)} · ${fmt(360 - p)} · ${fmt(-y)}`;
       const pick = await ctx.choice({
         id: 'a13.math',
@@ -99,7 +100,7 @@ export default {
         radio(ctx, 'CAPCOM', 'Aquarius, Houston. We checked your arithmetic. It is good.', 'Aquarius, Houston. Revisamos sus cuentas: están bien.');
       } else {
         ctx.score('math', 20, 80, 'Ángulos corregidos por Houston');
-        await ctx.say('CAPCOM', 'Aquarius, Houston. Check your numbers: roll plus 180, pitch 360 minus, yaw negative.', `Aquarius, Houston. Revisen las cuentas: alabeo +180, cabeceo 360 − P, guiñada negativa. Son ${right}.`);
+        await ctx.say('CAPCOM', 'Aquarius, Houston. Check your numbers: roll plus 180, pitch 360 minus, yaw negative.', `Aquarius, Houston. Revisen las cuentas: alabeo +180, cabeceo 360 − P, guiñada negativa. Son ${right}.`, { voiceEs: 'Aquarius, Houston. Revisen las cuentas: alabeo más 180, cabeceo 360 menos, guiñada negativa.' });
       }
       if (!sim.gnc.cmc.powered) {
         obj2.fail();

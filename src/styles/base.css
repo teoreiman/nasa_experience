@@ -210,10 +210,27 @@ body {
   }
 }
 
+/* menus work upright too; the cockpit, Mission Control and the Moon need the phone sideways */
 @media (orientation: portrait) and (pointer: coarse) {
-  #rotate-device {
+  body[data-scene='play'] #rotate-device,
+  body[data-scene='eva'] #rotate-device {
     display: flex;
   }
+}
+
+#rotate-device p {
+  margin: 0 0 1.2rem;
+  max-width: 18rem;
+  line-height: 1.35;
+}
+
+#rotate-device small {
+  display: block;
+  margin-top: 0.4rem;
+  font-family: var(--font-ui);
+  font-size: 0.8rem;
+  letter-spacing: 0;
+  color: var(--text-dim);
 }
 
 /* ------------------------------------------------------------------ loading screen */

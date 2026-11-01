@@ -29,8 +29,11 @@ export default {
     const v = ctx.vehicle;
     ctx.caption('SALIDA DE LA TIERRA', 'Apolo 8 · cuarta órbita lunar', 6);
     warpHint(ctx);
+    // the crew's television tour of the Moon, as the world heard it, until the far side cuts it off
+    const tv = ctx.settings.voiceMode !== 'text' ? ctx.audio?.ambientClip?.('a08_describing_moon', { gain: 0.5 }) : null;
     const obj1 = ctx.objective('far', 'Pasa por la cara oculta');
     await waitLOS(ctx);
+    tv?.stop();
     ctx.alert('LOS: cara oculta de la Luna', 'info', 5);
     radio(ctx, 'CDR', 'Okay, we are going to roll the spacecraft.', 'Bien, vamos a girar la nave.', { channel: 'ic' });
     await waitAOS(ctx);
@@ -52,9 +55,13 @@ export default {
       const inView = look ? Math.acos(Math.max(-1, Math.min(1, look.dir.dot(toEarth)))) * (180 / Math.PI) < look.fov * 0.45 : true;
       return { elev: ((sep - limb) * 180) / Math.PI, inView, size: ((2 * Math.atan(R_EARTH / dE)) * 180) / Math.PI };
     };
-    ctx.say('LMP', 'Oh my God! Look at that picture over there! Here is the Earth coming up. Wow, is that pretty!', '¡Dios mío! ¡Miren esa imagen de allá! ¡Ahí sale la Tierra! ¡Qué hermosa!', { wait: false });
-    radio(ctx, 'CDR', 'Hey, don\'t take that, it\'s not scheduled.', 'Eh, no saques esa, no está en el plan.');
-    radio(ctx, 'LMP', 'You got a color film, Jim? Hand me that roll of color quick, would you?', '¿Tienes película a color, Jim? Pásame ese rollo a color, rápido.');
+    // the onboard tape of that minute: Anders, Borman and Lovell scrambling for the colour film
+    ctx.say(
+      'LMP',
+      'Oh my God! Look at that picture over there! Here\'s the Earth coming up. Wow, is that pretty! — Hey, don\'t take that, it\'s not scheduled. — You got a color film, Jim? Hand me that roll of color quick, would you… — Oh man, that\'s great!',
+      '¡Dios mío! ¡Miren esa imagen de allá! ¡Ahí sale la Tierra! ¡Qué hermosa! — Eh, no saques esa, no está en el plan. — ¿Tienes película a color, Jim? Pásame ese rollo a color, rápido… — ¡Uf, eso es genial!',
+      { clip: 'a08_earthrise', channel: 'ic', whoLabel: 'Anders, Borman y Lovell · grabación de a bordo', wait: false },
+    );
     const obj2 = ctx.objective('photo', 'Fotografía la salida de la Tierra');
     ctx.hint('Mira hacia la Tierra sobre el horizonte lunar (ratón) y toma la foto con el botón «Hecho» de la lista.', { durationS: 12 });
     const stopTask = ctx.every(1, () => {
@@ -85,12 +92,17 @@ export default {
     const elev = shot?.e.elev ?? 30;
     ctx.score('photo', shot ? Math.round(Math.max(0, Math.min(1, (25 - elev) / 22)) * 150) + 50 : 0, 200, shot ? `La Tierra a ${elev.toFixed(1)}° del horizonte` : 'Sin foto');
     if (shot && elev < 12) ctx.achievement('a8-earthrise');
-    radio(ctx, 'CMP', 'Oh man, that is great!', '¡Uf, eso es genial!');
 
     // ---- Christmas Eve
     await ctx.wait(40);
     await ctx.say('PAO', 'This is Apollo Control. The crew is preparing for a television transmission from lunar orbit on Christmas Eve.', 'Aquí Control Apolo. La tripulación prepara una transmisión de televisión desde la órbita lunar en Nochebuena.');
-    await ctx.say('CDR', 'And from the crew of Apollo 8, we close with good night, good luck, a Merry Christmas, and God bless all of you, all of you on the good Earth.', 'Y de parte de la tripulación del Apolo 8, nos despedimos con buenas noches, buena suerte, feliz Navidad y que Dios los bendiga a todos, a todos ustedes en la buena Tierra.', { clip: 'a08_merry_christmas' });
+    // the broadcast itself: the first ten verses of Genesis read by Anders, Lovell and Borman
+    await ctx.say(
+      'LMP',
+      'For all the people back on Earth, the crew of Apollo 8 has a message that we would like to send to you. In the beginning God created the heaven and the earth… — And from the crew of Apollo 8, we close with good night, good luck, a Merry Christmas, and God bless all of you, all of you on the good Earth.',
+      'Para toda la gente en la Tierra, la tripulación del Apolo 8 tiene un mensaje. «En el principio creó Dios los cielos y la tierra…» — Y de parte de la tripulación del Apolo 8, nos despedimos con buenas noches, buena suerte, feliz Navidad y que Dios los bendiga a todos, a todos ustedes en la buena Tierra.',
+      { clip: 'a08_genesis', channel: 'ag', force: true, whoLabel: 'Anders, Lovell y Borman · transmisión de Nochebuena' },
+    );
     ctx.complete({
       summary: shot ? `La foto de la salida de la Tierra, con el planeta ${elev.toFixed(1)}° sobre el horizonte lunar. Esa imagen cambió cómo la humanidad se ve a sí misma.` : 'La Tierra ya estaba demasiado alta para la foto. Anders tuvo más suerte.',
       stats: { 'Altura de la Tierra': `${elev.toFixed(1)}°`, Fotos: shot ? 1 : 0 },

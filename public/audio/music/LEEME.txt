@@ -2,12 +2,24 @@ Música propia (opcional)
 ========================
 
 El juego no incluye música con copyright. Si tienes tus propias copias (por ejemplo, compradas)
-de la banda sonora de "Apollo 13" de James Horner, copia aquí los archivos con estos nombres:
+de la banda sonora de "Apollo 13" de James Horner, hay dos formas de usarla:
 
-  all_systems_go.mp3   → suena en el encendido del Saturn V (y en la inyección translunar)
-  reentry.mp3          → suena al entrar en la atmósfera (reentrada y apagón de radio)
+1) Desde el juego (también en el celular): Ajustes → Audio → Banda sonora propia → «Cargar
+   archivos…». Elige varias pistas a la vez: el juego reconoce los nombres de las pistas del disco
+   y pone cada una en su momento. Los archivos quedan guardados solo en ese navegador.
 
-También sirven .m4a u .ogg. Si un archivo no está, el juego usa su propia música original.
+2) En esta carpeta, con estos nombres (.mp3, .m4a u .ogg):
+
+  main_title.mp3            → menú principal                 («Main Title»)
+  launch_control.mp3        → sesión informativa              («Launch Control»)
+  all_systems_go.mp3        → encendido del Saturn V y la TLI («All Systems Go – The Launch»)
+  master_alarm.mp3          → emergencias (Apolo 13)          («Master Alarm»)
+  into_the_lem.mp3          → el LM como bote salvavidas      («Into the L.E.M.»)
+  darkside_of_the_moon.mp3  → detrás de la Luna               («Darkside of the Moon»)
+  reentry.mp3               → reentrada y amerizaje           («Re-Entry & Splashdown»)
+  end_titles.mp3            → éxito / final                   («End Titles»)
+
+Si un momento no tiene archivo, suena la música original del juego.
 
 Estos archivos son solo para tu uso personal: están excluidos de git (.gitignore) y del build
-publicado (npm run build / npm run deploy los quita de dist/), así que no se suben a GitHub.
+publicado (npm run build / npm run deploy los quitan de dist/), así que no se suben a GitHub.

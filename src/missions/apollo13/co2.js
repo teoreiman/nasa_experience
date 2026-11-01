@@ -117,7 +117,7 @@ export default {
     await ctx.waitUntil(() => lm.co2 < 4, { timeout: 3 * 3600 });
     obj2.done();
     v.tm['LM.CW.CO2_HI'] = false;
-    await ctx.say('CAPCOM', 'Aquarius, we see the CO2 coming down. Nice job.', `Aquarius, vemos el CO2 bajando: ${lm.co2.toFixed(1)} mmHg. Buen trabajo.`);
+    await ctx.say('CAPCOM', 'Aquarius, we see the CO2 coming down. Nice job.', `Aquarius, vemos el CO2 bajando: ${lm.co2.toFixed(1)} mmHg. Buen trabajo.`, { voiceEs: 'Aquarius, vemos el CO2 bajando. Buen trabajo.' });
     radio(ctx, 'LMP', 'It looks like it is working.', 'Parece que funciona.');
     ctx.achievement('a13-co2');
     ctx.score('co2', grade(maxCO2, 8, 14, 80), 80, `CO2 máximo ${maxCO2.toFixed(1)} mmHg`);

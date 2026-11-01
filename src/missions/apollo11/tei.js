@@ -57,7 +57,7 @@ export default {
     await ctx.say('CDR', 'Time to open up the LRL doors, Charlie.', 'Hora de abrir las puertas del laboratorio de recepción lunar, Charlie.');
     const gam = pred.gammaEI;
     const ok = Number.isFinite(gam) && gam < -5.3 && gam > -7.6;
-    await ctx.say('CAPCOM', "Roger. We've got you coming home. It's well in the green.", ok ? `Recibido. Los tenemos volviendo a casa: reentrada a GET ${fmtGET(pred.tEI)} con γ ${gam.toFixed(2)}°, bien dentro del corredor.` : 'Recibido. Los tenemos volviendo; la corrección de medio curso ajustará el corredor.');
+    await ctx.say('CAPCOM', "Roger. We've got you coming home. It's well in the green.", ok ? `Recibido. Los tenemos volviendo a casa: reentrada a GET ${fmtGET(pred.tEI)} con γ ${gam.toFixed(2)}°, bien dentro del corredor.` : 'Recibido. Los tenemos volviendo; la corrección de medio curso ajustará el corredor.', { voiceEs: ok ? 'Recibido. Los tenemos volviendo a casa, bien dentro del corredor.' : 'Recibido. Los tenemos volviendo; la corrección de medio curso ajustará el corredor.' });
     ctx.score('corridor', Number.isFinite(gam) ? grade(Math.abs(gam + 6.5), 0.25, 2.2, 150) : 20, 150, Number.isFinite(gam) ? `γ de reentrada ${gam.toFixed(2)}°` : 'Fuera del corredor (MCC necesaria)');
     ctx.achievement('a11-tei');
     ctx.complete({

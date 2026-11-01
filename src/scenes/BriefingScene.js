@@ -34,6 +34,7 @@ export const CONSOLE_INFO = {
 /** Controls cheat-sheet for the chapter and role: [{ title, rows: [[keys[], description]] }]
  *  (the full reference is the in-mission help, F1 — both read CONTROLS). */
 function controlsFor(chapter, role) {
+  if (window.__game?.input?.isTouch) return touchControlsFor(chapter, role);
   const time = [['.', ','], 'Acelerar / frenar el tiempo'];
   const help = [['F1'], 'Todos los controles'];
   if (role === 'controller') return [{ title: CONTROLS.mocr.title, rows: [...CONTROLS.mocr.rows, time, help] }];
@@ -62,6 +63,62 @@ function controlsFor(chapter, role) {
     { title: CONTROLS.cockpit.title, rows: CONTROLS.cockpit.rows },
     { title: CONTROLS.dsky.title, rows: [[['V', 'N', '0–9', 'Intro'], 'Verbo, nombre, dígitos, ENTR'], [['P', 'R', 'K', 'Retroceso'], 'PRO · RSET · KEY REL · CLR']] },
     { title: 'Misión', rows: [[['Tab'], 'Lista de comprobación'], time, [['F8'], 'Saltar al siguiente evento'], help] },
+  ].filter(Boolean);
+}
+
+/** The same cheat-sheet for phones and tablets: gestures and on-screen controls. */
+function touchControlsFor(chapter, role) {
+  const time = [['− ×1 +'], 'Arriba a la izquierda: frenar o acelerar el tiempo'];
+  const tools = [['☰', '?', 'II'], 'Lista de comprobación · ayuda · pausa'];
+  if (role === 'controller') {
+    return [{
+      title: 'Houston · táctil',
+      rows: [
+        [['Joystick'], 'Caminar por la sala'],
+        [['Arrastrar'], 'Mirar alrededor'],
+        [['Sentarse'], 'Ocupar la consola más cercana (o tocar la consola)'],
+        [['Tocar'], 'Sentado: pulsar teclas y ampliar pantallas'],
+        [['GO', 'NO GO'], 'Responder a FLIGHT en la tarjeta de la consola'],
+        time,
+        tools,
+      ],
+    }];
+  }
+  const id = chapter.id;
+  let flight = [];
+  if (/landing/.test(id)) {
+    flight = [
+      [['Joystick izq.'], 'Inclinar el LM (inclinar = moverse)'],
+      [['ROD ▲ ▼'], 'Velocidad de descenso ±1 pie/s en P66'],
+      [['▲ ▼ Acel.'], 'Acelerador manual'],
+    ];
+  } else if (/docking|tde|ascent|undock/.test(id)) {
+    flight = [
+      [['Joystick izq.'], 'Rotación'],
+      [['Joystick der.'], 'Traslación RCS'],
+      [['↺ ↻'], 'Alabeo'],
+    ];
+  } else if (/entry/.test(id)) {
+    flight = [[['↺ ↻'], 'Girar el vector de sustentación']];
+  } else if (/launch|lightning/.test(id)) {
+    flight = [[['Joystick izq.'], 'Si lo pilotas tú: lleva la mira al rombo']];
+  } else if (/mcc5|freereturn|loi|tei|tli|pc2|earthrise/.test(id)) {
+    flight = [[['🕹 Mandos'], 'Mostrar los joysticks para girar la nave']];
+  }
+  return [
+    flight.length ? { title: 'Pilotaje en este capítulo', rows: flight } : null,
+    {
+      title: 'Cabina · táctil',
+      rows: [
+        [['Arrastrar'], 'Mirar (sobre una zona sin controles)'],
+        [['Pellizcar'], 'Acercar o alejar la vista'],
+        [['Tocar'], 'Accionar: mitad superior o inferior de la palanca'],
+        [['Mantener'], 'Abrir o cerrar la tapa de protección'],
+        [['Doble toque'], 'Acercarse al panel'],
+        [['📷'], 'Vista exterior'],
+      ],
+    },
+    { title: 'Misión', rows: [time, tools] },
   ].filter(Boolean);
 }
 

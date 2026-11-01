@@ -487,6 +487,14 @@ Wall displays: world map with ground track + station coverage (Earth orbit), Ear
 
 ### 12.2 Hand-flown Saturn V and entry (game modes)
 
+- **Pilot view** (`FlightView` camera `'pilot'`, C / camera button: cabin → pilot → outside): along the
+  docking axis just ahead of our port while a target is within 2.5 km (CSM probe; LM overhead window),
+  else out of the LM front windows tilted 25° down, else out of the CM nose. `src/ui/PilotHUD.js` draws
+  the COAS reticle, the target port, the target's axis cross and the closing numbers, or the horizon,
+  flight-path marker and landing site for the LM. The HUD switches to it once for the final docking
+  approach (< 45 m) and for the landing from P64. `view.projectToScreen(world)` maps world points.
+
+
 - `SaturnV.manual` — the crew steers the thrust vector with the RHC (rate commands); the IU solution,
   rate-limited, is the flight-director target (`guideTheta/Psi`). `qAlpha` above `QALPHA_LIMIT`
   for ~1 s emits `saturn:breakup`. tm: `SAT.MANUAL, SAT.THETA_DEG, SAT.GUIDE_THETA_DEG, SAT.QALPHA…`.
@@ -519,6 +527,27 @@ from builds by vite.config.js. `SimAudio` maps sim → sound (engines by thrust 
 (silence in vacuum outside, structure-borne rumble inside), staging bangs, RCS thumps, pumps/fans by EPS
 state, C&W tone from `CM.CW.TONE`/`LM.CW.TONE`, entry roar, landing dust hiss, MOCR room murmur + selected
 voice loops in controller mode).
+
+### 13.1 Recorded radio voices, real recordings, the player's soundtrack
+
+- **Radio voices** (`tools/voices/`, `npm run voices`): `extract.mjs` collects every line the scripts
+  can say (calls `(who, en, es[, opts])` with a SPEAKERS id, line objects `{who, en, es}`, poll
+  intro/outro) into `lines.json`; lines with live figures carry `voiceEn` / `voiceEs` (fixed words, or a
+  list of phrases built with `missions/common/callouts.js`: digit-by-digit PAD readouts, gimbal angles,
+  LMP altitude callouts — that vocabulary is recorded too). `record.mjs` records each line with a male
+  macOS voice per speaker (pitch calibrated to 110–140 Hz), runs the Apollo S-band chain (300–3000 Hz,
+  8:1 compressor, transmitter saturation; PAO/narrator get a broadcast chain) and writes
+  `public/audio/voice/<lang>/<key>.m4a` + `index.json`. Key = `voiceKey(who, lang, words)`
+  (`src/audio/voiceKey.js`, shared with the game). `AudioEngine.radio(line)` plays: NASA clip →
+  recording (per-channel static bed, Quindar, signal fading) → speech synthesis at natural pitch.
+  macOS system voices are licensed for personal use only: the folder is git-ignored and stripped from
+  `dist/` (vite.config.js). Lines without a recording (e.g. on the published site) use the device voice.
+- **Real recordings**: `NASA_CLIPS` (+ `NASA_CLIP_SECONDS`, used as the line duration). Long ones can be
+  a background radio bed: `audio.ambientClip(name, {gain}) → {stop}` (ducked under the game's lines).
+- **Player's soundtrack** (`src/audio/userMusic.js`): files chosen in Ajustes → Audio are kept in
+  IndexedDB per cue (`MUSIC_CUES`, guessed from the file name: "All Systems Go", "Master Alarm"…);
+  `public/audio/music/<USER_TRACKS name>` also works locally. Cues: `menu, briefing, launch, tension,
+  lifeboat, darkside` (behind the Moon, SimAudio), `reentry, triumph`; menu-like cues loop.
 
 ## 14. UI (agent **ui**)
 

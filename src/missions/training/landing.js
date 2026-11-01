@@ -8,6 +8,7 @@ import { FT } from '../../core/constants.js';
 import { SITES, siteDir } from '../../sim/terrain/lunarTerrain.js';
 import { GNCHost } from '../../sim/gnc/GNCHost.js';
 import { radio, grade } from '../common/kit.js';
+import { altitudeCallout } from '../common/callouts.js';
 
 const PDI = GET(102, 33, 5);
 
@@ -95,7 +96,10 @@ export default {
     ctx.every(0.25, () => {
       const h = (v.state.altTerrain ?? v.state.alt) / FT;
       while (mi < marks.length && h < marks[mi]) {
-        if (h > marks[mi] - 40 || marks[mi] <= 100) radio(ctx, 'LMP', `${marks[mi]} feet, down ${Math.abs(v.state.hdot / FT).toFixed(0)}.`, `${marks[mi]} pies, bajando a ${Math.abs(v.state.hdot / FT).toFixed(0)}.`);
+        if (h > marks[mi] - 40 || marks[mi] <= 100) {
+          const rate = Math.abs(v.state.hdot / FT);
+          radio(ctx, 'LMP', `${marks[mi]} feet, down ${rate.toFixed(0)}.`, `${marks[mi]} pies, bajando a ${rate.toFixed(0)}.`, { voiceEn: altitudeCallout(marks[mi], rate, 0, 'en'), voiceEs: altitudeCallout(marks[mi], rate, 0, 'es') });
+        }
         mi++;
       }
     });

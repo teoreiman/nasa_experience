@@ -22,6 +22,8 @@ export class SimAudio {
       bus.on('agc:alarm', () => this.audio?.sfx?.('cwTone', { gain: 0.6 })),
       bus.on('mocr:seat', () => this.audio?.sfx?.('chair')),
     ];
+    // Apollo 13: the long hours in the lifeboat get their own music
+    if (sim.chapter?.id === 'a13-lifeboat') this._cue('lifeboat', 20);
   }
 
   _loop(name, on, gain = 1) {
@@ -162,6 +164,13 @@ export class SimAudio {
     const inside = this.inside;
     const paused = this.game.scene?.paused;
     if (paused) return;
+    // behind the Moon, out of contact with the Earth: music until the signal comes back
+    const farSide = st.primary === 'MOON' && !!st.losEarth && !st.landed;
+    if (farSide !== this._farSide) {
+      this._farSide = farSide;
+      if (farSide) this._cue('darkside', 3);
+      else if (this.audio.musicName === 'darkside') this._cue(null, 2);
+    }
     const alt = st.primary === 'EARTH' ? st.alt : 1e9;
     const air = Math.max(0, Math.min(1, 1 - alt / VACUUM_ALT));
 

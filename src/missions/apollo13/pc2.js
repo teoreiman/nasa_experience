@@ -55,7 +55,7 @@ export default {
     ctx.score('burn', burn.missed ? 40 : 100, 100, burn.missed ? 'PC+2 con retraso' : 'PC+2 puntual');
     ctx.score('time', Number.isFinite(after.tEI) ? grade(Math.abs(after.tEI - A13_EVENTS.EI) / 3600, 0.5, 8, 100) : 0, 100, Number.isFinite(after.tEI) ? `Reentrada a GET ${fmtGET(after.tEI)}` : 'Sin reentrada');
     ctx.achievement('a13-pc2');
-    await ctx.say('CAPCOM', 'Aquarius, Houston. That was a good burn. You are coming home to the Pacific.', Number.isFinite(after.tEI) ? `Aquarius, Houston. Buen encendido: vuelven al Pacífico, reentrada a GET ${fmtGET(after.tEI)}${Number.isFinite(gam) ? ` con γ ${gam.toFixed(2)}°` : ''}.` : 'Aquarius, Houston. Haremos una corrección más.');
+    await ctx.say('CAPCOM', 'Aquarius, Houston. That was a good burn. You are coming home to the Pacific.', Number.isFinite(after.tEI) ? `Aquarius, Houston. Buen encendido: vuelven al Pacífico, reentrada a GET ${fmtGET(after.tEI)}${Number.isFinite(gam) ? ` con γ ${gam.toFixed(2)}°` : ''}.` : 'Aquarius, Houston. Haremos una corrección más.', { voiceEs: Number.isFinite(after.tEI) ? 'Aquarius, Houston. Buen encendido: vuelven al Pacífico.' : 'Aquarius, Houston. Haremos una corrección más.' });
     ctx.complete({
       summary: `PC+2 completado. ${Number.isFinite(after.tEI) ? `Reentrada prevista a GET ${fmtGET(after.tEI)} en el Pacífico Sur, donde espera el USS Iwo Jima.` : ''} Ahora el problema es otro: el aire del LM.`,
       stats: { 'ΔV': `${(pad.dvTotal / 0.3048).toFixed(0)} ft/s`, 'Encendido': `${Math.round(pad.burnTime)} s`, 'DPS restante': `${Math.round((ctx.lm.dpsProp / ctx.lm.dpsProp0) * 100)} %` },

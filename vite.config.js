@@ -2,15 +2,18 @@ import { defineConfig } from 'vite';
 import { readdirSync, rmSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 
-// Music the player drops into public/audio/music/ is for local play only: keep it out of the build.
+// Music the player drops into public/audio/music/ and the radio voices recorded with the macOS system
+// voices (public/audio/voice/) are for local play only: keep them out of the build.
 const stripPrivateMusic = {
   name: 'strip-private-music',
   closeBundle() {
-    const dir = resolve(import.meta.dirname, 'dist/audio/music');
-    try {
-      for (const f of readdirSync(dir)) if (!/^LEEME/i.test(f)) rmSync(join(dir, f), { force: true });
-    } catch {
-      /* no music folder */
+    for (const sub of ['audio/music', 'audio/voice']) {
+      const dir = resolve(import.meta.dirname, 'dist', sub);
+      try {
+        for (const f of readdirSync(dir)) if (!/^LEEME/i.test(f)) rmSync(join(dir, f), { recursive: true, force: true });
+      } catch {
+        /* no such folder */
+      }
     }
   },
 };

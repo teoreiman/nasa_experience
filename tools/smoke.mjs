@@ -38,6 +38,8 @@ const browserChannel = opt('browser', process.platform === 'win32' ? 'msedge' : 
 const angle = process.platform === 'win32' ? 'd3d11' : process.platform === 'darwin' ? 'metal' : 'gl';
 const [vw, vh] = (opt('viewport', '1280x720')).split('x').map(Number);
 const mobile = flag('mobile');
+// --mobile-size 390x844 (portrait) | 667x375 (small landscape): touch phone with a custom screen
+const [mw, mh] = (opt('mobile-size', '844x390')).split('x').map(Number);
 
 const lockPath = resolve(tmpdir(), 'proyecto-apolo-smoke.lock');
 async function acquireLock() {
@@ -81,7 +83,7 @@ async function main() {
   });
   const context = await browser.newContext(
     mobile
-      ? { viewport: { width: 844, height: 390 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true, userAgent: 'Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Mobile Safari/537.36' }
+      ? { viewport: { width: mw, height: mh }, deviceScaleFactor: 2, isMobile: true, hasTouch: true, userAgent: 'Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Mobile Safari/537.36' }
       : { viewport: { width: vw, height: vh } },
   );
   const page = await context.newPage();

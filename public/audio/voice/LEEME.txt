@@ -1,0 +1,15 @@
+Voces de radio grabadas
+=======================
+
+Estas carpetas (en/, es/ e index.json) las genera `npm run voices` en una Mac: cada línea de radio
+de las misiones se graba con una voz masculina del sistema (Reed, Eddy, Rocko, Grandpa), con un
+tono natural de 110–140 Hz, y pasa por una cadena de radio Apollo (banda de 300 a 3000 Hz,
+compresión fuerte y saturación del transmisor). El juego las reproduce igual en todos los modos y
+dispositivos; si una línea no está, usa la voz sintética del navegador.
+
+La licencia de macOS solo permite usar sus voces del sistema para contenido personal y no
+comercial: por eso estos archivos no se suben a git (.gitignore) ni al build publicado
+(npm run build / npm run deploy los quitan de dist/). Para jugar con ellas en el celular, abre el
+servidor de desarrollo (`npm run dev`) desde la Mac y entra a la dirección de red que muestra.
+
+Para publicarlas en el sitio hace falta grabarlas con un motor de voz de licencia libre.

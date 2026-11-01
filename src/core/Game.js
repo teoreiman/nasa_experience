@@ -184,6 +184,8 @@ export class Game {
       const scene = new SceneClass(this);
       this.scene = scene;
       this.sceneName = name;
+      // CSS hook: menus also lay out in portrait, the 3D scenes ask phones to turn sideways
+      document.body.dataset.scene = name;
       await scene.enter?.(params);
       scene.resize?.(this.width, this.height);
       this.bus.emit('scene:changed', { name, params });

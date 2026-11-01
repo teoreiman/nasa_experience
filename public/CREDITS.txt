@@ -9,8 +9,10 @@ Texturas
 
 Audio
 - Grabaciones históricas de las misiones Apolo 8, 11 y 13 y discursos de J. F. Kennedy: NASA "Historical Sounds" — dominio público.
+- Apolo 8 (antes de la LOI, primera órbita lunar, conversación «Earthrise» de a bordo, recorrido televisivo por la Luna, lectura del Génesis en Nochebuena) y comunicaciones del día del lanzamiento del Apolo 11 retransmitidas por la estación de Canarias: grabaciones de la NASA vía Wikimedia Commons — dominio público.
+- Voces de radio sintéticas: generadas localmente con las voces del sistema de macOS para uso personal (no se distribuyen; ver audio/voice/LEEME.txt).
 - Rugido real del despegue (audio/real/): grabación de la cámara de plataforma 4 del lanzamiento del SLS Artemis II, NASA KSC, 1 de abril de 2026 (Wikimedia Commons, «Artemis II Live Launch Coverage - Pad Camera Site 4») — dominio público. Recortada y normalizada para el juego.
-- Música: original del juego (generada en tiempo real). El juego no incluye música con copyright; ver audio/music/LEEME.txt.
+- Música: original del juego (generada en tiempo real). El juego no incluye música con copyright: la banda sonora propia del jugador (por ejemplo «Apollo 13» de James Horner) se carga en Ajustes → Audio y queda solo en su dispositivo; ver audio/music/LEEME.txt.
 
 Software
 - three.js (MIT), Vite (MIT), fuentes Barlow / Barlow Condensed / Share Tech Mono (SIL Open Font License) vía Fontsource.

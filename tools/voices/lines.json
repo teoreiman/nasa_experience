@@ -1,0 +1,8546 @@
+{
+ "generated": "2026-11-01",
+ "lines": [
+  {
+   "key": "16fe2oyos7d",
+   "who": "BOOSTER",
+   "lang": "en",
+   "text": "Flight, Booster. S-IC is nominal.",
+   "src": [
+    "src/missions/common/launch.js:146"
+   ]
+  },
+  {
+   "key": "p74epoptzk",
+   "who": "BOOSTER",
+   "lang": "en",
+   "text": "Flight, Booster. We lost the center engine. The rest are good, we are GO.",
+   "src": [
+    "src/missions/apollo13/launch.js:46"
+   ]
+  },
+  {
+   "key": "ju15t70zjh",
+   "who": "BOOSTER",
+   "lang": "en",
+   "text": "Go!",
+   "src": [
+    "src/missions/MissionRunner.js:673",
+    "src/missions/MissionRunner.js:684"
+   ]
+  },
+  {
+   "key": "nig4d5nzuj",
+   "who": "BOOSTER",
+   "lang": "en",
+   "text": "No go, Flight.",
+   "src": [
+    "src/missions/MissionRunner.js:674",
+    "src/missions/MissionRunner.js:684"
+   ]
+  },
+  {
+   "key": "lm4lgviis6",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "13, we would like you to close the reac valves on fuel cell 3 and fuel cell 1.",
+   "src": [
+    "src/missions/apollo13/explosion.js:107"
+   ]
+  },
+  {
+   "key": "ugbxehy9tu",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "13, we've got one more item for you, when you get a chance. We'd like you to stir up your cryo tanks.",
+   "src": [
+    "src/missions/apollo13/explosion.js:41"
+   ]
+  },
+  {
+   "key": "16d13eshdch",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "30 seconds.",
+   "src": [
+    "src/missions/apollo11/landing.js:222"
+   ]
+  },
+  {
+   "key": "64aoo3jk6b",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "60 seconds.",
+   "src": [
+    "src/missions/apollo11/landing.js:218"
+   ]
+  },
+  {
+   "key": "xdqhrjg202",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Apollo 11, Apollo 11, this is Houston. Do you read? Over.",
+   "src": [
+    "src/missions/apollo11/loi.js:87"
+   ]
+  },
+  {
+   "key": "1v9rkljutb",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Apollo 11, Houston. Slightly less than 2 minutes to ignition and everything is GO.",
+   "src": [
+    "src/missions/apollo11/tli.js:74"
+   ]
+  },
+  {
+   "key": "cg607oxuvb",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Apollo 11, Houston. Standing by.",
+   "src": [
+    "src/missions/apollo11/entry.js:77"
+   ]
+  },
+  {
+   "key": "cebtlt1qg3",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Apollo 11, Houston. The S-IVB will vent and go into its slingshot. You have a good spacecraft.",
+   "src": [
+    "src/missions/apollo11/tde.js:144"
+   ]
+  },
+  {
+   "key": "hho15eocpj",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Apollo 11, Houston. Tower jettison.",
+   "src": [
+    "src/missions/common/launch.js:163"
+   ]
+  },
+  {
+   "key": "vaj45khtzx",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Apollo 11, Houston. We are GO for undocking.",
+   "src": [
+    "src/missions/apollo11/undock.js:31"
+   ]
+  },
+  {
+   "key": "14st3yeba7b",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Apollo 11, Houston. We are working on your TLI numbers.",
+   "src": [
+    "src/missions/apollo11/tli.js:31"
+   ]
+  },
+  {
+   "key": "b2nm3v70wu",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Apollo 11, Houston. We have your TEI PAD coming up.",
+   "src": [
+    "src/missions/apollo11/tei.js:29"
+   ]
+  },
+  {
+   "key": "e1h49c4su5",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Apollo 11, Houston. You are confirmed GO for orbit.",
+   "src": [
+    "src/missions/common/launch.js:201"
+   ]
+  },
+  {
+   "key": "9enn7lwx1x",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Apollo 11, Houston. You are GO at 3.",
+   "src": [
+    "src/missions/apollo11/tli.js:84"
+   ]
+  },
+  {
+   "key": "o56fe2n1sc",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Apollo 11, Houston. You are GO for CM/SM separation.",
+   "src": [
+    "src/missions/apollo11/entry.js:43"
+   ]
+  },
+  {
+   "key": "106s5548ss3",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Apollo 11, Houston. You are GO for separation.",
+   "src": [
+    "src/missions/apollo11/tde.js:45"
+   ]
+  },
+  {
+   "key": "1334cxenzve",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Apollo 11, Houston. You are GO for staging. S-IVB to orbit capability.",
+   "src": [
+    "src/missions/common/launch.js:134"
+   ]
+  },
+  {
+   "key": "j5vmqun4wf",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Apollo 11, Houston. You are GO for TEI.",
+   "src": [
+    "src/missions/apollo11/tei.js:36"
+   ]
+  },
+  {
+   "key": "3dlqwzl9a3",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Apollo 11, Houston. You are looking great. We will see you after blackout.",
+   "src": [
+    "src/missions/apollo11/entry.js:61"
+   ]
+  },
+  {
+   "key": "kfxlc2yhhb",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Apollo 11, no drogues. Deploy drogues manually.",
+   "src": [
+    "src/missions/apollo11/entry.js:87"
+   ]
+  },
+  {
+   "key": "k94dcb32as",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Apollo 11, this is Houston. All your systems are looking good going around the corner, and we will see you on the other side. Over.",
+   "src": [
+    "src/missions/apollo11/loi.js:59"
+   ]
+  },
+  {
+   "key": "ax9enadfrc",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Apollo 11, this is Houston. You are GO for TLI. Over.",
+   "src": [
+    "src/missions/apollo11/tli.js:56"
+   ]
+  },
+  {
+   "key": "uuxjydezll",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Apollo 12, Houston. Tower jettison.",
+   "src": [
+    "src/missions/common/launch.js:163"
+   ]
+  },
+  {
+   "key": "138g0i52iyb",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Apollo 12, Houston. Try SCE to Auxiliary. Over.",
+   "src": [
+    "src/missions/apollo12/lightning.js:68"
+   ]
+  },
+  {
+   "key": "463v8eikrp",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Apollo 12, Houston. We have got good data now.",
+   "src": [
+    "src/missions/apollo12/lightning.js:80"
+   ]
+  },
+  {
+   "key": "c3rcbobeu3",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Apollo 12, Houston. You are confirmed GO for orbit.",
+   "src": [
+    "src/missions/common/launch.js:201"
+   ]
+  },
+  {
+   "key": "14jv30j3sv4",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Apollo 12, Houston. You are GO for staging. S-IVB to orbit capability.",
+   "src": [
+    "src/missions/common/launch.js:134"
+   ]
+  },
+  {
+   "key": "e7p2k6r5pz",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Apollo 8, Houston. Over.",
+   "src": [
+    "src/missions/apollo8/loi.js:90"
+   ]
+  },
+  {
+   "key": "xf5k2qpw24",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Apollo 8, Houston. Roger. 169.1 by 60.5. Good to hear your voice.",
+   "src": [
+    "src/missions/apollo8/loi.js:92"
+   ]
+  },
+  {
+   "key": "13b47wjixov",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Apollo, Houston. Tower jettison.",
+   "src": [
+    "src/missions/common/launch.js:163"
+   ]
+  },
+  {
+   "key": "xupqkvv4pw",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Apollo, Houston. You are confirmed GO for orbit.",
+   "src": [
+    "src/missions/common/launch.js:201"
+   ]
+  },
+  {
+   "key": "k1pg3zj0nh",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Apollo, Houston. You are GO for staging. S-IVB to orbit capability.",
+   "src": [
+    "src/missions/common/launch.js:134"
+   ]
+  },
+  {
+   "key": "f29axocpnp",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Apollo, Houston. You are GO for TLI.",
+   "src": [
+    "src/missions/free/index.js:256"
+   ]
+  },
+  {
+   "key": "e76800vn2u",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Apsis change PAD.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "e508ons1xb",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Aquarius, Houston. Check your numbers: roll plus 180, pitch 360 minus, yaw negative.",
+   "src": [
+    "src/missions/apollo13/lifeboat.js:103"
+   ]
+  },
+  {
+   "key": "t2azdy2p29",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Aquarius, Houston. Nice burn. You are right in the corridor.",
+   "src": [
+    "src/missions/apollo13/mcc5.js:120"
+   ]
+  },
+  {
+   "key": "15dvk3ofh7d",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Aquarius, Houston. That was a good burn. You are coming home to the Pacific.",
+   "src": [
+    "src/missions/apollo13/pc2.js:58"
+   ]
+  },
+  {
+   "key": "11wrjknv523",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Aquarius, Houston. We checked your arithmetic. It is good.",
+   "src": [
+    "src/missions/apollo13/lifeboat.js:100"
+   ]
+  },
+  {
+   "key": "ljn1gvbrlk",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Aquarius, Houston. We have a procedure for you to rig the command module canisters. Get a pencil and some paper.",
+   "src": [
+    "src/missions/apollo13/co2.js:86"
+   ]
+  },
+  {
+   "key": "73yqz8hwf",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Aquarius, Houston. We want a DPS burn at 61:30 to put you back on a free return.",
+   "src": [
+    "src/missions/apollo13/freereturn.js:51"
+   ]
+  },
+  {
+   "key": "je022yy5ab",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Aquarius, Houston. Welcome back. Your S-IVB just hit the Moon; the Apollo 12 seismometer is ringing.",
+   "src": [
+    "src/missions/apollo13/pc2.js:34"
+   ]
+  },
+  {
+   "key": "mqo38qfejw",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Aquarius, Houston. You are going around the corner. We will see you on the other side.",
+   "src": [
+    "src/missions/apollo13/pc2.js:23"
+   ]
+  },
+  {
+   "key": "uuo30ruqmk",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Aquarius, Houston. You are on a free return trajectory.",
+   "src": [
+    "src/missions/apollo13/freereturn.js:83"
+   ]
+  },
+  {
+   "key": "1dqj5x1qb5",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Aquarius, Houston. Your entry angle is shallowing. We want a midcourse correction, MCC-5, and you are going to fly it manually.",
+   "src": [
+    "src/missions/apollo13/mcc5.js:30"
+   ]
+  },
+  {
+   "key": "14daxzbhthv",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Aquarius, the CM platform is gone. We will have to align on the Sun and the Moon later.",
+   "src": [
+    "src/missions/apollo13/lifeboat.js:80"
+   ]
+  },
+  {
+   "key": "4znjykh8ub",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Aquarius, we see the CO2 coming down. Nice job.",
+   "src": [
+    "src/missions/apollo13/co2.js:120"
+   ]
+  },
+  {
+   "key": "125g2j8ze42",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Aquarius, you are GO for PC plus 2.",
+   "src": [
+    "src/missions/apollo13/pc2.js:46"
+   ]
+  },
+  {
+   "key": "ldi4q8bmso",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Bingo.",
+   "src": [
+    "src/missions/apollo11/landing.js:227"
+   ]
+  },
+  {
+   "key": "14tnl7saihp",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "burn time",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "cw7qkywwxo",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Circularization PAD.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "vg2tq4clo6",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Columbia, Houston. We show you docked. Welcome back.",
+   "src": [
+    "src/missions/apollo11/ascent.js:165"
+   ]
+  },
+  {
+   "key": "3svhg5bqf3",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "delta V",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "iuy69raso7",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Deorbit PAD.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "lzde8or2mw",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "DOI PAD.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "u1k3z04c5o",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Eagle, Houston. If you read, you are GO for powered descent. Over.",
+   "src": [
+    "src/missions/apollo11/landing.js:54"
+   ]
+  },
+  {
+   "key": "17bayv1xmtp",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Eagle, Houston. Negative on anything metal in that panel. Try something non-conductive.",
+   "src": [
+    "src/missions/apollo11/ascent.js:58"
+   ]
+  },
+  {
+   "key": "jp7rdaupsu",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Eagle, Houston. We are 10 minutes from your liftoff time. You are cleared for takeoff.",
+   "src": [
+    "src/missions/apollo11/ascent.js:36"
+   ]
+  },
+  {
+   "key": "9wbltc5yg2",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Eagle, Houston. We see a good DOI. You are GO for powered descent at the next pass.",
+   "src": [
+    "src/missions/apollo11/undock.js:109"
+   ]
+  },
+  {
+   "key": "1zlj26d6pt",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Eagle, Houston. We would rather you push it in. We can arm it from the ground if we need to, but push it in.",
+   "src": [
+    "src/missions/apollo11/ascent.js:60"
+   ]
+  },
+  {
+   "key": "1404iv2dstu",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Eagle, Houston. You are GO for landing. Over.",
+   "src": [
+    "src/missions/apollo11/landing.js:179"
+   ]
+  },
+  {
+   "key": "jbmp9svc5n",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Eagle, Houston. You are GO for powered descent.",
+   "src": [
+    "src/missions/free/index.js:289"
+   ]
+  },
+  {
+   "key": "e6luugmzdr",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Eagle, Houston. You are looking good. We show you in orbit.",
+   "src": [
+    "src/missions/apollo11/ascent.js:109"
+   ]
+  },
+  {
+   "key": "kjtwlqc27a",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Eagle, you are stay for T1.",
+   "src": [
+    "src/missions/apollo11/landing.js:301"
+   ]
+  },
+  {
+   "key": "phvzcr4dae",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "eight",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "x9zf3eeeem",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "en",
+   "src": [
+    "src/missions/apollo13/mcc5.js:40",
+    "src/missions/common/kit.js:48",
+    "src/missions/free/index.js:236"
+   ]
+  },
+  {
+   "key": "xq0dcfj4jk",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Farewell, Aquarius, and we thank you.",
+   "src": [
+    "src/missions/apollo13/entry.js:58"
+   ]
+  },
+  {
+   "key": "h7yhxk4phe",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "feet per second",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "lnnnwnl7ch",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "five",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "15puiusc2ku",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "four",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "z2x3mbp3m4",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Free return PAD.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "3i3hqgawos",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Go!",
+   "src": [
+    "src/missions/MissionRunner.js:673",
+    "src/missions/MissionRunner.js:684"
+   ]
+  },
+  {
+   "key": "13nzlr0cck6",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Hard dock. Nice job.",
+   "src": [
+    "src/missions/training/docking.js:72"
+   ]
+  },
+  {
+   "key": "17mvh6jkbze",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Hello Apollo 11, Houston. How did it go? Over.",
+   "src": [
+    "src/missions/apollo11/tei.js:56"
+   ]
+  },
+  {
+   "key": "n4vdz0y0ob",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Houston standing by. Call us when you need numbers.",
+   "src": [
+    "src/missions/free/index.js:314"
+   ]
+  },
+  {
+   "key": "xkradly831",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Houston with a status update.",
+   "src": [
+    "src/missions/free/index.js:248"
+   ]
+  },
+  {
+   "key": "mqskms14u0",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Houston. We show cutoff and we copy the numbers. You are well on your way now.",
+   "src": [
+    "src/missions/free/index.js:197"
+   ]
+  },
+  {
+   "key": "o16k037y74",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Inboard cutoff on the S-II.",
+   "src": [
+    "src/missions/common/kit.js:128"
+   ]
+  },
+  {
+   "key": "nmriam4d8z",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Inboard cutoff.",
+   "src": [
+    "src/missions/common/kit.js:118"
+   ]
+  },
+  {
+   "key": "12w2lf8czr0",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Is that right?",
+   "src": [
+    "src/missions/apollo13/powerup.js:65"
+   ]
+  },
+  {
+   "key": "orj2xwogme",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Last one. Houston has loaded a maneuver for you. Select P40 and watch the computer turn the spacecraft to the burn attitude.",
+   "src": [
+    "src/missions/training/dsky.js:53"
+   ]
+  },
+  {
+   "key": "cz49oqellx",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Loaded in your computer.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "80qxpwbu0z",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "LOI PAD.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "13syjbf5n8s",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Mains! Deploy the mains!",
+   "src": [
+    "src/missions/apollo11/entry.js:92"
+   ]
+  },
+  {
+   "key": "fcizi02wez",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Maneuver PAD.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "15xtmoqw9th",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Mark. Mode 1 Bravo.",
+   "src": [
+    "src/missions/common/launch.js:131"
+   ]
+  },
+  {
+   "key": "qn3lkfi9o0",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "MCC-5 PAD.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "11ygie03cpi",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Midcourse correction PAD.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "17z18wwwxzm",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "minus",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "vhxplfqxew",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Mode 1 Charlie.",
+   "src": [
+    "src/missions/common/launch.js:133"
+   ]
+  },
+  {
+   "key": "165cgb31vx7",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Negative, no LOI solution from here.",
+   "src": [
+    "src/missions/free/index.js:269"
+   ]
+  },
+  {
+   "key": "f8d4solmrp",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "niner",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "15zbvjyvoww",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "No go, Flight.",
+   "src": [
+    "src/missions/MissionRunner.js:674",
+    "src/missions/MissionRunner.js:684"
+   ]
+  },
+  {
+   "key": "r670bqbgte",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Odyssey, Houston. Standing by. Over.",
+   "src": [
+    "src/missions/apollo13/entry.js:90"
+   ]
+  },
+  {
+   "key": "xyxge80lyc",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Odyssey, Houston. We have the power-up procedure for you. It is a long one; take your time.",
+   "src": [
+    "src/missions/apollo13/powerup.js:26"
+   ]
+  },
+  {
+   "key": "p7ewzovskz",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Odyssey, Houston. We see your power-up. It looks good.",
+   "src": [
+    "src/missions/apollo13/powerup.js:41"
+   ]
+  },
+  {
+   "key": "jwggb1hj0m",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Odyssey, Houston. We show you on the mains. It really looks great.",
+   "src": [
+    "src/missions/apollo13/entry.js:108"
+   ]
+  },
+  {
+   "key": "1uou84v87m",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Odyssey, Houston. You are GO for SM jettison.",
+   "src": [
+    "src/missions/apollo13/powerup.js:49"
+   ]
+  },
+  {
+   "key": "154im1l5484",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Okay, Jack, we want to power down the CM now.",
+   "src": [
+    "src/missions/apollo13/lifeboat.js:119"
+   ]
+  },
+  {
+   "key": "ahv9uwiubm",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Okay, Odyssey. You are GO for LM jettison.",
+   "src": [
+    "src/missions/apollo13/entry.js:46"
+   ]
+  },
+  {
+   "key": "scwat5ly25",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Okay, you have the LM about 40 meters ahead. Take your time.",
+   "src": [
+    "src/missions/training/docking.js:31"
+   ]
+  },
+  {
+   "key": "asyh51cx97",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Okay. We read you, Jack.",
+   "src": [
+    "src/missions/apollo13/entry.js:93"
+   ]
+  },
+  {
+   "key": "u0gv44on3o",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "one",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "15g6u2qvump",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "PC plus 2 PAD.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "l8f0zbth4b",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "pitch",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "ioeen22k9p",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "plus",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "d7x6kh5byd",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "point",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "mke3p1gq64",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Roger, 11. We will pass that on. And it looks like you are well on your way now.",
+   "src": [
+    "src/missions/apollo11/tli.js:98"
+   ]
+  },
+  {
+   "key": "26uw13qx53",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Roger, 1201 alarm. We are GO. Same type. We are GO.",
+   "src": [
+    "src/missions/apollo11/landing.js:154"
+   ]
+  },
+  {
+   "key": "16aodkrl4k8",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Roger, hard dock. Nice going.",
+   "src": [
+    "src/missions/apollo11/tde.js:127"
+   ]
+  },
+  {
+   "key": "uy6907jg7y",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Roger, hard dock. Nice job.",
+   "src": [
+    "src/missions/free/index.js:205"
+   ]
+  },
+  {
+   "key": "123cef1z5tf",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Roger, liftoff. The clock is running.",
+   "src": [
+    "src/missions/free/index.js:176"
+   ]
+  },
+  {
+   "key": "ypghczz7az",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Roger, stand by for TLI numbers.",
+   "src": [
+    "src/missions/free/index.js:250"
+   ]
+  },
+  {
+   "key": "1384nmb0sna",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Roger, TLI inhibited.",
+   "src": [
+    "src/missions/free/index.js:260"
+   ]
+  },
+  {
+   "key": "122yzlus8iy",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Roger, tower cleared.",
+   "src": [
+    "src/missions/common/kit.js:115"
+   ]
+  },
+  {
+   "key": "lrjmrjmx81",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Roger, Twan— Tranquility, we copy you on the ground. You got a bunch of guys about to turn blue. We are breathing again. Thanks a lot.",
+   "src": [
+    "src/missions/apollo11/landing.js:281"
+   ]
+  },
+  {
+   "key": "17ek0kxn1x5",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Roger, we confirm ignition, and the thrust is GO.",
+   "src": [
+    "src/missions/apollo11/tli.js:80"
+   ]
+  },
+  {
+   "key": "13oev0wj62b",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Roger, we copy the undocking.",
+   "src": [
+    "src/missions/free/index.js:299"
+   ]
+  },
+  {
+   "key": "kppuckdkib",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Roger, you are cleared for takeoff.",
+   "src": [
+    "src/missions/free/index.js:292"
+   ]
+  },
+  {
+   "key": "7171syga6z",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Roger. 1201. We got it. We are GO.",
+   "src": [
+    "src/missions/apollo11/landing.js:156"
+   ]
+  },
+  {
+   "key": "9891qpdvzz",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Roger. 1202. We got it. We are GO.",
+   "src": [
+    "src/missions/apollo11/landing.js:156"
+   ]
+  },
+  {
+   "key": "kxwpc05wip",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Roger. Eagle, Houston. One minute and you are looking good.",
+   "src": [
+    "src/missions/apollo11/ascent.js:95"
+   ]
+  },
+  {
+   "key": "k0m6077xe2",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Roger. Main B undervolt.",
+   "src": [
+    "src/missions/apollo13/explosion.js:68"
+   ]
+  },
+  {
+   "key": "qyf5px9ody",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Roger. We copy your burn status report. We are all breathing again.",
+   "src": [
+    "src/missions/apollo11/loi.js:89"
+   ]
+  },
+  {
+   "key": "q11zvsbjq",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Roger. We copy your venting.",
+   "src": [
+    "src/missions/apollo13/explosion.js:85"
+   ]
+  },
+  {
+   "key": "pmrvunaiku",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Roger. We got — we're GO on that alarm.",
+   "src": [
+    "src/missions/apollo11/landing.js:142"
+   ]
+  },
+  {
+   "key": "6v0y7a0sjk",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Roger. We had a couple of cosmic strikes, I think.",
+   "src": [
+    "src/missions/apollo12/lightning.js:94"
+   ]
+  },
+  {
+   "key": "qn2khovgxo",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Roger. We've got you coming home. It's well in the green.",
+   "src": [
+    "src/missions/apollo11/tei.js:60"
+   ]
+  },
+  {
+   "key": "jl3kzyr9lb",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "roll",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "dkl7p6p3fw",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "SCE. SCE to Auxiliary.",
+   "src": [
+    "src/missions/apollo12/lightning.js:70"
+   ]
+  },
+  {
+   "key": "lacs9v0gsc",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "seconds",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "8qpp5fs2a6",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "seven",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "83z258qm0h",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "six",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "r8aiicu7ep",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Staging. Good ignition.",
+   "src": [
+    "src/missions/free/index.js:183"
+   ]
+  },
+  {
+   "key": "15iri19v02j",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Stand by for your maneuver PAD.",
+   "src": [
+    "src/missions/common/kit.js:33"
+   ]
+  },
+  {
+   "key": "16f856g5jp2",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "TEI PAD.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "cjbv6tt940",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "That is affirmative.",
+   "src": [
+    "src/missions/apollo13/explosion.js:109"
+   ]
+  },
+  {
+   "key": "6b78j5aw14",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "That is the cockpit. You are ready for the DSKY course.",
+   "src": [
+    "src/missions/training/cockpit.js:54"
+   ]
+  },
+  {
+   "key": "ayydgjqucz",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Thirteen, Houston. Tower jettison.",
+   "src": [
+    "src/missions/common/launch.js:163"
+   ]
+  },
+  {
+   "key": "ecoabvr6zu",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Thirteen, Houston. We confirm the center engine out. Everything else is GO.",
+   "src": [
+    "src/missions/apollo13/launch.js:46"
+   ]
+  },
+  {
+   "key": "85a8s488hr",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Thirteen, Houston. We want you to get over into the LM and get it powered up.",
+   "src": [
+    "src/missions/apollo13/lifeboat.js:51"
+   ]
+  },
+  {
+   "key": "kffgqw5nb1",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Thirteen, Houston. You are confirmed GO for orbit.",
+   "src": [
+    "src/missions/common/launch.js:201"
+   ]
+  },
+  {
+   "key": "ekjo4dcnql",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Thirteen, Houston. You are GO for staging. S-IVB to orbit capability.",
+   "src": [
+    "src/missions/common/launch.js:134"
+   ]
+  },
+  {
+   "key": "kgm62r7jqx",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Thirteen, we are still losing O2 tank 1. We would like you to start thinking about the LM lifeboat.",
+   "src": [
+    "src/missions/apollo13/explosion.js:124"
+   ]
+  },
+  {
+   "key": "94bzc33zpz",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "This chapter is still under construction.",
+   "src": [
+    "src/missions/stub.js:9"
+   ]
+  },
+  {
+   "key": "kfcu90ft88",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "This is Houston. Say again, please.",
+   "src": [
+    "src/missions/apollo13/explosion.js:66"
+   ]
+  },
+  {
+   "key": "13cbq7p7s4q",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "three",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "7axk54h8nc",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "TIG",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "63u09y7e63",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "TLI PAD.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "lrhduiro84",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Tower cleared.",
+   "src": [
+    "src/missions/free/index.js:179"
+   ]
+  },
+  {
+   "key": "186dwj8qzrq",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Tower jettison confirmed.",
+   "src": [
+    "src/missions/free/index.js:186"
+   ]
+  },
+  {
+   "key": "gtygl54ceo",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "two",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "sygsc1bcnj",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "We confirm good thrust on all five.",
+   "src": [
+    "src/missions/common/kit.js:122"
+   ]
+  },
+  {
+   "key": "x0kx5h48i1",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "We confirm ignition and the thrust is GO.",
+   "src": [
+    "src/missions/free/index.js:193"
+   ]
+  },
+  {
+   "key": "5sbm8lu8x3",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "We confirm tower jettison. Mode 2.",
+   "src": [
+    "src/missions/common/kit.js:125"
+   ]
+  },
+  {
+   "key": "60w7v065ke",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "We have entry interface. See you on the other side of blackout.",
+   "src": [
+    "src/missions/free/index.js:227"
+   ]
+  },
+  {
+   "key": "j4vdbw7u8q",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "We saw no ignition. Stand by for a new PAD; the computer will fly it.",
+   "src": [
+    "src/missions/common/kit.js:80"
+   ]
+  },
+  {
+   "key": "x6ku51j721",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Welcome to the command module simulator. Let us start with the most important light in the spacecraft.",
+   "src": [
+    "src/missions/training/cockpit.js:32"
+   ]
+  },
+  {
+   "key": "azafpv283r",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Well done. You speak AGC now.",
+   "src": [
+    "src/missions/training/dsky.js:63"
+   ]
+  },
+  {
+   "key": "fo5u2evfzd",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "yaw",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "14glnarruwd",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "You are confirmed GO for orbit.",
+   "src": [
+    "src/missions/free/index.js:189"
+   ]
+  },
+  {
+   "key": "zxibf1bal9",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "You have manual control. Lift vector up at entry interface.",
+   "src": [
+    "src/missions/training/entry.js:39"
+   ]
+  },
+  {
+   "key": "u25b28r463",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "zero",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "gmdt9f9iwv",
+   "who": "CDR",
+   "lang": "en",
+   "text": "Abort! Abort!",
+   "src": [
+    "src/missions/common/launch.js:53"
+   ]
+  },
+  {
+   "key": "rx7vl9rybz",
+   "who": "CDR",
+   "lang": "en",
+   "text": "And it looks to me, looking out the hatch, that we are venting something. We are venting something out into space.",
+   "src": [
+    "src/missions/apollo13/explosion.js:84"
+   ]
+  },
+  {
+   "key": "xxsy348whv",
+   "who": "CDR",
+   "lang": "en",
+   "text": "And there is one whole side of that spacecraft missing!",
+   "src": [
+    "src/missions/apollo13/powerup.js:64"
+   ]
+  },
+  {
+   "key": "16p67ohvoen",
+   "who": "CDR",
+   "lang": "en",
+   "text": "Are you saying you want them both closed?",
+   "src": [
+    "src/missions/apollo13/explosion.js:108"
+   ]
+  },
+  {
+   "key": "7f9c5mo9gp",
+   "who": "CDR",
+   "lang": "en",
+   "text": "Burn complete.",
+   "src": [
+    "src/missions/apollo8/loi.js:58"
+   ]
+  },
+  {
+   "key": "1l1hwrj3wh",
+   "who": "CDR",
+   "lang": "en",
+   "text": "Burn complete. We are in lunar orbit.",
+   "src": [
+    "src/missions/apollo11/loi.js:75"
+   ]
+  },
+  {
+   "key": "qe154v4i82",
+   "who": "CDR",
+   "lang": "en",
+   "text": "Capture.",
+   "src": [
+    "src/missions/free/index.js:202"
+   ]
+  },
+  {
+   "key": "eii8qnot2y",
+   "who": "CDR",
+   "lang": "en",
+   "text": "CM/SM sep. We are in entry attitude.",
+   "src": [
+    "src/missions/apollo11/entry.js:60"
+   ]
+  },
+  {
+   "key": "z60wltd5lh",
+   "who": "CDR",
+   "lang": "en",
+   "text": "Fuel cells are off line, the AC buses are dead, the platform is gone.",
+   "src": [
+    "src/missions/apollo12/lightning.js:50"
+   ]
+  },
+  {
+   "key": "fa63nv9qq7",
+   "who": "CDR",
+   "lang": "en",
+   "text": "Give us a reading on the 1201 program alarm.",
+   "src": [
+    "src/missions/apollo11/landing.js:134"
+   ]
+  },
+  {
+   "key": "cuyk5kvqzq",
+   "who": "CDR",
+   "lang": "en",
+   "text": "Give us a reading on the 1202 program alarm.",
+   "src": [
+    "src/missions/apollo11/landing.js:134"
+   ]
+  },
+  {
+   "key": "lr5lwwjnqb",
+   "who": "CDR",
+   "lang": "en",
+   "text": "Hey Houston, Apollo 11. That Saturn gave us a magnificent ride.",
+   "src": [
+    "src/missions/apollo11/tli.js:97"
+   ]
+  },
+  {
+   "key": "op3fbps4rw",
+   "who": "CDR",
+   "lang": "en",
+   "text": "Houston, we have had an inboard out on the S-II.",
+   "src": [
+    "src/missions/apollo13/launch.js:38"
+   ]
+  },
+  {
+   "key": "v7mknoobiy",
+   "who": "CDR",
+   "lang": "en",
+   "text": "Houston, we've had a problem. We've had a Main B Bus Undervolt.",
+   "src": [
+    "src/missions/apollo13/explosion.js:67"
+   ]
+  },
+  {
+   "key": "a443sg8qvp",
+   "who": "CDR",
+   "lang": "en",
+   "text": "I lost a whole bunch of stuff. I don't know what happened here. We had everything in the world drop out.",
+   "src": [
+    "src/missions/apollo12/lightning.js:45"
+   ]
+  },
+  {
+   "key": "18abydn1kys",
+   "who": "CDR",
+   "lang": "en",
+   "text": "I'm not sure we didn't get hit by lightning.",
+   "src": [
+    "src/missions/apollo12/lightning.js:93"
+   ]
+  },
+  {
+   "key": "3e5f2r0xu9",
+   "who": "CDR",
+   "lang": "en",
+   "text": "Ignition.",
+   "src": [
+    "src/missions/apollo11/tli.js:79",
+    "src/missions/apollo13/mcc5.js:93"
+   ]
+  },
+  {
+   "key": "14r141qetwu",
+   "who": "CDR",
+   "lang": "en",
+   "text": "It's a 1201.",
+   "src": [
+    "src/missions/apollo11/landing.js:133"
+   ]
+  },
+  {
+   "key": "iobbi7kvpl",
+   "who": "CDR",
+   "lang": "en",
+   "text": "It's a 1202.",
+   "src": [
+    "src/missions/apollo11/landing.js:133"
+   ]
+  },
+  {
+   "key": "7sngcfqlao",
+   "who": "CDR",
+   "lang": "en",
+   "text": "Liftoff. The clock is running.",
+   "src": [
+    "src/missions/common/launch.js:103"
+   ]
+  },
+  {
+   "key": "4mwakpt54",
+   "who": "CDR",
+   "lang": "en",
+   "text": "Okay, we are going to roll the spacecraft.",
+   "src": [
+    "src/missions/apollo8/earthrise.js:38"
+   ]
+  },
+  {
+   "key": "1bmc8tyfod",
+   "who": "CDR",
+   "lang": "en",
+   "text": "Okay, we will realign the platform with the stars. We are in orbit and everything is fine.",
+   "src": [
+    "src/missions/apollo12/lightning.js:95"
+   ]
+  },
+  {
+   "key": "pg1f80a93k",
+   "who": "CDR",
+   "lang": "en",
+   "text": "Okay. Fred and I are going into the LM.",
+   "src": [
+    "src/missions/apollo13/lifeboat.js:52"
+   ]
+  },
+  {
+   "key": "cawkycfeuy",
+   "who": "CDR",
+   "lang": "en",
+   "text": "Pretty rocky area.",
+   "src": [
+    "src/missions/apollo11/landing.js:184"
+   ]
+  },
+  {
+   "key": "dog7jf857v",
+   "who": "CDR",
+   "lang": "en",
+   "text": "Program alarm.",
+   "src": [
+    "src/missions/apollo11/landing.js:132"
+   ]
+  },
+  {
+   "key": "eufi6w3tz2",
+   "who": "CDR",
+   "lang": "en",
+   "text": "Read you loud and clear, Houston. It was like perfect.",
+   "src": [
+    "src/missions/apollo11/loi.js:88"
+   ]
+  },
+  {
+   "key": "dd0pllb9x2",
+   "who": "CDR",
+   "lang": "en",
+   "text": "Right by the high-gain antenna, the whole panel is blown out, almost from the base to the engine.",
+   "src": [
+    "src/missions/apollo13/powerup.js:66"
+   ]
+  },
+  {
+   "key": "kgi278ze4r",
+   "who": "CDR",
+   "lang": "en",
+   "text": "Roger, Houston. We are through the blackout.",
+   "src": [
+    "src/missions/apollo11/entry.js:78"
+   ]
+  },
+  {
+   "key": "gth8yh5j7v",
+   "who": "CDR",
+   "lang": "en",
+   "text": "Roger, we are GO for TLI.",
+   "src": [
+    "src/missions/apollo11/tli.js:57"
+   ]
+  },
+  {
+   "key": "2lp077vo63",
+   "who": "CDR",
+   "lang": "en",
+   "text": "Roger. Everything looks OK up here.",
+   "src": [
+    "src/missions/apollo11/loi.js:60"
+   ]
+  },
+  {
+   "key": "wv3w52s2pm",
+   "who": "CDR",
+   "lang": "en",
+   "text": "Roger. Shutdown. We are in orbit.",
+   "src": [
+    "src/missions/common/launch.js:202"
+   ]
+  },
+  {
+   "key": "6rb10uzhj7",
+   "who": "CDR",
+   "lang": "en",
+   "text": "Roger. The other four are burning fine.",
+   "src": [
+    "src/missions/apollo13/launch.js:56"
+   ]
+  },
+  {
+   "key": "rd1u4t4gh2",
+   "who": "CDR",
+   "lang": "en",
+   "text": "Roger. We're thinking about the LM.",
+   "src": [
+    "src/missions/apollo13/explosion.js:125"
+   ]
+  },
+  {
+   "key": "ty2yzx86dz",
+   "who": "CDR",
+   "lang": "en",
+   "text": "Roll and pitch program.",
+   "src": [
+    "src/missions/common/launch.js:129"
+   ]
+  },
+  {
+   "key": "kp3c2tl27p",
+   "who": "CDR",
+   "lang": "en",
+   "text": "Roll is complete.",
+   "src": [
+    "src/missions/common/launch.js:130"
+   ]
+  },
+  {
+   "key": "rs64fubr5",
+   "who": "CDR",
+   "lang": "en",
+   "text": "Shutdown.",
+   "src": [
+    "src/missions/apollo11/landing.js:277",
+    "src/missions/apollo13/mcc5.js:107",
+    "src/missions/common/kit.js:134"
+   ]
+  },
+  {
+   "key": "m1bz7qsvl0",
+   "who": "CDR",
+   "lang": "en",
+   "text": "Shutdown. Good burn.",
+   "src": [
+    "src/missions/apollo11/tei.js:49",
+    "src/missions/apollo13/freereturn.js:73"
+   ]
+  },
+  {
+   "key": "l6vkneahyc",
+   "who": "CDR",
+   "lang": "en",
+   "text": "Shutdown. That was a good burn.",
+   "src": [
+    "src/missions/apollo13/pc2.js:51"
+   ]
+  },
+  {
+   "key": "p5r3trxitj",
+   "who": "CDR",
+   "lang": "en",
+   "text": "Somebody is upside down.",
+   "src": [
+    "src/missions/apollo11/undock.js:81"
+   ]
+  },
+  {
+   "key": "pqni6783e3",
+   "who": "CDR",
+   "lang": "en",
+   "text": "Staging, and the S-IVB is lit.",
+   "src": [
+    "src/missions/common/kit.js:131"
+   ]
+  },
+  {
+   "key": "czpehv7w4w",
+   "who": "CDR",
+   "lang": "en",
+   "text": "Staging. And ignition.",
+   "src": [
+    "src/missions/common/kit.js:121"
+   ]
+  },
+  {
+   "key": "ed3ecfckem",
+   "who": "CDR",
+   "lang": "en",
+   "text": "The Eagle has wings.",
+   "src": [
+    "src/missions/apollo11/undock.js:53"
+   ]
+  },
+  {
+   "key": "8jfb7lcp9a",
+   "who": "CDR",
+   "lang": "en",
+   "text": "Time to open up the LRL doors, Charlie.",
+   "src": [
+    "src/missions/apollo11/tei.js:57"
+   ]
+  },
+  {
+   "key": "crurt2mm4u",
+   "who": "CDR",
+   "lang": "en",
+   "text": "Try FCE to Auxiliary. What the hell is that?",
+   "src": [
+    "src/missions/apollo12/lightning.js:69"
+   ]
+  },
+  {
+   "key": "17q2wd5dusm",
+   "who": "CDR",
+   "lang": "en",
+   "text": "We have the LM. Eagle is out.",
+   "src": [
+    "src/missions/apollo11/tde.js:140"
+   ]
+  },
+  {
+   "key": "z6zvefyyar",
+   "who": "CDR",
+   "lang": "en",
+   "text": "What the hell was that?",
+   "src": [
+    "src/missions/apollo12/lightning.js:44"
+   ]
+  },
+  {
+   "key": "3i51tiqd8k",
+   "who": "CMP",
+   "lang": "en",
+   "text": "Capture.",
+   "src": [
+    "src/missions/apollo11/tde.js:114"
+   ]
+  },
+  {
+   "key": "40ashblc9d",
+   "who": "CMP",
+   "lang": "en",
+   "text": "Capture. Retracting the probe.",
+   "src": [
+    "src/missions/apollo11/ascent.js:158"
+   ]
+  },
+  {
+   "key": "44d9hztgcr",
+   "who": "CMP",
+   "lang": "en",
+   "text": "Eagle, Columbia. I have you in sight. Come on up.",
+   "src": [
+    "src/missions/apollo11/ascent.js:124"
+   ]
+  },
+  {
+   "key": "fxibunocc7",
+   "who": "CMP",
+   "lang": "en",
+   "text": "Eagle, this is Columbia. They just gave you a GO for powered descent.",
+   "src": [
+    "src/missions/apollo11/landing.js:55"
+   ]
+  },
+  {
+   "key": "vr48srvlay",
+   "who": "CMP",
+   "lang": "en",
+   "text": "eight",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "14ezjsrj0bq",
+   "who": "CMP",
+   "lang": "en",
+   "text": "en",
+   "src": [
+    "src/missions/apollo13/lifeboat.js:83"
+   ]
+  },
+  {
+   "key": "5x1wtl6b76",
+   "who": "CMP",
+   "lang": "en",
+   "text": "five",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "7u33ybmo2o",
+   "who": "CMP",
+   "lang": "en",
+   "text": "four",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "6a9l2qh3by",
+   "who": "CMP",
+   "lang": "en",
+   "text": "Get some pictures, Fred.",
+   "src": [
+    "src/missions/apollo13/pc2.js:29"
+   ]
+  },
+  {
+   "key": "pswvqbfyd",
+   "who": "CMP",
+   "lang": "en",
+   "text": "Go ahead, Houston, Apollo 8. Burn complete. Our orbit 169.1 by 60.5.",
+   "src": [
+    "src/missions/apollo8/loi.js:91"
+   ]
+  },
+  {
+   "key": "6qygczvvgc",
+   "who": "CMP",
+   "lang": "en",
+   "text": "I think you have got a fine-looking flying machine there, Eagle, despite the fact you are upside down.",
+   "src": [
+    "src/missions/apollo11/undock.js:80"
+   ]
+  },
+  {
+   "key": "d1kdmkknci",
+   "who": "CMP",
+   "lang": "en",
+   "text": "minus",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "fixksg27i6",
+   "who": "CMP",
+   "lang": "en",
+   "text": "niner",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "wu1qouypp",
+   "who": "CMP",
+   "lang": "en",
+   "text": "Odyssey is powered down.",
+   "src": [
+    "src/missions/apollo13/lifeboat.js:124"
+   ]
+  },
+  {
+   "key": "jr2us57jnm",
+   "who": "CMP",
+   "lang": "en",
+   "text": "Okay, Aquarius. CM gimbal angles.",
+   "src": [
+    "src/missions/apollo13/lifeboat.js:83"
+   ]
+  },
+  {
+   "key": "125po1pkkra",
+   "who": "CMP",
+   "lang": "en",
+   "text": "Okay, Joe.",
+   "src": [
+    "src/missions/apollo13/entry.js:92"
+   ]
+  },
+  {
+   "key": "72497sla1e",
+   "who": "CMP",
+   "lang": "en",
+   "text": "Okay, the first one is hooked up and the fan is on.",
+   "src": [
+    "src/missions/apollo13/co2.js:112"
+   ]
+  },
+  {
+   "key": "7qkb3yigg",
+   "who": "CMP",
+   "lang": "en",
+   "text": "Okay, they are closed.",
+   "src": [
+    "src/missions/apollo13/explosion.js:121"
+   ]
+  },
+  {
+   "key": "cvv079zcih",
+   "who": "CMP",
+   "lang": "en",
+   "text": "Okay. Stand by.",
+   "src": [
+    "src/missions/apollo13/explosion.js:42"
+   ]
+  },
+  {
+   "key": "fi3synznop",
+   "who": "CMP",
+   "lang": "en",
+   "text": "one",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "1389j6a8f7y",
+   "who": "CMP",
+   "lang": "en",
+   "text": "pitch",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "11lpyjhu5fv",
+   "who": "CMP",
+   "lang": "en",
+   "text": "plus",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "q0kwpc1stl",
+   "who": "CMP",
+   "lang": "en",
+   "text": "point",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "x7rlh8kjfd",
+   "who": "CMP",
+   "lang": "en",
+   "text": "Roger. Ready to copy. It is cold in here.",
+   "src": [
+    "src/missions/apollo13/powerup.js:27"
+   ]
+  },
+  {
+   "key": "3f4pvu3up2",
+   "who": "CMP",
+   "lang": "en",
+   "text": "roll",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "fkqzy693y1",
+   "who": "CMP",
+   "lang": "en",
+   "text": "SEP. The SLA panels are away.",
+   "src": [
+    "src/missions/apollo11/tde.js:59"
+   ]
+  },
+  {
+   "key": "d0qovniki8",
+   "who": "CMP",
+   "lang": "en",
+   "text": "Separation burn complete. See you later.",
+   "src": [
+    "src/missions/apollo11/undock.js:91"
+   ]
+  },
+  {
+   "key": "4incpx5q2z",
+   "who": "CMP",
+   "lang": "en",
+   "text": "seven",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "awb9y5fhir",
+   "who": "CMP",
+   "lang": "en",
+   "text": "six",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "13aocfcuvx9",
+   "who": "CMP",
+   "lang": "en",
+   "text": "The Moon is essentially gray, no color; looks like plaster of Paris or sort of a grayish beach sand.",
+   "src": [
+    "src/missions/apollo8/loi.js:79"
+   ]
+  },
+  {
+   "key": "r35q0ei3gy",
+   "who": "CMP",
+   "lang": "en",
+   "text": "three",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "168r6lcqhvh",
+   "who": "CMP",
+   "lang": "en",
+   "text": "Too fast. Backing off.",
+   "src": [
+    "src/missions/apollo11/tde.js:70"
+   ]
+  },
+  {
+   "key": "3hvy2b4qbw",
+   "who": "CMP",
+   "lang": "en",
+   "text": "Tunnel pressurized. Ready for LM ejection.",
+   "src": [
+    "src/missions/apollo11/tde.js:132"
+   ]
+  },
+  {
+   "key": "scgodqp478",
+   "who": "CMP",
+   "lang": "en",
+   "text": "two",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "rpizl04qt1",
+   "who": "CMP",
+   "lang": "en",
+   "text": "yaw",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "14svs2mhtfx",
+   "who": "CMP",
+   "lang": "en",
+   "text": "zero",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "20ehbqnmvr",
+   "who": "CONTROL",
+   "lang": "en",
+   "text": "Go!",
+   "src": [
+    "src/missions/MissionRunner.js:673",
+    "src/missions/MissionRunner.js:684"
+   ]
+  },
+  {
+   "key": "40g39q0n9s",
+   "who": "CONTROL",
+   "lang": "en",
+   "text": "No go, Flight.",
+   "src": [
+    "src/missions/MissionRunner.js:674",
+    "src/missions/MissionRunner.js:684"
+   ]
+  },
+  {
+   "key": "yoyon1ubil",
+   "who": "EECOM",
+   "lang": "en",
+   "text": "Flight, Crew Systems has a procedure: we can rig the CM canisters with what they have on board.",
+   "src": [
+    "src/missions/apollo13/co2.js:78"
+   ]
+  },
+  {
+   "key": "1d6rhwly8o",
+   "who": "EECOM",
+   "lang": "en",
+   "text": "Flight, EECOM. Try SCE to Aux.",
+   "src": [
+    "src/missions/apollo12/lightning.js:59"
+   ]
+  },
+  {
+   "key": "vt2hil2wb6",
+   "who": "EECOM",
+   "lang": "en",
+   "text": "Flight, EECOM. We may have had an instrumentation problem, Flight... No. We have lost two fuel cells and O2 tank 2.",
+   "src": [
+    "src/missions/apollo13/explosion.js:95"
+   ]
+  },
+  {
+   "key": "mvjge9nzu6",
+   "who": "EECOM",
+   "lang": "en",
+   "text": "Go!",
+   "src": [
+    "src/missions/MissionRunner.js:673",
+    "src/missions/MissionRunner.js:684"
+   ]
+  },
+  {
+   "key": "6rujlp1fpf",
+   "who": "EECOM",
+   "lang": "en",
+   "text": "No go, Flight.",
+   "src": [
+    "src/missions/MissionRunner.js:674",
+    "src/missions/MissionRunner.js:684"
+   ]
+  },
+  {
+   "key": "efpf5pfouq",
+   "who": "FAO",
+   "lang": "en",
+   "text": "Go!",
+   "src": [
+    "src/missions/MissionRunner.js:673",
+    "src/missions/MissionRunner.js:684"
+   ]
+  },
+  {
+   "key": "12gexizcol9",
+   "who": "FAO",
+   "lang": "en",
+   "text": "No go, Flight.",
+   "src": [
+    "src/missions/MissionRunner.js:674",
+    "src/missions/MissionRunner.js:684"
+   ]
+  },
+  {
+   "key": "16xvc4gb3yi",
+   "who": "FIDO",
+   "lang": "en",
+   "text": "Flight, FIDO. DPS burn at 61:30, 38 feet per second. That gets us a free return.",
+   "src": [
+    "src/missions/apollo13/freereturn.js:59"
+   ]
+  },
+  {
+   "key": "sg675z7m7k",
+   "who": "FIDO",
+   "lang": "en",
+   "text": "Flight, FIDO. We are go for the first opportunity.",
+   "src": [
+    "src/missions/apollo11/tli.js:46"
+   ]
+  },
+  {
+   "key": "xi02o9elc7",
+   "who": "FIDO",
+   "lang": "en",
+   "text": "Go!",
+   "src": [
+    "src/missions/MissionRunner.js:673",
+    "src/missions/MissionRunner.js:684"
+   ]
+  },
+  {
+   "key": "7t9fr2kya1",
+   "who": "FIDO",
+   "lang": "en",
+   "text": "No go, Flight.",
+   "src": [
+    "src/missions/MissionRunner.js:674",
+    "src/missions/MissionRunner.js:684"
+   ]
+  },
+  {
+   "key": "7aoq6ldyfa",
+   "who": "FLIGHT",
+   "lang": "en",
+   "text": "All flight, go/no-go for TEI.",
+   "src": [
+    "src/missions/apollo11/tei.js:34"
+   ]
+  },
+  {
+   "key": "b3ivvfeuc8",
+   "who": "FLIGHT",
+   "lang": "en",
+   "text": "All flight, go/no-go for the PC plus 2 burn.",
+   "src": [
+    "src/missions/apollo13/pc2.js:44"
+   ]
+  },
+  {
+   "key": "133idltiji0",
+   "who": "FLIGHT",
+   "lang": "en",
+   "text": "BOOSTER?",
+   "src": [
+    "src/missions/MissionRunner.js:664"
+   ]
+  },
+  {
+   "key": "6863c4h0xy",
+   "who": "FLIGHT",
+   "lang": "en",
+   "text": "CAPCOM, Aquarius is GO for PC plus 2.",
+   "src": [
+    "src/missions/apollo13/pc2.js:45"
+   ]
+  },
+  {
+   "key": "u3t31ig2i5",
+   "who": "FLIGHT",
+   "lang": "en",
+   "text": "CAPCOM, we are GO for TEI.",
+   "src": [
+    "src/missions/apollo11/tei.js:35"
+   ]
+  },
+  {
+   "key": "ntxso0vkm9",
+   "who": "FLIGHT",
+   "lang": "en",
+   "text": "CAPCOM, we are stay for T1.",
+   "src": [
+    "src/missions/apollo11/landing.js:300"
+   ]
+  },
+  {
+   "key": "lpy6gfqraa",
+   "who": "FLIGHT",
+   "lang": "en",
+   "text": "CAPCOM?",
+   "src": [
+    "src/missions/MissionRunner.js:664"
+   ]
+  },
+  {
+   "key": "x9mmy2eddu",
+   "who": "FLIGHT",
+   "lang": "en",
+   "text": "CONTROL?",
+   "src": [
+    "src/missions/MissionRunner.js:664"
+   ]
+  },
+  {
+   "key": "gtig9xyavr",
+   "who": "FLIGHT",
+   "lang": "en",
+   "text": "EECOM, I need something better than that.",
+   "src": [
+    "src/missions/apollo12/lightning.js:61"
+   ]
+  },
+  {
+   "key": "fhsn0xchsj",
+   "who": "FLIGHT",
+   "lang": "en",
+   "text": "EECOM, that does not explain the venting.",
+   "src": [
+    "src/missions/apollo13/explosion.js:97"
+   ]
+  },
+  {
+   "key": "oy36r9pav0",
+   "who": "FLIGHT",
+   "lang": "en",
+   "text": "EECOM?",
+   "src": [
+    "src/missions/MissionRunner.js:664"
+   ]
+  },
+  {
+   "key": "15oqbz4jnzc",
+   "who": "FLIGHT",
+   "lang": "en",
+   "text": "FAO?",
+   "src": [
+    "src/missions/MissionRunner.js:664"
+   ]
+  },
+  {
+   "key": "3yfaq8n83w",
+   "who": "FLIGHT",
+   "lang": "en",
+   "text": "FIDO, we have no reason to slip. First opportunity.",
+   "src": [
+    "src/missions/apollo11/tli.js:47"
+   ]
+  },
+  {
+   "key": "1252j24a793",
+   "who": "FLIGHT",
+   "lang": "en",
+   "text": "FIDO?",
+   "src": [
+    "src/missions/MissionRunner.js:664"
+   ]
+  },
+  {
+   "key": "bp8sv9wt09",
+   "who": "FLIGHT",
+   "lang": "en",
+   "text": "FLIGHT?",
+   "src": [
+    "src/missions/MissionRunner.js:664"
+   ]
+  },
+  {
+   "key": "wp2kkzibip",
+   "who": "FLIGHT",
+   "lang": "en",
+   "text": "GNC?",
+   "src": [
+    "src/missions/MissionRunner.js:664"
+   ]
+  },
+  {
+   "key": "2zvua72rg1",
+   "who": "FLIGHT",
+   "lang": "en",
+   "text": "Go!",
+   "src": [
+    "src/missions/MissionRunner.js:673",
+    "src/missions/MissionRunner.js:684"
+   ]
+  },
+  {
+   "key": "n3kiqnky1y",
+   "who": "FLIGHT",
+   "lang": "en",
+   "text": "GUIDO?",
+   "src": [
+    "src/missions/MissionRunner.js:664"
+   ]
+  },
+  {
+   "key": "if6a7zm0ly",
+   "who": "FLIGHT",
+   "lang": "en",
+   "text": "INCO?",
+   "src": [
+    "src/missions/MissionRunner.js:664"
+   ]
+  },
+  {
+   "key": "z90qlyy7pf",
+   "who": "FLIGHT",
+   "lang": "en",
+   "text": "Launch control, Houston is go for launch.",
+   "src": [
+    "src/missions/common/launch.js:82"
+   ]
+  },
+  {
+   "key": "exujgro7ve",
+   "who": "FLIGHT",
+   "lang": "en",
+   "text": "Let's solve the problem, but let's not make it any worse by guessing.",
+   "src": [
+    "src/missions/apollo13/explosion.js:96"
+   ]
+  },
+  {
+   "key": "17u3f77v39f",
+   "who": "FLIGHT",
+   "lang": "en",
+   "text": "Negative, Booster, all parameters are good.",
+   "src": [
+    "src/missions/common/launch.js:147"
+   ]
+  },
+  {
+   "key": "18aw59236ky",
+   "who": "FLIGHT",
+   "lang": "en",
+   "text": "Negative, Booster. We still have orbit capability.",
+   "src": [
+    "src/missions/apollo13/launch.js:47"
+   ]
+  },
+  {
+   "key": "4p33yvu1ww",
+   "who": "FLIGHT",
+   "lang": "en",
+   "text": "Negative. We do not know what the SPS looks like after that explosion.",
+   "src": [
+    "src/missions/apollo13/freereturn.js:61"
+   ]
+  },
+  {
+   "key": "skxzqajvv2",
+   "who": "FLIGHT",
+   "lang": "en",
+   "text": "NETWORK?",
+   "src": [
+    "src/missions/MissionRunner.js:664"
+   ]
+  },
+  {
+   "key": "s82qsye48h",
+   "who": "FLIGHT",
+   "lang": "en",
+   "text": "No go, Flight.",
+   "src": [
+    "src/missions/MissionRunner.js:674",
+    "src/missions/MissionRunner.js:684"
+   ]
+  },
+  {
+   "key": "mt0orx7dhg",
+   "who": "FLIGHT",
+   "lang": "en",
+   "text": "No, we want a free return now. We don't know how long the LM will hold.",
+   "src": [
+    "src/missions/apollo13/freereturn.js:60"
+   ]
+  },
+  {
+   "key": "lmnbuxdu0n",
+   "who": "FLIGHT",
+   "lang": "en",
+   "text": "Not needed, Booster. The S-IVB has the margin.",
+   "src": [
+    "src/missions/apollo13/launch.js:48"
+   ]
+  },
+  {
+   "key": "xageh1km0u",
+   "who": "FLIGHT",
+   "lang": "en",
+   "text": "Okay, all flight controllers, about 45 seconds to T1 stay/no stay.",
+   "src": [
+    "src/missions/apollo11/landing.js:299"
+   ]
+  },
+  {
+   "key": "11byxtv7bk",
+   "who": "FLIGHT",
+   "lang": "en",
+   "text": "Okay, all flight controllers, go/no-go for launch.",
+   "src": [
+    "src/missions/common/launch.js:81"
+   ]
+  },
+  {
+   "key": "7mg36jkq7g",
+   "who": "FLIGHT",
+   "lang": "en",
+   "text": "PAO?",
+   "src": [
+    "src/missions/MissionRunner.js:664"
+   ]
+  },
+  {
+   "key": "bn3axbday2",
+   "who": "FLIGHT",
+   "lang": "en",
+   "text": "PROCEDURES?",
+   "src": [
+    "src/missions/MissionRunner.js:664"
+   ]
+  },
+  {
+   "key": "26v48jl7xm",
+   "who": "FLIGHT",
+   "lang": "en",
+   "text": "Retro, we always send the abort PADs.",
+   "src": [
+    "src/missions/apollo11/loi.js:45"
+   ]
+  },
+  {
+   "key": "jievn8vdqc",
+   "who": "FLIGHT",
+   "lang": "en",
+   "text": "RETRO?",
+   "src": [
+    "src/missions/MissionRunner.js:664"
+   ]
+  },
+  {
+   "key": "5rbe48xmib",
+   "who": "FLIGHT",
+   "lang": "en",
+   "text": "SURGEON?",
+   "src": [
+    "src/missions/MissionRunner.js:664"
+   ]
+  },
+  {
+   "key": "fh3dckxm51",
+   "who": "FLIGHT",
+   "lang": "en",
+   "text": "TELMU?",
+   "src": [
+    "src/missions/MissionRunner.js:664"
+   ]
+  },
+  {
+   "key": "s5hrd9arkg",
+   "who": "FLIGHT",
+   "lang": "en",
+   "text": "That buys us hours, not days.",
+   "src": [
+    "src/missions/apollo13/co2.js:80"
+   ]
+  },
+  {
+   "key": "pqec8zwn7w",
+   "who": "FLIGHT",
+   "lang": "en",
+   "text": "That is the room. Welcome to the team.",
+   "src": [
+    "src/missions/training/mocr.js:56"
+   ]
+  },
+  {
+   "key": "gf9i00agec",
+   "who": "FLIGHT",
+   "lang": "en",
+   "text": "The booster is fine and the crew is talking. We are not aborting on bad data.",
+   "src": [
+    "src/missions/apollo12/lightning.js:60"
+   ]
+  },
+  {
+   "key": "oozuxnru39",
+   "who": "FLIGHT",
+   "lang": "en",
+   "text": "We cannot power the CM up. We need those batteries for entry.",
+   "src": [
+    "src/missions/apollo13/co2.js:79"
+   ]
+  },
+  {
+   "key": "gcgscm2htw",
+   "who": "FLIGHT",
+   "lang": "en",
+   "text": "Welcome to the MOCR. Let me show you around before your first shift.",
+   "src": [
+    "src/missions/training/mocr.js:39"
+   ]
+  },
+  {
+   "key": "ph7m7f915e",
+   "who": "GNC",
+   "lang": "en",
+   "text": "Go!",
+   "src": [
+    "src/missions/MissionRunner.js:673",
+    "src/missions/MissionRunner.js:684"
+   ]
+  },
+  {
+   "key": "sv2jnzobme",
+   "who": "GNC",
+   "lang": "en",
+   "text": "No go, Flight.",
+   "src": [
+    "src/missions/MissionRunner.js:674",
+    "src/missions/MissionRunner.js:684"
+   ]
+  },
+  {
+   "key": "xjgffxqv6g",
+   "who": "GUIDO",
+   "lang": "en",
+   "text": "Go!",
+   "src": [
+    "src/missions/MissionRunner.js:673",
+    "src/missions/MissionRunner.js:684"
+   ]
+  },
+  {
+   "key": "4pw1hbjnd4",
+   "who": "GUIDO",
+   "lang": "en",
+   "text": "No go, Flight.",
+   "src": [
+    "src/missions/MissionRunner.js:674",
+    "src/missions/MissionRunner.js:684"
+   ]
+  },
+  {
+   "key": "adzqf7y0h8",
+   "who": "GUIDO",
+   "lang": "en",
+   "text": "We're go on that alarm, Flight.",
+   "src": [
+    "src/missions/apollo11/landing.js:142"
+   ]
+  },
+  {
+   "key": "i3oblnz1qn",
+   "who": "INCO",
+   "lang": "en",
+   "text": "Go!",
+   "src": [
+    "src/missions/MissionRunner.js:673",
+    "src/missions/MissionRunner.js:684"
+   ]
+  },
+  {
+   "key": "5kd4ldvq3k",
+   "who": "INCO",
+   "lang": "en",
+   "text": "No go, Flight.",
+   "src": [
+    "src/missions/MissionRunner.js:674",
+    "src/missions/MissionRunner.js:684"
+   ]
+  },
+  {
+   "key": "s26jen323g",
+   "who": "LCC",
+   "lang": "en",
+   "text": "Apollo 11, this is launch control. Good luck and Godspeed.",
+   "src": [
+    "src/missions/common/launch.js:83"
+   ]
+  },
+  {
+   "key": "yw3do7i6ie",
+   "who": "LCC",
+   "lang": "en",
+   "text": "Apollo 12, this is launch control. Good luck and Godspeed.",
+   "src": [
+    "src/missions/common/launch.js:83"
+   ]
+  },
+  {
+   "key": "b38mme1otv",
+   "who": "LCC",
+   "lang": "en",
+   "text": "Apollo, this is launch control. Good luck and Godspeed.",
+   "src": [
+    "src/missions/common/launch.js:83"
+   ]
+  },
+  {
+   "key": "12ign5wrvan",
+   "who": "LCC",
+   "lang": "en",
+   "text": "Liftoff! We have liftoff!",
+   "src": [
+    "src/missions/free/index.js:175"
+   ]
+  },
+  {
+   "key": "rijfnhgdgo",
+   "who": "LCC",
+   "lang": "en",
+   "text": "Resuming the count. T minus 60 seconds and counting.",
+   "src": [
+    "src/missions/common/launch.js:72"
+   ]
+  },
+  {
+   "key": "ewdpz95bec",
+   "who": "LCC",
+   "lang": "en",
+   "text": "Thirteen, this is launch control. Good luck and Godspeed.",
+   "src": [
+    "src/missions/common/launch.js:83"
+   ]
+  },
+  {
+   "key": "10tx1y681ux",
+   "who": "LCC",
+   "lang": "en",
+   "text": "This is Kennedy launch control. The countdown is proceeding.",
+   "src": [
+    "src/missions/free/index.js:313"
+   ]
+  },
+  {
+   "key": "4i89yrvtzh",
+   "who": "LCC",
+   "lang": "en",
+   "text": "We are holding at T minus 1 minute. Apollo 11, report when you are ready.",
+   "src": [
+    "src/missions/common/launch.js:68"
+   ]
+  },
+  {
+   "key": "3wf21mf2rq",
+   "who": "LCC",
+   "lang": "en",
+   "text": "We are holding at T minus 1 minute. Apollo 12, report when you are ready.",
+   "src": [
+    "src/missions/common/launch.js:68"
+   ]
+  },
+  {
+   "key": "15ucy1qocz6",
+   "who": "LCC",
+   "lang": "en",
+   "text": "We are holding at T minus 1 minute. Apollo, report when you are ready.",
+   "src": [
+    "src/missions/common/launch.js:68"
+   ]
+  },
+  {
+   "key": "b9ugm58xpq",
+   "who": "LCC",
+   "lang": "en",
+   "text": "We are holding at T minus 1 minute. Thirteen, report when you are ready.",
+   "src": [
+    "src/missions/common/launch.js:68"
+   ]
+  },
+  {
+   "key": "vypu2r7vp6",
+   "who": "LMP",
+   "lang": "en",
+   "text": "10 feet,",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "unxwygo31v",
+   "who": "LMP",
+   "lang": "en",
+   "text": "10 forward.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "qizjse2btj",
+   "who": "LMP",
+   "lang": "en",
+   "text": "100 feet,",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "wowg1e75tr",
+   "who": "LMP",
+   "lang": "en",
+   "text": "100 forward.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "4itgb79qgr",
+   "who": "LMP",
+   "lang": "en",
+   "text": "1000 feet,",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "o06b4ibtqx",
+   "who": "LMP",
+   "lang": "en",
+   "text": "11 forward.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "112dyy11nle",
+   "who": "LMP",
+   "lang": "en",
+   "text": "12 forward.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "46ctdsc2qh",
+   "who": "LMP",
+   "lang": "en",
+   "text": "120 forward.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "ybs8eb7bih",
+   "who": "LMP",
+   "lang": "en",
+   "text": "13 forward.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "shojugj4qd",
+   "who": "LMP",
+   "lang": "en",
+   "text": "14 forward.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "1kzrl4ju2u",
+   "who": "LMP",
+   "lang": "en",
+   "text": "15 forward.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "k2xdxyja7l",
+   "who": "LMP",
+   "lang": "en",
+   "text": "150 forward.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "lgcx71tkb1",
+   "who": "LMP",
+   "lang": "en",
+   "text": "16 forward.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "14ui3kz5x34",
+   "who": "LMP",
+   "lang": "en",
+   "text": "160 feet,",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "c545bpaiyz",
+   "who": "LMP",
+   "lang": "en",
+   "text": "17 forward.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "14tn6zavtl4",
+   "who": "LMP",
+   "lang": "en",
+   "text": "18 forward.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "yynkcakgdv",
+   "who": "LMP",
+   "lang": "en",
+   "text": "19 forward.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "xii1t28h5c",
+   "who": "LMP",
+   "lang": "en",
+   "text": "2 forward.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "qkwpt7n5ho",
+   "who": "LMP",
+   "lang": "en",
+   "text": "20 feet,",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "4u657bu4b6",
+   "who": "LMP",
+   "lang": "en",
+   "text": "20 forward.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "4o7h1j4zic",
+   "who": "LMP",
+   "lang": "en",
+   "text": "200 feet,",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "9fbpghizot",
+   "who": "LMP",
+   "lang": "en",
+   "text": "2000 feet,",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "5yhr6i23xx",
+   "who": "LMP",
+   "lang": "en",
+   "text": "22 forward.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "k53xelasss",
+   "who": "LMP",
+   "lang": "en",
+   "text": "220 feet,",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "13yvu3l9gn5",
+   "who": "LMP",
+   "lang": "en",
+   "text": "25 forward.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "7rrjkqnvhy",
+   "who": "LMP",
+   "lang": "en",
+   "text": "3 forward.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "nt4kkpsrjw",
+   "who": "LMP",
+   "lang": "en",
+   "text": "30 feet,",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "kcmyj2618e",
+   "who": "LMP",
+   "lang": "en",
+   "text": "30 forward.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "3litcn1g9z",
+   "who": "LMP",
+   "lang": "en",
+   "text": "300 feet,",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "bedpwzsygy",
+   "who": "LMP",
+   "lang": "en",
+   "text": "35 forward.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "84iflcypr6",
+   "who": "LMP",
+   "lang": "en",
+   "text": "4 forward.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "tjk4mct060",
+   "who": "LMP",
+   "lang": "en",
+   "text": "40 feet,",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "dh19wl0yd2",
+   "who": "LMP",
+   "lang": "en",
+   "text": "40 forward.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "s0nw24qvzu",
+   "who": "LMP",
+   "lang": "en",
+   "text": "400 feet,",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "mfaiitl274",
+   "who": "LMP",
+   "lang": "en",
+   "text": "45 forward.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "11ssxpdqsos",
+   "who": "LMP",
+   "lang": "en",
+   "text": "5 forward.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "6m46rpvlqa",
+   "who": "LMP",
+   "lang": "en",
+   "text": "50 feet,",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "lcoud9rawl",
+   "who": "LMP",
+   "lang": "en",
+   "text": "50 forward.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "1070t2q97r5",
+   "who": "LMP",
+   "lang": "en",
+   "text": "500 feet,",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "d714apet4j",
+   "who": "LMP",
+   "lang": "en",
+   "text": "6 forward.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "fdstb8lr8z",
+   "who": "LMP",
+   "lang": "en",
+   "text": "60 feet,",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "elcjx9ht91",
+   "who": "LMP",
+   "lang": "en",
+   "text": "60 forward.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "vvo06th0gq",
+   "who": "LMP",
+   "lang": "en",
+   "text": "600 feet,",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "ueu92sqgn9",
+   "who": "LMP",
+   "lang": "en",
+   "text": "7 forward.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "8shchwuuwe",
+   "who": "LMP",
+   "lang": "en",
+   "text": "70 forward.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "cjz03jmuop",
+   "who": "LMP",
+   "lang": "en",
+   "text": "75 feet,",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "jkf6gbnare",
+   "who": "LMP",
+   "lang": "en",
+   "text": "750 feet,",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "16iyl4mf6am",
+   "who": "LMP",
+   "lang": "en",
+   "text": "8 forward.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "cr6ygc8txy",
+   "who": "LMP",
+   "lang": "en",
+   "text": "80 forward.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "zpuajdwpi2",
+   "who": "LMP",
+   "lang": "en",
+   "text": "9 forward.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "k4awi4rctv",
+   "who": "LMP",
+   "lang": "en",
+   "text": "9, 8, 7, 6, 5, abort stage, engine arm, ascent, proceed.",
+   "src": [
+    "src/missions/apollo11/ascent.js:78"
+   ]
+  },
+  {
+   "key": "rhca1gmese",
+   "who": "LMP",
+   "lang": "en",
+   "text": "90 forward.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "vcwz1ieq5p",
+   "who": "LMP",
+   "lang": "en",
+   "text": "Contact light.",
+   "src": [
+    "src/missions/apollo11/landing.js:234"
+   ]
+  },
+  {
+   "key": "ov8q3j9rh5",
+   "who": "LMP",
+   "lang": "en",
+   "text": "Contact light. Engine stop.",
+   "src": [
+    "src/missions/training/landing.js:126"
+   ]
+  },
+  {
+   "key": "uqhskksy7x",
+   "who": "LMP",
+   "lang": "en",
+   "text": "down 0",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "jndwval59g",
+   "who": "LMP",
+   "lang": "en",
+   "text": "down 1",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "piz0fd1qjm",
+   "who": "LMP",
+   "lang": "en",
+   "text": "down 10",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "17v18od6f43",
+   "who": "LMP",
+   "lang": "en",
+   "text": "down 100",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "10m2w4ne1ys",
+   "who": "LMP",
+   "lang": "en",
+   "text": "down 11",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "3csmpvstkw",
+   "who": "LMP",
+   "lang": "en",
+   "text": "down 12",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "1832g68yag7",
+   "who": "LMP",
+   "lang": "en",
+   "text": "down 120",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "efwif60t0x",
+   "who": "LMP",
+   "lang": "en",
+   "text": "down 13",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "pixmq2mfku",
+   "who": "LMP",
+   "lang": "en",
+   "text": "down 14",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "10m1ifcvas7",
+   "who": "LMP",
+   "lang": "en",
+   "text": "down 15",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "lcxvmnwck8",
+   "who": "LMP",
+   "lang": "en",
+   "text": "down 150",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "3cr90lbvnx",
+   "who": "LMP",
+   "lang": "en",
+   "text": "down 16",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "efv4pvm7th",
+   "who": "LMP",
+   "lang": "en",
+   "text": "down 17",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "pj1rsu3eus",
+   "who": "LMP",
+   "lang": "en",
+   "text": "down 18",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "10m5ni4bnst",
+   "who": "LMP",
+   "lang": "en",
+   "text": "down 19",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "8kbev3k367",
+   "who": "LMP",
+   "lang": "en",
+   "text": "down 2",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "3oo8cqo5uh",
+   "who": "LMP",
+   "lang": "en",
+   "text": "down 20",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "puvzrb6nij",
+   "who": "LMP",
+   "lang": "en",
+   "text": "down 22",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "10xx420kcbp",
+   "who": "LMP",
+   "lang": "en",
+   "text": "down 25",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "15tlo9nyozq",
+   "who": "LMP",
+   "lang": "en",
+   "text": "down 3",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "pq337ufdek",
+   "who": "LMP",
+   "lang": "en",
+   "text": "down 30",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "10t8cm0teps",
+   "who": "LMP",
+   "lang": "en",
+   "text": "down 35",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "uqgevorf6i",
+   "who": "LMP",
+   "lang": "en",
+   "text": "down 4",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "316oykrraw",
+   "who": "LMP",
+   "lang": "en",
+   "text": "down 40",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "10aic24vvhp",
+   "who": "LMP",
+   "lang": "en",
+   "text": "down 45",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "jncj6eifvv",
+   "who": "LMP",
+   "lang": "en",
+   "text": "down 5",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "p3tq3qcaie",
+   "who": "LMP",
+   "lang": "en",
+   "text": "down 50",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "8ka167gmdk",
+   "who": "LMP",
+   "lang": "en",
+   "text": "down 6",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "397wgupsvo",
+   "who": "LMP",
+   "lang": "en",
+   "text": "down 60",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "15tkakrum49",
+   "who": "LMP",
+   "lang": "en",
+   "text": "down 7",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "paxsw19abg",
+   "who": "LMP",
+   "lang": "en",
+   "text": "down 70",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "uqf15zxl6c",
+   "who": "LMP",
+   "lang": "en",
+   "text": "down 8",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "2m1eo24d36",
+   "who": "LMP",
+   "lang": "en",
+   "text": "down 80",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "jnb5gpo6v1",
+   "who": "LMP",
+   "lang": "en",
+   "text": "down 9",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "ong9ij42ed",
+   "who": "LMP",
+   "lang": "en",
+   "text": "down 90",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "11dgrjkixj4",
+   "who": "LMP",
+   "lang": "en",
+   "text": "en",
+   "src": [
+    "src/missions/apollo11/landing.js:200",
+    "src/missions/training/landing.js:101"
+   ]
+  },
+  {
+   "key": "10v67jimzyo",
+   "who": "LMP",
+   "lang": "en",
+   "text": "Five percent. Quantity light.",
+   "src": [
+    "src/missions/apollo11/landing.js:209"
+   ]
+  },
+  {
+   "key": "nlsawyejvj",
+   "who": "LMP",
+   "lang": "en",
+   "text": "Houston, Aquarius. We have a CO2 light.",
+   "src": [
+    "src/missions/apollo13/co2.js:70"
+   ]
+  },
+  {
+   "key": "en8slsqheq",
+   "who": "LMP",
+   "lang": "en",
+   "text": "Houston, Aquarius. We have the LM powered up.",
+   "src": [
+    "src/missions/apollo13/lifeboat.js:71"
+   ]
+  },
+  {
+   "key": "e9atfwbrhm",
+   "who": "LMP",
+   "lang": "en",
+   "text": "Houston, we have a problem with a circuit breaker. The engine arm breaker on panel 16 is broken off.",
+   "src": [
+    "src/missions/apollo11/ascent.js:43"
+   ]
+  },
+  {
+   "key": "c1mwwhsd2m",
+   "who": "LMP",
+   "lang": "en",
+   "text": "Ignition. Ten percent.",
+   "src": [
+    "src/missions/apollo11/landing.js:116"
+   ]
+  },
+  {
+   "key": "l83w25my82",
+   "who": "LMP",
+   "lang": "en",
+   "text": "It is really a mess.",
+   "src": [
+    "src/missions/apollo13/powerup.js:67"
+   ]
+  },
+  {
+   "key": "42353bqiyx",
+   "who": "LMP",
+   "lang": "en",
+   "text": "It looks like it is working.",
+   "src": [
+    "src/missions/apollo13/co2.js:121"
+   ]
+  },
+  {
+   "key": "13oaqy627ze",
+   "who": "LMP",
+   "lang": "en",
+   "text": "Look at that! The far side.",
+   "src": [
+    "src/missions/apollo8/loi.js:59"
+   ]
+  },
+  {
+   "key": "r6w3ty2pkq",
+   "who": "LMP",
+   "lang": "en",
+   "text": "Look at that. The far side of the Moon.",
+   "src": [
+    "src/missions/apollo13/pc2.js:28"
+   ]
+  },
+  {
+   "key": "mpa0yxt0et",
+   "who": "LMP",
+   "lang": "en",
+   "text": "Okay, I pushed it in with a felt-tip pen. It is in.",
+   "src": [
+    "src/missions/apollo11/ascent.js:62"
+   ]
+  },
+  {
+   "key": "1vcfkr29ch",
+   "who": "LMP",
+   "lang": "en",
+   "text": "Okay. Engine stop. ACA out of detent.",
+   "src": [
+    "src/missions/apollo11/landing.js:278"
+   ]
+  },
+  {
+   "key": "10rd5xq52vg",
+   "who": "LMP",
+   "lang": "en",
+   "text": "Platform is aligned. Aquarius is ready.",
+   "src": [
+    "src/missions/apollo13/lifeboat.js:112"
+   ]
+  },
+  {
+   "key": "13z4z41dzmh",
+   "who": "LMP",
+   "lang": "en",
+   "text": "Proceed.",
+   "src": [
+    "src/missions/apollo11/landing.js:103"
+   ]
+  },
+  {
+   "key": "qovt4h7mf2",
+   "who": "LMP",
+   "lang": "en",
+   "text": "Program alarm. Same type: 1201.",
+   "src": [
+    "src/missions/apollo11/landing.js:153"
+   ]
+  },
+  {
+   "key": "d6lmtiru13",
+   "who": "LMP",
+   "lang": "en",
+   "text": "Roger. Understand. GO for landing. 3000 feet.",
+   "src": [
+    "src/missions/apollo11/landing.js:180"
+   ]
+  },
+  {
+   "key": "v5ul042sgj",
+   "who": "LMP",
+   "lang": "en",
+   "text": "Roger. Understand. We are number one on the runway.",
+   "src": [
+    "src/missions/apollo11/ascent.js:37"
+   ]
+  },
+  {
+   "key": "6i4o077yqz",
+   "who": "LMP",
+   "lang": "en",
+   "text": "SCE is in Aux.",
+   "src": [
+    "src/missions/apollo12/lightning.js:79"
+   ]
+  },
+  {
+   "key": "7ccrqpzaqx",
+   "who": "LMP",
+   "lang": "en",
+   "text": "Ten seconds.",
+   "src": [
+    "src/missions/apollo13/mcc5.js:84"
+   ]
+  },
+  {
+   "key": "cyjkhlkmd3",
+   "who": "LMP",
+   "lang": "en",
+   "text": "That was beautiful. 26, 36 feet per second up. Be advised of the pitchover. Very smooth.",
+   "src": [
+    "src/missions/apollo11/ascent.js:94"
+   ]
+  },
+  {
+   "key": "im7rajor7h",
+   "who": "LMP",
+   "lang": "en",
+   "text": "The view of the Moon out the window is magnificent. It looks like a giant plaster model.",
+   "src": [
+    "src/missions/apollo11/loi.js:90"
+   ]
+  },
+  {
+   "key": "1126gkslryo",
+   "who": "LMP",
+   "lang": "en",
+   "text": "Throttle up. Full thrust.",
+   "src": [
+    "src/missions/apollo11/landing.js:118"
+   ]
+  },
+  {
+   "key": "gsulo451er",
+   "who": "NETWORK",
+   "lang": "en",
+   "text": "Go!",
+   "src": [
+    "src/missions/MissionRunner.js:673",
+    "src/missions/MissionRunner.js:684"
+   ]
+  },
+  {
+   "key": "omn2ziobmu",
+   "who": "NETWORK",
+   "lang": "en",
+   "text": "No go, Flight.",
+   "src": [
+    "src/missions/MissionRunner.js:674",
+    "src/missions/MissionRunner.js:684"
+   ]
+  },
+  {
+   "key": "j2hql6cs4i",
+   "who": "PAO",
+   "lang": "en",
+   "text": "Apollo 11 has passed the entry interface. Blackout expected shortly.",
+   "src": [
+    "src/missions/apollo11/entry.js:73"
+   ]
+  },
+  {
+   "key": "175mei8llyf",
+   "who": "PAO",
+   "lang": "en",
+   "text": "Apollo 11 is down. The flight lasted 195 hours, 18 minutes. Man has walked on the Moon and returned.",
+   "src": [
+    "src/missions/apollo11/entry.js:112"
+   ]
+  },
+  {
+   "key": "j6deoizld3",
+   "who": "PAO",
+   "lang": "en",
+   "text": "Apollo 13 is home. A successful failure.",
+   "src": [
+    "src/missions/apollo13/entry.js:116"
+   ]
+  },
+  {
+   "key": "184s1poglmo",
+   "who": "PAO",
+   "lang": "en",
+   "text": "Go!",
+   "src": [
+    "src/missions/MissionRunner.js:673",
+    "src/missions/MissionRunner.js:684"
+   ]
+  },
+  {
+   "key": "13hx0jla86g",
+   "who": "PAO",
+   "lang": "en",
+   "text": "Guidance is internal.",
+   "src": [
+    "src/missions/common/launch.js:95"
+   ]
+  },
+  {
+   "key": "sr1l9goegg",
+   "who": "PAO",
+   "lang": "en",
+   "text": "Maximum dynamic pressure.",
+   "src": [
+    "src/missions/common/launch.js:132"
+   ]
+  },
+  {
+   "key": "80hv0cixgk",
+   "who": "PAO",
+   "lang": "en",
+   "text": "No go, Flight.",
+   "src": [
+    "src/missions/MissionRunner.js:674",
+    "src/missions/MissionRunner.js:684"
+   ]
+  },
+  {
+   "key": "ljng2fkzh4",
+   "who": "PAO",
+   "lang": "en",
+   "text": "T minus 50 seconds. Launch vehicle power transfer is complete.",
+   "src": [
+    "src/missions/common/launch.js:91"
+   ]
+  },
+  {
+   "key": "7iekx9iokt",
+   "who": "PAO",
+   "lang": "en",
+   "text": "This is Apollo Control at 55 hours 50 minutes. The television transmission has ended. Apollo 13 is 200,000 miles from Earth.",
+   "src": [
+    "src/missions/apollo13/explosion.js:39"
+   ]
+  },
+  {
+   "key": "118esar1gcy",
+   "who": "PAO",
+   "lang": "en",
+   "text": "This is Apollo Control. Apollo 11 is in a near-perfect parking orbit. Next stop: the translunar injection.",
+   "src": [
+    "src/missions/apollo11/launch.js:35"
+   ]
+  },
+  {
+   "key": "17zgu80iek5",
+   "who": "PAO",
+   "lang": "en",
+   "text": "This is Apollo Control. Apollo 11 is now 9,000 miles from the Moon, approaching at 4,000 miles per hour.",
+   "src": [
+    "src/missions/apollo11/loi.js:30"
+   ]
+  },
+  {
+   "key": "a8q28u5vgi",
+   "who": "PAO",
+   "lang": "en",
+   "text": "This is Apollo Control. Apollo 8 is 2,200 miles from the Moon and accelerating.",
+   "src": [
+    "src/missions/apollo8/loi.js:30"
+   ]
+  },
+  {
+   "key": "12cphh55jie",
+   "who": "PAO",
+   "lang": "en",
+   "text": "This is Apollo Control. Despite the early centre engine cutoff, Apollo 13 is in a good parking orbit.",
+   "src": [
+    "src/missions/apollo13/launch.js:60"
+   ]
+  },
+  {
+   "key": "116tik670rw",
+   "who": "PAO",
+   "lang": "en",
+   "text": "This is Apollo Control. The crew is now using the lunar module as a lifeboat.",
+   "src": [
+    "src/missions/apollo13/lifeboat.js:127"
+   ]
+  },
+  {
+   "key": "16ahvfdt5p",
+   "who": "PAO",
+   "lang": "en",
+   "text": "This is Apollo Control. The crew is preparing for a television transmission from lunar orbit on Christmas Eve.",
+   "src": [
+    "src/missions/apollo8/earthrise.js:98"
+   ]
+  },
+  {
+   "key": "nkxo8amd1a",
+   "who": "PAO",
+   "lang": "en",
+   "text": "This is Apollo Saturn launch control. T minus 3 minutes 30 seconds and counting.",
+   "src": [
+    "src/missions/apollo13/launch.js:31",
+    "src/missions/training/launch.js:30"
+   ]
+  },
+  {
+   "key": "bgygjdteyy",
+   "who": "PAO",
+   "lang": "en",
+   "text": "This is Apollo Saturn launch control. T minus 3 minutes 30 seconds and counting. All going well.",
+   "src": [
+    "src/missions/apollo11/launch.js:30"
+   ]
+  },
+  {
+   "key": "o9ewnhmtil",
+   "who": "PAO",
+   "lang": "en",
+   "text": "This is Apollo Saturn launch control. We are under a cloud cover with rain, and we are proceeding with the count.",
+   "src": [
+    "src/missions/apollo12/lightning.js:34"
+   ]
+  },
+  {
+   "key": "112muuhksw0",
+   "who": "PAO",
+   "lang": "en",
+   "text": "Time base 6 has started. The S-IVB is preparing for its second burn.",
+   "src": [
+    "src/missions/apollo11/tli.js:71"
+   ]
+  },
+  {
+   "key": "jrjusosi4f",
+   "who": "PAO",
+   "lang": "en",
+   "text": "We are in the blackout period. We expect about 3 minutes.",
+   "src": [
+    "src/missions/apollo13/entry.js:86"
+   ]
+  },
+  {
+   "key": "uuq1a19z7m",
+   "who": "PAO",
+   "lang": "en",
+   "text": "We have loss of signal. Apollo 11 is behind the Moon.",
+   "src": [
+    "src/missions/apollo11/loi.js:64"
+   ]
+  },
+  {
+   "key": "lc4mx3wkac",
+   "who": "PROCEDURES",
+   "lang": "en",
+   "text": "Go!",
+   "src": [
+    "src/missions/MissionRunner.js:673",
+    "src/missions/MissionRunner.js:684"
+   ]
+  },
+  {
+   "key": "dhwt4p983k",
+   "who": "PROCEDURES",
+   "lang": "en",
+   "text": "No go, Flight.",
+   "src": [
+    "src/missions/MissionRunner.js:674",
+    "src/missions/MissionRunner.js:684"
+   ]
+  },
+  {
+   "key": "14gif5vejdk",
+   "who": "RECOVERY",
+   "lang": "en",
+   "text": "Apollo 11, Hornet. Welcome home.",
+   "src": [
+    "src/missions/apollo11/entry.js:111"
+   ]
+  },
+  {
+   "key": "sewb7t9zur",
+   "who": "RECOVERY",
+   "lang": "en",
+   "text": "Apollo 11, Recovery. We have three good chutes.",
+   "src": [
+    "src/missions/apollo11/entry.js:104"
+   ]
+  },
+  {
+   "key": "vfeso4fwdj",
+   "who": "RECOVERY",
+   "lang": "en",
+   "text": "Odyssey, this is Iwo Jima. We have you in sight. Welcome home.",
+   "src": [
+    "src/missions/apollo13/entry.js:115"
+   ]
+  },
+  {
+   "key": "lyrof9ooq",
+   "who": "RECOVERY",
+   "lang": "en",
+   "text": "Splashdown! We have a visual on the spacecraft.",
+   "src": [
+    "src/missions/free/index.js:218"
+   ]
+  },
+  {
+   "key": "12zznkjaw9",
+   "who": "RECOVERY",
+   "lang": "en",
+   "text": "Splashdown. Good entry.",
+   "src": [
+    "src/missions/training/entry.js:81"
+   ]
+  },
+  {
+   "key": "312dc9jwz7",
+   "who": "RETRO",
+   "lang": "en",
+   "text": "Flight, Retro. Abort PADs are up.",
+   "src": [
+    "src/missions/apollo11/loi.js:44"
+   ]
+  },
+  {
+   "key": "hfzpjiu0ei",
+   "who": "RETRO",
+   "lang": "en",
+   "text": "Go!",
+   "src": [
+    "src/missions/MissionRunner.js:673",
+    "src/missions/MissionRunner.js:684"
+   ]
+  },
+  {
+   "key": "q6objgv1lt",
+   "who": "RETRO",
+   "lang": "en",
+   "text": "No go, Flight.",
+   "src": [
+    "src/missions/MissionRunner.js:674",
+    "src/missions/MissionRunner.js:684"
+   ]
+  },
+  {
+   "key": "x7j1zqlly2",
+   "who": "SURGEON",
+   "lang": "en",
+   "text": "Go!",
+   "src": [
+    "src/missions/MissionRunner.js:673",
+    "src/missions/MissionRunner.js:684"
+   ]
+  },
+  {
+   "key": "dxl3dsbibv",
+   "who": "SURGEON",
+   "lang": "en",
+   "text": "No go, Flight.",
+   "src": [
+    "src/missions/MissionRunner.js:674",
+    "src/missions/MissionRunner.js:684"
+   ]
+  },
+  {
+   "key": "wd6yi97pdi",
+   "who": "TELMU",
+   "lang": "en",
+   "text": "Go!",
+   "src": [
+    "src/missions/MissionRunner.js:673",
+    "src/missions/MissionRunner.js:684"
+   ]
+  },
+  {
+   "key": "1y5tjygvwe",
+   "who": "TELMU",
+   "lang": "en",
+   "text": "No go, Flight.",
+   "src": [
+    "src/missions/MissionRunner.js:674",
+    "src/missions/MissionRunner.js:684"
+   ]
+  },
+  {
+   "key": "16swugbb4en",
+   "who": "BOOSTER",
+   "lang": "es",
+   "text": "¡GO!",
+   "src": [
+    "src/missions/MissionRunner.js:673",
+    "src/missions/MissionRunner.js:684"
+   ]
+  },
+  {
+   "key": "npefyzhhqr",
+   "who": "BOOSTER",
+   "lang": "es",
+   "text": "Flight, BOOSTER. El S-IC va nominal.",
+   "src": [
+    "src/missions/common/launch.js:146"
+   ]
+  },
+  {
+   "key": "cikpb1sf6x",
+   "who": "BOOSTER",
+   "lang": "es",
+   "text": "Flight, BOOSTER. Perdimos el motor central; los demás están bien. Seguimos GO.",
+   "src": [
+    "src/missions/apollo13/launch.js:46"
+   ]
+  },
+  {
+   "key": "za6qx3vdm4",
+   "who": "BOOSTER",
+   "lang": "es",
+   "text": "NO GO, Flight.",
+   "src": [
+    "src/missions/MissionRunner.js:674",
+    "src/missions/MissionRunner.js:684"
+   ]
+  },
+  {
+   "key": "2rk1bfrtp5",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "¡GO!",
+   "src": [
+    "src/missions/MissionRunner.js:673",
+    "src/missions/MissionRunner.js:684"
+   ]
+  },
+  {
+   "key": "14goqv83j2n",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "¡Principales! ¡Desplieguen los principales!",
+   "src": [
+    "src/missions/apollo11/entry.js:92"
+   ]
+  },
+  {
+   "key": "16qwwgqnj9y",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "¿En serio?",
+   "src": [
+    "src/missions/apollo13/powerup.js:65"
+   ]
+  },
+  {
+   "key": "kx28mwl1mn",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "30 segundos.",
+   "src": [
+    "src/missions/apollo11/landing.js:222"
+   ]
+  },
+  {
+   "key": "11i6834vw4s",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "60 segundos.",
+   "src": [
+    "src/missions/apollo11/landing.js:218"
+   ]
+  },
+  {
+   "key": "bdf81dfsav",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Acoplamiento firme. Buen trabajo.",
+   "src": [
+    "src/missions/training/docking.js:72"
+   ]
+  },
+  {
+   "key": "ase3lpomc3",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Adiós, Aquarius, y gracias.",
+   "src": [
+    "src/missions/apollo13/entry.js:58"
+   ]
+  },
+  {
+   "key": "px764vaehv",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Afirmativo.",
+   "src": [
+    "src/missions/apollo13/explosion.js:109"
+   ]
+  },
+  {
+   "key": "ay630cmb6s",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "alabeo",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "14jiz5ovfp7",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Apagado central del S-II.",
+   "src": [
+    "src/missions/common/kit.js:128"
+   ]
+  },
+  {
+   "key": "v6xwz1zebw",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Apagado del motor central.",
+   "src": [
+    "src/missions/common/kit.js:118"
+   ]
+  },
+  {
+   "key": "12bz25jdy7b",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Apolo 11, Apolo 11, aquí Houston. ¿Nos copian?",
+   "src": [
+    "src/missions/apollo11/loi.js:87"
+   ]
+  },
+  {
+   "key": "wc6gx755fi",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Apolo 11, aquí Houston. Tienen GO para la TLI.",
+   "src": [
+    "src/missions/apollo11/tli.js:56"
+   ]
+  },
+  {
+   "key": "w31spq396g",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Apolo 11, aquí Houston. Todos sus sistemas se ven bien al doblar la esquina; nos vemos al otro lado.",
+   "src": [
+    "src/missions/apollo11/loi.js:59"
+   ]
+  },
+  {
+   "key": "i0seib9la8",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Apolo 11, Houston. A la escucha.",
+   "src": [
+    "src/missions/apollo11/entry.js:77"
+   ]
+  },
+  {
+   "key": "ge8zywvelm",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Apolo 11, Houston. Confirmado: tienen GO para la órbita.",
+   "src": [
+    "src/missions/common/launch.js:201"
+   ]
+  },
+  {
+   "key": "sqrsfjv07m",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Apolo 11, Houston. Desechen la torre.",
+   "src": [
+    "src/missions/common/launch.js:163"
+   ]
+  },
+  {
+   "key": "3f7opz1i78",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Apolo 11, Houston. El S-IVB ventilará sus tanques para su maniobra de «honda» lejos de ustedes. Tienen una buena nave.",
+   "src": [
+    "src/missions/apollo11/tde.js:144"
+   ]
+  },
+  {
+   "key": "9q5sbazby2",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Apolo 11, Houston. Estamos calculando los datos de la TLI.",
+   "src": [
+    "src/missions/apollo11/tli.js:31"
+   ]
+  },
+  {
+   "key": "6wmgq4l8ye",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Apolo 11, Houston. GO para la separación. El S-IVB ya puede llevarlos a órbita.",
+   "src": [
+    "src/missions/common/launch.js:134"
+   ]
+  },
+  {
+   "key": "h1u2f84358",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Apolo 11, Houston. Les pasamos el PAD de la TEI.",
+   "src": [
+    "src/missions/apollo11/tei.js:29"
+   ]
+  },
+  {
+   "key": "lklc6pkli5",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Apolo 11, Houston. Menos de 2 minutos para la ignición y todo está GO.",
+   "src": [
+    "src/missions/apollo11/tli.js:74"
+   ]
+  },
+  {
+   "key": "ha3s0ezs2q",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Apolo 11, Houston. Siguen GO a los 3 minutos.",
+   "src": [
+    "src/missions/apollo11/tli.js:84"
+   ]
+  },
+  {
+   "key": "3gi7gs7hpm",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Apolo 11, Houston. Tenemos GO para el desacoplamiento.",
+   "src": [
+    "src/missions/apollo11/undock.js:31"
+   ]
+  },
+  {
+   "key": "47jxu34mhs",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Apolo 11, Houston. Tienen GO para la separación CM/SM.",
+   "src": [
+    "src/missions/apollo11/entry.js:43"
+   ]
+  },
+  {
+   "key": "65z6ivq4yr",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Apolo 11, Houston. Tienen GO para la separación.",
+   "src": [
+    "src/missions/apollo11/tde.js:45"
+   ]
+  },
+  {
+   "key": "rqqbqlyfrx",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Apolo 11, Houston. Tienen GO para la TEI.",
+   "src": [
+    "src/missions/apollo11/tei.js:36"
+   ]
+  },
+  {
+   "key": "ejzxedea98",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Apolo 11, Houston. Todo se ve muy bien. Los vemos después del apagón.",
+   "src": [
+    "src/missions/apollo11/entry.js:61"
+   ]
+  },
+  {
+   "key": "movnjn0zxw",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Apolo 11: no vemos los estabilizadores. Despliéguenlos a mano.",
+   "src": [
+    "src/missions/apollo11/entry.js:87"
+   ]
+  },
+  {
+   "key": "174vq9svidb",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Apolo 12, Houston. Ahora tenemos buenos datos.",
+   "src": [
+    "src/missions/apollo12/lightning.js:80"
+   ]
+  },
+  {
+   "key": "12mlec4sz6h",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Apolo 12, Houston. Confirmado: tienen GO para la órbita.",
+   "src": [
+    "src/missions/common/launch.js:201"
+   ]
+  },
+  {
+   "key": "uimqfet7xa",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Apolo 12, Houston. Desechen la torre.",
+   "src": [
+    "src/missions/common/launch.js:163"
+   ]
+  },
+  {
+   "key": "p24603si0k",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Apolo 12, Houston. GO para la separación. El S-IVB ya puede llevarlos a órbita.",
+   "src": [
+    "src/missions/common/launch.js:134"
+   ]
+  },
+  {
+   "key": "10lai75zfhu",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Apolo 12, Houston. Prueben SCE a auxiliar. Cambio.",
+   "src": [
+    "src/missions/apollo12/lightning.js:68"
+   ]
+  },
+  {
+   "key": "j6hnqqo22w",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Apolo 8, Houston. Cambio.",
+   "src": [
+    "src/missions/apollo8/loi.js:90"
+   ]
+  },
+  {
+   "key": "kdasbs7qgb",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Apolo 8, Houston. Recibido. Qué bueno oír su voz.",
+   "src": [
+    "src/missions/apollo8/loi.js:92"
+   ]
+  },
+  {
+   "key": "tj9c4a0kh9",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Apolo, Houston. Confirmado: tienen GO para la órbita.",
+   "src": [
+    "src/missions/common/launch.js:201"
+   ]
+  },
+  {
+   "key": "sxq3qg8eds",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Apolo, Houston. Desechen la torre.",
+   "src": [
+    "src/missions/common/launch.js:163"
+   ]
+  },
+  {
+   "key": "mmjyeqv5de",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Apolo, Houston. GO para la separación. El S-IVB ya puede llevarlos a órbita.",
+   "src": [
+    "src/missions/common/launch.js:134"
+   ]
+  },
+  {
+   "key": "raats8xl7i",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Apolo, Houston. Tienen GO para la TLI.",
+   "src": [
+    "src/missions/free/index.js:256"
+   ]
+  },
+  {
+   "key": "vnpjdh9wu5",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Aquarius, Houston. Bienvenidos. Su S-IVB acaba de impactar en la Luna: el sismómetro del Apolo 12 está vibrando.",
+   "src": [
+    "src/missions/apollo13/pc2.js:34"
+   ]
+  },
+  {
+   "key": "12dedvdqfg3",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Aquarius, Houston. Buen encendido: están justo en el corredor.",
+   "src": [
+    "src/missions/apollo13/mcc5.js:120"
+   ]
+  },
+  {
+   "key": "62utu4bkth",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Aquarius, Houston. Buen encendido: vuelven al Pacífico.",
+   "src": [
+    "src/missions/apollo13/pc2.js:58"
+   ]
+  },
+  {
+   "key": "ba7tu7nwgm",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Aquarius, Houston. El ángulo de reentrada se está volviendo rasante. Queremos la corrección MCC-5 y la van a volar a mano.",
+   "src": [
+    "src/missions/apollo13/mcc5.js:30"
+   ]
+  },
+  {
+   "key": "itonj5lwg9",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Aquarius, Houston. Están en retorno libre.",
+   "src": [
+    "src/missions/apollo13/freereturn.js:83"
+   ]
+  },
+  {
+   "key": "8gs5s71uy6",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Aquarius, Houston. Haremos una corrección más.",
+   "src": [
+    "src/missions/apollo13/pc2.js:58"
+   ]
+  },
+  {
+   "key": "dzjl9nromw",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Aquarius, Houston. Queremos un encendido del DPS a las 61:30 para devolverlos al retorno libre.",
+   "src": [
+    "src/missions/apollo13/freereturn.js:51"
+   ]
+  },
+  {
+   "key": "tybxq537yc",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Aquarius, Houston. Revisamos sus cuentas: están bien.",
+   "src": [
+    "src/missions/apollo13/lifeboat.js:100"
+   ]
+  },
+  {
+   "key": "fbnvzk6dki",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Aquarius, Houston. Revisen las cuentas: alabeo más 180, cabeceo 360 menos, guiñada negativa.",
+   "src": [
+    "src/missions/apollo13/lifeboat.js:103"
+   ]
+  },
+  {
+   "key": "yhhp36zqgo",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Aquarius, Houston. Tenemos un procedimiento para adaptar los cartuchos del módulo de mando. Busquen lápiz y papel.",
+   "src": [
+    "src/missions/apollo13/co2.js:86"
+   ]
+  },
+  {
+   "key": "6ywu1t3ovm",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Aquarius, Houston. Todavía no vuelven a la Tierra; haremos otra corrección.",
+   "src": [
+    "src/missions/apollo13/freereturn.js:83"
+   ]
+  },
+  {
+   "key": "15wkcwr4a6y",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Aquarius, Houston. Van a doblar la esquina. Nos vemos del otro lado.",
+   "src": [
+    "src/missions/apollo13/pc2.js:23"
+   ]
+  },
+  {
+   "key": "w5j1ii560n",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Aquarius, la plataforma del CM se perdió. Tendremos que alinear con el Sol y la Luna más adelante.",
+   "src": [
+    "src/missions/apollo13/lifeboat.js:80"
+   ]
+  },
+  {
+   "key": "y72w3n9cj4",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Aquarius, tienen GO para el PC+2.",
+   "src": [
+    "src/missions/apollo13/pc2.js:46"
+   ]
+  },
+  {
+   "key": "7vp5znir47",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Aquarius, vemos el CO2 bajando. Buen trabajo.",
+   "src": [
+    "src/missions/apollo13/co2.js:120"
+   ]
+  },
+  {
+   "key": "t7edrrqo39",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Aquí Houston. Repitan, por favor.",
+   "src": [
+    "src/missions/apollo13/explosion.js:66"
+   ]
+  },
+  {
+   "key": "1t1znnx66f",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Bien hecho. Ya hablas el idioma del AGC.",
+   "src": [
+    "src/missions/training/dsky.js:63"
+   ]
+  },
+  {
+   "key": "uj6v43dohg",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Bien, Jack: ahora hay que apagar el CM.",
+   "src": [
+    "src/missions/apollo13/lifeboat.js:119"
+   ]
+  },
+  {
+   "key": "ojz7ksib23",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Bien, Odyssey. Tienen GO para separar el LM.",
+   "src": [
+    "src/missions/apollo13/entry.js:46"
+   ]
+  },
+  {
+   "key": "2opz7zro7o",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Bien: tienes el LM unos 40 metros delante. Tómate tu tiempo.",
+   "src": [
+    "src/missions/training/docking.js:31"
+   ]
+  },
+  {
+   "key": "142a2m6qjp5",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Bien. Te escuchamos, Jack.",
+   "src": [
+    "src/missions/apollo13/entry.js:93"
+   ]
+  },
+  {
+   "key": "84jkqbibl3",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Bienvenido al simulador del módulo de mando. Empecemos por la luz más importante de la nave.",
+   "src": [
+    "src/missions/training/cockpit.js:32"
+   ]
+  },
+  {
+   "key": "qjz0rtajt7",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Bingo.",
+   "src": [
+    "src/missions/apollo11/landing.js:227"
+   ]
+  },
+  {
+   "key": "7gyde85wed",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "cabeceo",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "zyxpf5tp1",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Cargado en el ordenador.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "5q5lxvwkcz",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "cero",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "ejqizbpuqt",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "cinco",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "exhzg92ctq",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Columbia, Houston. Los vemos acoplados. Bienvenidos.",
+   "src": [
+    "src/missions/apollo11/ascent.js:165"
+   ]
+  },
+  {
+   "key": "7fu8ntmk1q",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "coma",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "3ilzori2o8",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Confirmado: GO para la órbita.",
+   "src": [
+    "src/missions/free/index.js:189"
+   ]
+  },
+  {
+   "key": "yxunacuo3k",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Confirmado: torre desechada.",
+   "src": [
+    "src/missions/free/index.js:186"
+   ]
+  },
+  {
+   "key": "yx0y1ay0w2",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Confirmamos buen empuje en los cinco.",
+   "src": [
+    "src/missions/common/kit.js:122"
+   ]
+  },
+  {
+   "key": "fzjhl4h545",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Confirmamos el desecho de la torre. Modo 2.",
+   "src": [
+    "src/missions/common/kit.js:125"
+   ]
+  },
+  {
+   "key": "cwm6e1my8w",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Confirmamos ignición; el empuje es GO.",
+   "src": [
+    "src/missions/free/index.js:193"
+   ]
+  },
+  {
+   "key": "t9106a55c",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "cuatro",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "ivi0iu4v12",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "delta ve",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "3b1n51aafi",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "dos",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "7xe1vv7iqv",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Eagle, Houston. Faltan 10 minutos para su despegue. Tienen autorización para despegar.",
+   "src": [
+    "src/missions/apollo11/ascent.js:36"
+   ]
+  },
+  {
+   "key": "11xi3n4zebd",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Eagle, Houston. Negativo: nada metálico en ese panel. Prueben con algo que no conduzca.",
+   "src": [
+    "src/missions/apollo11/ascent.js:58"
+   ]
+  },
+  {
+   "key": "ox6b7br9nv",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Eagle, Houston. Preferimos que lo empujen. Podríamos armarlo desde tierra, pero empújenlo.",
+   "src": [
+    "src/missions/apollo11/ascent.js:60"
+   ]
+  },
+  {
+   "key": "ep7rx8zl20",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Eagle, Houston. Se ven bien: los vemos en órbita.",
+   "src": [
+    "src/missions/apollo11/ascent.js:109"
+   ]
+  },
+  {
+   "key": "w3w6c1a0mv",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Eagle, Houston. Si nos copian: tienen GO para el descenso motorizado.",
+   "src": [
+    "src/missions/apollo11/landing.js:54"
+   ]
+  },
+  {
+   "key": "qry3apbh3l",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Eagle, Houston. Tienen GO para alunizar.",
+   "src": [
+    "src/missions/apollo11/landing.js:179"
+   ]
+  },
+  {
+   "key": "oy0pgsxgtx",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Eagle, Houston. Tienen GO para el descenso motorizado.",
+   "src": [
+    "src/missions/free/index.js:289"
+   ]
+  },
+  {
+   "key": "17hsycpi135",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Eagle, Houston. Vemos una buena DOI. En la próxima pasada tendrán GO para el descenso motorizado.",
+   "src": [
+    "src/missions/apollo11/undock.js:109"
+   ]
+  },
+  {
+   "key": "w9c1axs5as",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Eagle, se quedan para T1: STAY.",
+   "src": [
+    "src/missions/apollo11/landing.js:301"
+   ]
+  },
+  {
+   "key": "dw16io31f",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "es",
+   "src": [
+    "src/missions/apollo13/mcc5.js:40",
+    "src/missions/common/kit.js:48",
+    "src/missions/free/index.js:236"
+   ]
+  },
+  {
+   "key": "miiry5sb99",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Esa es la cabina. Ya estás listo para el curso del DSKY.",
+   "src": [
+    "src/missions/training/cockpit.js:54"
+   ]
+  },
+  {
+   "key": "6f7avaih6g",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Esperen, les pasamos el PAD de la maniobra.",
+   "src": [
+    "src/missions/common/kit.js:33"
+   ]
+  },
+  {
+   "key": "9yxtlljyd6",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Este capítulo todavía está en construcción.",
+   "src": [
+    "src/missions/stub.js:9"
+   ]
+  },
+  {
+   "key": "tb6z8guk22",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "guiñada",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "girtmb6oy",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Hola, Apolo 11, aquí Houston. ¿Cómo salió? Cambio.",
+   "src": [
+    "src/missions/apollo11/tei.js:56"
+   ]
+  },
+  {
+   "key": "10k60lv1w7b",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Houston a la escucha. Llamen cuando necesiten datos.",
+   "src": [
+    "src/missions/free/index.js:314"
+   ]
+  },
+  {
+   "key": "gltklg06vb",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Houston. Vemos el apagado y copiamos los datos. Ya están bien encaminados.",
+   "src": [
+    "src/missions/free/index.js:197"
+   ]
+  },
+  {
+   "key": "47szn56hz3",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Informe de Houston: les pasamos los datos de su órbita.",
+   "src": [
+    "src/missions/free/index.js:248"
+   ]
+  },
+  {
+   "key": "13hvrkykaxa",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Interfaz de reentrada. Nos vemos al otro lado del apagón.",
+   "src": [
+    "src/missions/free/index.js:227"
+   ]
+  },
+  {
+   "key": "jstico008r",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Marca. Modo 1 Bravo.",
+   "src": [
+    "src/missions/common/launch.js:131"
+   ]
+  },
+  {
+   "key": "zs48f1j83p",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "más",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "tiabpmrpso",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "menos",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "3x8luuv7hl",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Modo 1 Charlie.",
+   "src": [
+    "src/missions/common/launch.js:133"
+   ]
+  },
+  {
+   "key": "cv3vfw1jo6",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Negativo: desde aquí no hay solución de LOI.",
+   "src": [
+    "src/missions/free/index.js:269"
+   ]
+  },
+  {
+   "key": "rky2qaq70m",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "NO GO, Flight.",
+   "src": [
+    "src/missions/MissionRunner.js:674",
+    "src/missions/MissionRunner.js:684"
+   ]
+  },
+  {
+   "key": "oi574ijptj",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "No vimos la ignición. Esperen un PAD nuevo; esta vez lo vuela el ordenador.",
+   "src": [
+    "src/missions/common/kit.js:80"
+   ]
+  },
+  {
+   "key": "9g7x519dpl",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "nueve",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "12giq3g24pm",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "ocho",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "qspvw17rzi",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Odyssey, Houston. A la escucha. Cambio.",
+   "src": [
+    "src/missions/apollo13/entry.js:90"
+   ]
+  },
+  {
+   "key": "111agjrqbk",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Odyssey, Houston. Los vemos con los principales. Se ve realmente bien.",
+   "src": [
+    "src/missions/apollo13/entry.js:108"
+   ]
+  },
+  {
+   "key": "12rcdh6mvxy",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Odyssey, Houston. Tenemos el procedimiento de reactivación. Es largo: tómense su tiempo.",
+   "src": [
+    "src/missions/apollo13/powerup.js:26"
+   ]
+  },
+  {
+   "key": "xdog4vble",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Odyssey, Houston. Tienen GO para separar el módulo de servicio.",
+   "src": [
+    "src/missions/apollo13/powerup.js:49"
+   ]
+  },
+  {
+   "key": "ybsdrdkfoe",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Odyssey, Houston. Vemos la reactivación. Se ve bien.",
+   "src": [
+    "src/missions/apollo13/powerup.js:41"
+   ]
+  },
+  {
+   "key": "odfiys077q",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "PAD de cambio de órbita.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "173qfgpzsv6",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "PAD de circularización.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "13h63va7ua6",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "PAD de desorbitado.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "kmokh9drlh",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "PAD de la corrección de medio curso.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "12m95lp2lgv",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "PAD de la DOI.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "7gpllwi3wb",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "PAD de la LOI.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "xaj0wkrzzh",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "PAD de la maniobra.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "n6n5ktwcx9",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "PAD de la MCC-5.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "wwdxq39nvy",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "PAD de la TEI.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "uzjl9vbxkn",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "PAD de la TLI.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "f3bdog8pc",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "PAD de retorno libre.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "dkh35pi6og",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "PAD del PC más 2.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "wsygqha58i",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "pies por segundo",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "fswy99tkc",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Recibido, 11. Se lo diremos. Y parece que ya están bien encaminados.",
+   "src": [
+    "src/missions/apollo11/tli.js:98"
+   ]
+  },
+  {
+   "key": "134cope9psx",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Recibido, 1201. Lo tenemos. Seguimos GO.",
+   "src": [
+    "src/missions/apollo11/landing.js:156"
+   ]
+  },
+  {
+   "key": "wazep1p35f",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Recibido, 1202. Lo tenemos. Seguimos GO.",
+   "src": [
+    "src/missions/apollo11/landing.js:156"
+   ]
+  },
+  {
+   "key": "6iglrq4els",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Recibido, acoplamiento firme. Buen trabajo.",
+   "src": [
+    "src/missions/free/index.js:205"
+   ]
+  },
+  {
+   "key": "7w0oia5nko",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Recibido, alarma 1201. Seguimos GO. Del mismo tipo. Seguimos GO.",
+   "src": [
+    "src/missions/apollo11/landing.js:154"
+   ]
+  },
+  {
+   "key": "138yyse85xf",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Recibido, confirmamos ignición; el empuje es GO.",
+   "src": [
+    "src/missions/apollo11/tli.js:80"
+   ]
+  },
+  {
+   "key": "ben1hkx17p",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Recibido, copiamos el desacoplamiento.",
+   "src": [
+    "src/missions/free/index.js:299"
+   ]
+  },
+  {
+   "key": "6frmgexn7j",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Recibido, copiamos el informe del encendido. Todos respiramos de nuevo.",
+   "src": [
+    "src/missions/apollo11/loi.js:89"
+   ]
+  },
+  {
+   "key": "16yczilk195",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Recibido, despegue. El reloj está en marcha.",
+   "src": [
+    "src/missions/free/index.js:176"
+   ]
+  },
+  {
+   "key": "tabnnusnx1",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Recibido, esperen los datos de la TLI.",
+   "src": [
+    "src/missions/free/index.js:250"
+   ]
+  },
+  {
+   "key": "cif3w6uts",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Recibido, tienen autorización para despegar. Armen el motor de ascenso y separen la etapa.",
+   "src": [
+    "src/missions/free/index.js:292"
+   ]
+  },
+  {
+   "key": "l2zz7j1k1p",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Recibido, torre superada.",
+   "src": [
+    "src/missions/common/kit.js:115"
+   ]
+  },
+  {
+   "key": "geyu89eft5",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Recibido, Tran… Tranquilidad, los copiamos en tierra. Tienen a un montón de gente aquí a punto de ponerse azul. Volvemos a respirar. Muchas gracias.",
+   "src": [
+    "src/missions/apollo11/landing.js:281"
+   ]
+  },
+  {
+   "key": "11jjan30c9a",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Recibido: acoplamiento firme. Bien hecho.",
+   "src": [
+    "src/missions/apollo11/tde.js:127"
+   ]
+  },
+  {
+   "key": "dqrv0smur5",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Recibido: TLI inhibida.",
+   "src": [
+    "src/missions/free/index.js:260"
+   ]
+  },
+  {
+   "key": "42tvqkfuje",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Recibido. Copiamos que expulsan algo.",
+   "src": [
+    "src/missions/apollo13/explosion.js:85"
+   ]
+  },
+  {
+   "key": "14haep45cry",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Recibido. Creo que tuvimos un par de descargas cósmicas.",
+   "src": [
+    "src/missions/apollo12/lightning.js:94"
+   ]
+  },
+  {
+   "key": "hn9v3v7izl",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Recibido. Eagle, Houston: un minuto y se ven bien.",
+   "src": [
+    "src/missions/apollo11/ascent.js:95"
+   ]
+  },
+  {
+   "key": "6bvufyrd77",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Recibido. Estamos… seguimos GO con esa alarma.",
+   "src": [
+    "src/missions/apollo11/landing.js:142"
+   ]
+  },
+  {
+   "key": "ld9ly80qrc",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Recibido. Los tenemos volviendo a casa, bien dentro del corredor.",
+   "src": [
+    "src/missions/apollo11/tei.js:60"
+   ]
+  },
+  {
+   "key": "jcymp0l1wi",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Recibido. Los tenemos volviendo; la corrección de medio curso ajustará el corredor.",
+   "src": [
+    "src/missions/apollo11/tei.js:60"
+   ]
+  },
+  {
+   "key": "gnxdg4q4d2",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Recibido. Subtensión en el bus principal B.",
+   "src": [
+    "src/missions/apollo13/explosion.js:68"
+   ]
+  },
+  {
+   "key": "7udjoras49",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "SCE. SCE a auxiliar.",
+   "src": [
+    "src/missions/apollo12/lightning.js:70"
+   ]
+  },
+  {
+   "key": "249sa1np5r",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "segundos",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "rbdcd8r5rd",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "seis",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "9cm7drgrbs",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Separación de etapa. Buena ignición.",
+   "src": [
+    "src/missions/free/index.js:183"
+   ]
+  },
+  {
+   "key": "17bkeiimf0i",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "siete",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "3q9k0womx0",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "tiempo de encendido",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "be0639ielo",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Tienes el control manual. Sustentación arriba en la interfaz de reentrada.",
+   "src": [
+    "src/missions/training/entry.js:39"
+   ]
+  },
+  {
+   "key": "ed29udll4b",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "TIG",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "toalxm9g8",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Torre superada.",
+   "src": [
+    "src/missions/free/index.js:179"
+   ]
+  },
+  {
+   "key": "dofkx1ywf1",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Trece, el tanque de O2 número 1 sigue perdiendo. Empiecen a pensar en el LM como bote salvavidas.",
+   "src": [
+    "src/missions/apollo13/explosion.js:124"
+   ]
+  },
+  {
+   "key": "u5e4liewx8",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Trece, Houston. Confirmado: tienen GO para la órbita.",
+   "src": [
+    "src/missions/common/launch.js:201"
+   ]
+  },
+  {
+   "key": "dva6pds8xy",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Trece, Houston. Confirmamos el motor central apagado. Todo lo demás está GO.",
+   "src": [
+    "src/missions/apollo13/launch.js:46"
+   ]
+  },
+  {
+   "key": "156pu1tjboi",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Trece, Houston. Desechen la torre.",
+   "src": [
+    "src/missions/common/launch.js:163"
+   ]
+  },
+  {
+   "key": "tfb2p5qxp5",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Trece, Houston. GO para la separación. El S-IVB ya puede llevarlos a órbita.",
+   "src": [
+    "src/missions/common/launch.js:134"
+   ]
+  },
+  {
+   "key": "or4fxh774j",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Trece, Houston. Queremos que pasen al LM y lo enciendan.",
+   "src": [
+    "src/missions/apollo13/lifeboat.js:51"
+   ]
+  },
+  {
+   "key": "15sgwglycce",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Trece, queremos que cierren las válvulas de reactivos de la pila 3 y de la pila 1.",
+   "src": [
+    "src/missions/apollo13/explosion.js:107"
+   ]
+  },
+  {
+   "key": "t5wc7g470g",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Trece, tenemos una tarea más cuando puedan: queremos que agiten los tanques criogénicos.",
+   "src": [
+    "src/missions/apollo13/explosion.js:41"
+   ]
+  },
+  {
+   "key": "1669ccj0fkz",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "tres",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "kzcyu1nhxf",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Última. Houston cargó una maniobra (P30). Selecciona P40 con VERB 3 7 ENTR 4 0 ENTR y mira cómo el ordenador gira la nave hacia la actitud del encendido.",
+   "src": [
+    "src/missions/training/dsky.js:53"
+   ]
+  },
+  {
+   "key": "114scv9yqfr",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "uno",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "g3ddxk1kj7",
+   "who": "CDR",
+   "lang": "es",
+   "text": "¡Aborto! ¡Aborto!",
+   "src": [
+    "src/missions/common/launch.js:53"
+   ]
+  },
+  {
+   "key": "8ukhyxss2o",
+   "who": "CDR",
+   "lang": "es",
+   "text": "¡Le falta todo un costado a esa nave!",
+   "src": [
+    "src/missions/apollo13/powerup.js:64"
+   ]
+  },
+  {
+   "key": "578804tx95",
+   "who": "CDR",
+   "lang": "es",
+   "text": "¿FCE a auxiliar? ¿Qué demonios es eso?",
+   "src": [
+    "src/missions/apollo12/lightning.js:69"
+   ]
+  },
+  {
+   "key": "fjlbjjw27e",
+   "who": "CDR",
+   "lang": "es",
+   "text": "¿Nos dicen que las cerremos las dos?",
+   "src": [
+    "src/missions/apollo13/explosion.js:108"
+   ]
+  },
+  {
+   "key": "lu5v7pvt9h",
+   "who": "CDR",
+   "lang": "es",
+   "text": "¿Qué demonios fue eso?",
+   "src": [
+    "src/missions/apollo12/lightning.js:44"
+   ]
+  },
+  {
+   "key": "1qzt0b8iev",
+   "who": "CDR",
+   "lang": "es",
+   "text": "Alabeo completo.",
+   "src": [
+    "src/missions/common/launch.js:130"
+   ]
+  },
+  {
+   "key": "o7h29kbrmq",
+   "who": "CDR",
+   "lang": "es",
+   "text": "Alarma de programa.",
+   "src": [
+    "src/missions/apollo11/landing.js:132"
+   ]
+  },
+  {
+   "key": "kkok48d32o",
+   "who": "CDR",
+   "lang": "es",
+   "text": "Alguien está cabeza abajo.",
+   "src": [
+    "src/missions/apollo11/undock.js:81"
+   ]
+  },
+  {
+   "key": "11lma6jjv9i",
+   "who": "CDR",
+   "lang": "es",
+   "text": "Apagado.",
+   "src": [
+    "src/missions/apollo11/landing.js:277",
+    "src/missions/apollo13/mcc5.js:107",
+    "src/missions/common/kit.js:134"
+   ]
+  },
+  {
+   "key": "12ooaegz36s",
+   "who": "CDR",
+   "lang": "es",
+   "text": "Apagado. Buen encendido.",
+   "src": [
+    "src/missions/apollo11/tei.js:49",
+    "src/missions/apollo13/freereturn.js:73"
+   ]
+  },
+  {
+   "key": "892ykyr895",
+   "who": "CDR",
+   "lang": "es",
+   "text": "Apagado. Fue un buen encendido.",
+   "src": [
+    "src/missions/apollo13/pc2.js:51"
+   ]
+  },
+  {
+   "key": "15efonm3q0",
+   "who": "CDR",
+   "lang": "es",
+   "text": "Bien, vamos a girar la nave.",
+   "src": [
+    "src/missions/apollo8/earthrise.js:38"
+   ]
+  },
+  {
+   "key": "e7ltg9b21g",
+   "who": "CDR",
+   "lang": "es",
+   "text": "Bien: realinearemos la plataforma con las estrellas. Estamos en órbita y todo está bien.",
+   "src": [
+    "src/missions/apollo12/lightning.js:95"
+   ]
+  },
+  {
+   "key": "6u3n3o609l",
+   "who": "CDR",
+   "lang": "es",
+   "text": "Bien. Fred y yo vamos al LM.",
+   "src": [
+    "src/missions/apollo13/lifeboat.js:52"
+   ]
+  },
+  {
+   "key": "vybeml577h",
+   "who": "CDR",
+   "lang": "es",
+   "text": "Captura.",
+   "src": [
+    "src/missions/free/index.js:202"
+   ]
+  },
+  {
+   "key": "jnztmgrsww",
+   "who": "CDR",
+   "lang": "es",
+   "text": "Dennos una lectura sobre la alarma de programa 1201.",
+   "src": [
+    "src/missions/apollo11/landing.js:134"
+   ]
+  },
+  {
+   "key": "15ir62v5i8b",
+   "who": "CDR",
+   "lang": "es",
+   "text": "Dennos una lectura sobre la alarma de programa 1202.",
+   "src": [
+    "src/missions/apollo11/landing.js:134"
+   ]
+  },
+  {
+   "key": "s6o3uuorr8",
+   "who": "CDR",
+   "lang": "es",
+   "text": "Despegue. El reloj está en marcha.",
+   "src": [
+    "src/missions/common/launch.js:103"
+   ]
+  },
+  {
+   "key": "5bzr8arbu7",
+   "who": "CDR",
+   "lang": "es",
+   "text": "El Eagle tiene alas.",
+   "src": [
+    "src/missions/apollo11/undock.js:53"
+   ]
+  },
+  {
+   "key": "8a0rzdfs4f",
+   "who": "CDR",
+   "lang": "es",
+   "text": "Encendido completo.",
+   "src": [
+    "src/missions/apollo8/loi.js:58"
+   ]
+  },
+  {
+   "key": "aul2t2uf7n",
+   "who": "CDR",
+   "lang": "es",
+   "text": "Encendido completo. Estamos en órbita lunar.",
+   "src": [
+    "src/missions/apollo11/loi.js:75"
+   ]
+  },
+  {
+   "key": "u5fuitteqj",
+   "who": "CDR",
+   "lang": "es",
+   "text": "Es un 1201.",
+   "src": [
+    "src/missions/apollo11/landing.js:133"
+   ]
+  },
+  {
+   "key": "7ni09xuswo",
+   "who": "CDR",
+   "lang": "es",
+   "text": "Es un 1202.",
+   "src": [
+    "src/missions/apollo11/landing.js:133"
+   ]
+  },
+  {
+   "key": "6z31xmmpr3",
+   "who": "CDR",
+   "lang": "es",
+   "text": "Hora de abrir las puertas del laboratorio de recepción lunar, Charlie.",
+   "src": [
+    "src/missions/apollo11/tei.js:57"
+   ]
+  },
+  {
+   "key": "14093c3o17p",
+   "who": "CDR",
+   "lang": "es",
+   "text": "Houston, hemos tenido un problema. Tenemos una subtensión en el bus principal B.",
+   "src": [
+    "src/missions/apollo13/explosion.js:67"
+   ]
+  },
+  {
+   "key": "17qlo1lsi9l",
+   "who": "CDR",
+   "lang": "es",
+   "text": "Houston, se nos apagó el motor central del S-II.",
+   "src": [
+    "src/missions/apollo13/launch.js:38"
+   ]
+  },
+  {
+   "key": "wdagnus5oq",
+   "who": "CDR",
+   "lang": "es",
+   "text": "Ignición.",
+   "src": [
+    "src/missions/apollo11/tli.js:79",
+    "src/missions/apollo13/mcc5.js:93"
+   ]
+  },
+  {
+   "key": "1rxj5den9s",
+   "who": "CDR",
+   "lang": "es",
+   "text": "Justo al lado de la antena de alta ganancia: el panel entero voló, casi desde la base hasta el motor.",
+   "src": [
+    "src/missions/apollo13/powerup.js:66"
+   ]
+  },
+  {
+   "key": "dims2f7d3g",
+   "who": "CDR",
+   "lang": "es",
+   "text": "Las pilas están fuera de línea, los buses de alterna muertos, la plataforma se perdió.",
+   "src": [
+    "src/missions/apollo12/lightning.js:50"
+   ]
+  },
+  {
+   "key": "tr82zlo2nr",
+   "who": "CDR",
+   "lang": "es",
+   "text": "Los recibimos fuerte y claro, Houston. Fue como perfecto.",
+   "src": [
+    "src/missions/apollo11/loi.js:88"
+   ]
+  },
+  {
+   "key": "13j8c9u91kh",
+   "who": "CDR",
+   "lang": "es",
+   "text": "No estoy seguro de que no nos haya caído un rayo.",
+   "src": [
+    "src/missions/apollo12/lightning.js:93"
+   ]
+  },
+  {
+   "key": "ktr1b2r6ph",
+   "who": "CDR",
+   "lang": "es",
+   "text": "Oye Houston, aquí Apolo 11. Ese Saturn nos dio una cabalgata magnífica.",
+   "src": [
+    "src/missions/apollo11/tli.js:97"
+   ]
+  },
+  {
+   "key": "l6grm3gr9r",
+   "who": "CDR",
+   "lang": "es",
+   "text": "Perdí un montón de cosas, no sé qué pasó. Se nos cayó todo.",
+   "src": [
+    "src/missions/apollo12/lightning.js:45"
+   ]
+  },
+  {
+   "key": "j8dv5a1zvk",
+   "who": "CDR",
+   "lang": "es",
+   "text": "Programa de alabeo y cabeceo.",
+   "src": [
+    "src/missions/common/launch.js:129"
+   ]
+  },
+  {
+   "key": "2ykz0w9dud",
+   "who": "CDR",
+   "lang": "es",
+   "text": "Recibido, Houston. Salimos del apagón.",
+   "src": [
+    "src/missions/apollo11/entry.js:78"
+   ]
+  },
+  {
+   "key": "xri7tegsdl",
+   "who": "CDR",
+   "lang": "es",
+   "text": "Recibido: GO para la TLI.",
+   "src": [
+    "src/missions/apollo11/tli.js:57"
+   ]
+  },
+  {
+   "key": "9tfw5n0ey4",
+   "who": "CDR",
+   "lang": "es",
+   "text": "Recibido. Apagado. Estamos en órbita.",
+   "src": [
+    "src/missions/common/launch.js:202"
+   ]
+  },
+  {
+   "key": "ccwpbzviiv",
+   "who": "CDR",
+   "lang": "es",
+   "text": "Recibido. Los otros cuatro van bien.",
+   "src": [
+    "src/missions/apollo13/launch.js:56"
+   ]
+  },
+  {
+   "key": "qgix05pz52",
+   "who": "CDR",
+   "lang": "es",
+   "text": "Recibido. Todo se ve bien aquí arriba.",
+   "src": [
+    "src/missions/apollo11/loi.js:60"
+   ]
+  },
+  {
+   "key": "170a68s1ylw",
+   "who": "CDR",
+   "lang": "es",
+   "text": "Recibido. Ya estamos pensando en el LM.",
+   "src": [
+    "src/missions/apollo13/explosion.js:125"
+   ]
+  },
+  {
+   "key": "t7r0sz14f9",
+   "who": "CDR",
+   "lang": "es",
+   "text": "Separación CM/SM. Estamos en actitud de reentrada.",
+   "src": [
+    "src/missions/apollo11/entry.js:60"
+   ]
+  },
+  {
+   "key": "arfn8rd95o",
+   "who": "CDR",
+   "lang": "es",
+   "text": "Separación; el S-IVB encendido.",
+   "src": [
+    "src/missions/common/kit.js:131"
+   ]
+  },
+  {
+   "key": "bv0g636qyc",
+   "who": "CDR",
+   "lang": "es",
+   "text": "Separación. E ignición.",
+   "src": [
+    "src/missions/common/kit.js:121"
+   ]
+  },
+  {
+   "key": "fmexgoauf5",
+   "who": "CDR",
+   "lang": "es",
+   "text": "Tenemos al LM. El Eagle está fuera.",
+   "src": [
+    "src/missions/apollo11/tde.js:140"
+   ]
+  },
+  {
+   "key": "jcgp5ep1od",
+   "who": "CDR",
+   "lang": "es",
+   "text": "Y por lo que veo desde la escotilla, estamos expulsando algo. Estamos expulsando algo al espacio.",
+   "src": [
+    "src/missions/apollo13/explosion.js:84"
+   ]
+  },
+  {
+   "key": "6bqrjmxb9p",
+   "who": "CDR",
+   "lang": "es",
+   "text": "Zona bastante rocosa.",
+   "src": [
+    "src/missions/apollo11/landing.js:184"
+   ]
+  },
+  {
+   "key": "125t7pn9vzr",
+   "who": "CMP",
+   "lang": "es",
+   "text": "Adelante, Houston, aquí Apolo 8. Encendido completo. Nuestra órbita:",
+   "src": [
+    "src/missions/apollo8/loi.js:91"
+   ]
+  },
+  {
+   "key": "ne8vtzhwql",
+   "who": "CMP",
+   "lang": "es",
+   "text": "alabeo",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "rmu9dx7ym8",
+   "who": "CMP",
+   "lang": "es",
+   "text": "Aquarius, ángulos del CM.",
+   "src": [
+    "src/missions/apollo13/lifeboat.js:83"
+   ]
+  },
+  {
+   "key": "15wzp2dawjn",
+   "who": "CMP",
+   "lang": "es",
+   "text": "Bien, Joe.",
+   "src": [
+    "src/missions/apollo13/entry.js:92"
+   ]
+  },
+  {
+   "key": "94tc85yyo5",
+   "who": "CMP",
+   "lang": "es",
+   "text": "cabeceo",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "x83cg88zn0",
+   "who": "CMP",
+   "lang": "es",
+   "text": "Captura.",
+   "src": [
+    "src/missions/apollo11/tde.js:114"
+   ]
+  },
+  {
+   "key": "xcrdthqz4k",
+   "who": "CMP",
+   "lang": "es",
+   "text": "Captura. Retraigo la sonda.",
+   "src": [
+    "src/missions/apollo11/ascent.js:158"
+   ]
+  },
+  {
+   "key": "x2kjzoc9el",
+   "who": "CMP",
+   "lang": "es",
+   "text": "cero",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "qq5jkkxcbu",
+   "who": "CMP",
+   "lang": "es",
+   "text": "cinco",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "8wyg1sz71c",
+   "who": "CMP",
+   "lang": "es",
+   "text": "coma",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "sk2ckfi5w1",
+   "who": "CMP",
+   "lang": "es",
+   "text": "Creo que tienen una máquina voladora preciosa, Eagle, aunque estén cabeza abajo.",
+   "src": [
+    "src/missions/apollo11/undock.js:80"
+   ]
+  },
+  {
+   "key": "11f8j9zl1fm",
+   "who": "CMP",
+   "lang": "es",
+   "text": "cuatro",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "c49numg4dc",
+   "who": "CMP",
+   "lang": "es",
+   "text": "De acuerdo. Un momento.",
+   "src": [
+    "src/missions/apollo13/explosion.js:42"
+   ]
+  },
+  {
+   "key": "2043ohxl08",
+   "who": "CMP",
+   "lang": "es",
+   "text": "Demasiado rápido. Me alejo y vuelvo a intentar.",
+   "src": [
+    "src/missions/apollo11/tde.js:70"
+   ]
+  },
+  {
+   "key": "161jlq6vb2e",
+   "who": "CMP",
+   "lang": "es",
+   "text": "dos",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "oc495lfouu",
+   "who": "CMP",
+   "lang": "es",
+   "text": "Eagle, aquí Columbia. Acaban de darles GO para el descenso motorizado.",
+   "src": [
+    "src/missions/apollo11/landing.js:55"
+   ]
+  },
+  {
+   "key": "16iecigtgx3",
+   "who": "CMP",
+   "lang": "es",
+   "text": "Eagle, aquí Columbia. Los tengo a la vista. Suban.",
+   "src": [
+    "src/missions/apollo11/ascent.js:124"
+   ]
+  },
+  {
+   "key": "z0aqcr8kr2",
+   "who": "CMP",
+   "lang": "es",
+   "text": "El Odyssey está apagado.",
+   "src": [
+    "src/missions/apollo13/lifeboat.js:124"
+   ]
+  },
+  {
+   "key": "5dj0vyi9xp",
+   "who": "CMP",
+   "lang": "es",
+   "text": "Encendido de separación completo. Nos vemos luego.",
+   "src": [
+    "src/missions/apollo11/undock.js:91"
+   ]
+  },
+  {
+   "key": "i0yezgsenn",
+   "who": "CMP",
+   "lang": "es",
+   "text": "es",
+   "src": [
+    "src/missions/apollo13/lifeboat.js:83",
+    "src/missions/apollo8/loi.js:91"
+   ]
+  },
+  {
+   "key": "bepzm1liih",
+   "who": "CMP",
+   "lang": "es",
+   "text": "guiñada",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "pih9odspd9",
+   "who": "CMP",
+   "lang": "es",
+   "text": "La Luna es esencialmente gris, sin color; parece yeso, o una arena de playa grisácea.",
+   "src": [
+    "src/missions/apollo8/loi.js:79"
+   ]
+  },
+  {
+   "key": "1dxldo8dfb",
+   "who": "CMP",
+   "lang": "es",
+   "text": "Listo, cerradas.",
+   "src": [
+    "src/missions/apollo13/explosion.js:121"
+   ]
+  },
+  {
+   "key": "2u8itmnl49",
+   "who": "CMP",
+   "lang": "es",
+   "text": "Listo: el primero está conectado y el ventilador funciona.",
+   "src": [
+    "src/missions/apollo13/co2.js:112"
+   ]
+  },
+  {
+   "key": "10n9z6mfjp8",
+   "who": "CMP",
+   "lang": "es",
+   "text": "más",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "aeqpjh622f",
+   "who": "CMP",
+   "lang": "es",
+   "text": "menos",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "3pkyapdd2v",
+   "who": "CMP",
+   "lang": "es",
+   "text": "nueve",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "67psktdlxs",
+   "who": "CMP",
+   "lang": "es",
+   "text": "ocho",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "nvbuncxqjd",
+   "who": "CMP",
+   "lang": "es",
+   "text": "por",
+   "src": [
+    "src/missions/apollo8/loi.js:91"
+   ]
+  },
+  {
+   "key": "v17gy1jmq1",
+   "who": "CMP",
+   "lang": "es",
+   "text": "Recibido, listos para copiar. Hace frío aquí dentro.",
+   "src": [
+    "src/missions/apollo13/powerup.js:27"
+   ]
+  },
+  {
+   "key": "ujkbntb1f7",
+   "who": "CMP",
+   "lang": "es",
+   "text": "Saca fotos, Fred.",
+   "src": [
+    "src/missions/apollo13/pc2.js:29"
+   ]
+  },
+  {
+   "key": "pgozwqz3c7",
+   "who": "CMP",
+   "lang": "es",
+   "text": "seis",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "176lxydmi3n",
+   "who": "CMP",
+   "lang": "es",
+   "text": "Separación. Los paneles del adaptador se abren.",
+   "src": [
+    "src/missions/apollo11/tde.js:59"
+   ]
+  },
+  {
+   "key": "seugasc7st",
+   "who": "CMP",
+   "lang": "es",
+   "text": "siete",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "4r3384r9fo",
+   "who": "CMP",
+   "lang": "es",
+   "text": "tres",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "zkw4amo0mi",
+   "who": "CMP",
+   "lang": "es",
+   "text": "Túnel presurizado. Listos para extraer el LM.",
+   "src": [
+    "src/missions/apollo11/tde.js:132"
+   ]
+  },
+  {
+   "key": "87q4muw4rj",
+   "who": "CMP",
+   "lang": "es",
+   "text": "uno",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "p4ase6g0i",
+   "who": "CONTROL",
+   "lang": "es",
+   "text": "¡GO!",
+   "src": [
+    "src/missions/MissionRunner.js:673",
+    "src/missions/MissionRunner.js:684"
+   ]
+  },
+  {
+   "key": "82j7hlfyk6",
+   "who": "CONTROL",
+   "lang": "es",
+   "text": "NO GO, Flight.",
+   "src": [
+    "src/missions/MissionRunner.js:674",
+    "src/missions/MissionRunner.js:684"
+   ]
+  },
+  {
+   "key": "kgehfzgbfv",
+   "who": "EECOM",
+   "lang": "es",
+   "text": "¡GO!",
+   "src": [
+    "src/missions/MissionRunner.js:673",
+    "src/missions/MissionRunner.js:684"
+   ]
+  },
+  {
+   "key": "dj79t3ma42",
+   "who": "EECOM",
+   "lang": "es",
+   "text": "Flight, EECOM. Podría ser instrumentación… No. Perdimos dos pilas de combustible y el tanque de O2 número 2.",
+   "src": [
+    "src/missions/apollo13/explosion.js:95"
+   ]
+  },
+  {
+   "key": "1625e56s8uw",
+   "who": "EECOM",
+   "lang": "es",
+   "text": "Flight, EECOM. Prueben SCE a AUX.",
+   "src": [
+    "src/missions/apollo12/lightning.js:59"
+   ]
+  },
+  {
+   "key": "10qv7hh250h",
+   "who": "EECOM",
+   "lang": "es",
+   "text": "Flight, Sistemas de Tripulación tiene un procedimiento: se pueden adaptar los cartuchos del CM con lo que tienen a bordo.",
+   "src": [
+    "src/missions/apollo13/co2.js:78"
+   ]
+  },
+  {
+   "key": "21t3qiyc2e",
+   "who": "EECOM",
+   "lang": "es",
+   "text": "NO GO, Flight.",
+   "src": [
+    "src/missions/MissionRunner.js:674",
+    "src/missions/MissionRunner.js:684"
+   ]
+  },
+  {
+   "key": "imn1itgbzt",
+   "who": "FAO",
+   "lang": "es",
+   "text": "¡GO!",
+   "src": [
+    "src/missions/MissionRunner.js:673",
+    "src/missions/MissionRunner.js:684"
+   ]
+  },
+  {
+   "key": "neiatlgwnc",
+   "who": "FAO",
+   "lang": "es",
+   "text": "NO GO, Flight.",
+   "src": [
+    "src/missions/MissionRunner.js:674",
+    "src/missions/MissionRunner.js:684"
+   ]
+  },
+  {
+   "key": "wpvn1ie6nw",
+   "who": "FIDO",
+   "lang": "es",
+   "text": "¡GO!",
+   "src": [
+    "src/missions/MissionRunner.js:673",
+    "src/missions/MissionRunner.js:684"
+   ]
+  },
+  {
+   "key": "yr3dnejzvb",
+   "who": "FIDO",
+   "lang": "es",
+   "text": "Flight, FIDO. Encendido del DPS a las 61:30, 38 pies/s. Eso nos devuelve al retorno libre.",
+   "src": [
+    "src/missions/apollo13/freereturn.js:59"
+   ]
+  },
+  {
+   "key": "kx7vp7j5zy",
+   "who": "FIDO",
+   "lang": "es",
+   "text": "Flight, FIDO. Vamos con la primera oportunidad.",
+   "src": [
+    "src/missions/apollo11/tli.js:46"
+   ]
+  },
+  {
+   "key": "ud8uqcxros",
+   "who": "FIDO",
+   "lang": "es",
+   "text": "NO GO, Flight.",
+   "src": [
+    "src/missions/MissionRunner.js:674",
+    "src/missions/MissionRunner.js:684"
+   ]
+  },
+  {
+   "key": "l3skp64p53",
+   "who": "FLIGHT",
+   "lang": "es",
+   "text": "¡GO!",
+   "src": [
+    "src/missions/MissionRunner.js:673",
+    "src/missions/MissionRunner.js:684"
+   ]
+  },
+  {
+   "key": "al3owaz5bm",
+   "who": "FLIGHT",
+   "lang": "es",
+   "text": "¿BOOSTER?",
+   "src": [
+    "src/missions/MissionRunner.js:664"
+   ]
+  },
+  {
+   "key": "opln20544m",
+   "who": "FLIGHT",
+   "lang": "es",
+   "text": "¿CAPCOM?",
+   "src": [
+    "src/missions/MissionRunner.js:664"
+   ]
+  },
+  {
+   "key": "10m1hin0iqy",
+   "who": "FLIGHT",
+   "lang": "es",
+   "text": "¿CONTROL?",
+   "src": [
+    "src/missions/MissionRunner.js:664"
+   ]
+  },
+  {
+   "key": "gye2jey148",
+   "who": "FLIGHT",
+   "lang": "es",
+   "text": "¿EECOM?",
+   "src": [
+    "src/missions/MissionRunner.js:664"
+   ]
+  },
+  {
+   "key": "123h6gwh7w5",
+   "who": "FLIGHT",
+   "lang": "es",
+   "text": "¿FAO?",
+   "src": [
+    "src/missions/MissionRunner.js:664"
+   ]
+  },
+  {
+   "key": "2hj0nre1au",
+   "who": "FLIGHT",
+   "lang": "es",
+   "text": "¿FIDO?",
+   "src": [
+    "src/missions/MissionRunner.js:664"
+   ]
+  },
+  {
+   "key": "2hd4hlffyx",
+   "who": "FLIGHT",
+   "lang": "es",
+   "text": "¿FLIGHT?",
+   "src": [
+    "src/missions/MissionRunner.js:664"
+   ]
+  },
+  {
+   "key": "2kc8drszwi",
+   "who": "FLIGHT",
+   "lang": "es",
+   "text": "¿GNC?",
+   "src": [
+    "src/missions/MissionRunner.js:664"
+   ]
+  },
+  {
+   "key": "yqz3sg88qz",
+   "who": "FLIGHT",
+   "lang": "es",
+   "text": "¿GUIDO?",
+   "src": [
+    "src/missions/MissionRunner.js:664"
+   ]
+  },
+  {
+   "key": "13cxt8fcx14",
+   "who": "FLIGHT",
+   "lang": "es",
+   "text": "¿INCO?",
+   "src": [
+    "src/missions/MissionRunner.js:664"
+   ]
+  },
+  {
+   "key": "e363zqe4mh",
+   "who": "FLIGHT",
+   "lang": "es",
+   "text": "¿NETWORK?",
+   "src": [
+    "src/missions/MissionRunner.js:664"
+   ]
+  },
+  {
+   "key": "124ptv3mn36",
+   "who": "FLIGHT",
+   "lang": "es",
+   "text": "¿PAO?",
+   "src": [
+    "src/missions/MissionRunner.js:664"
+   ]
+  },
+  {
+   "key": "xot30gyqbc",
+   "who": "FLIGHT",
+   "lang": "es",
+   "text": "¿PROCEDURES?",
+   "src": [
+    "src/missions/MissionRunner.js:664"
+   ]
+  },
+  {
+   "key": "pwkxkyicp5",
+   "who": "FLIGHT",
+   "lang": "es",
+   "text": "¿RETRO?",
+   "src": [
+    "src/missions/MissionRunner.js:664"
+   ]
+  },
+  {
+   "key": "10msao2ynuo",
+   "who": "FLIGHT",
+   "lang": "es",
+   "text": "¿SURGEON?",
+   "src": [
+    "src/missions/MissionRunner.js:664"
+   ]
+  },
+  {
+   "key": "ao0rdc3z4u",
+   "who": "FLIGHT",
+   "lang": "es",
+   "text": "¿TELMU?",
+   "src": [
+    "src/missions/MissionRunner.js:664"
+   ]
+  },
+  {
+   "key": "5sgqi8spp8",
+   "who": "FLIGHT",
+   "lang": "es",
+   "text": "Bienvenido al MOCR. Te muestro la sala antes de tu primer turno.",
+   "src": [
+    "src/missions/training/mocr.js:39"
+   ]
+  },
+  {
+   "key": "zjq9cy87s7",
+   "who": "FLIGHT",
+   "lang": "es",
+   "text": "CAPCOM, Aquarius tiene GO para el PC+2.",
+   "src": [
+    "src/missions/apollo13/pc2.js:45"
+   ]
+  },
+  {
+   "key": "nht5izjz8u",
+   "who": "FLIGHT",
+   "lang": "es",
+   "text": "CAPCOM, nos quedamos en T1.",
+   "src": [
+    "src/missions/apollo11/landing.js:300"
+   ]
+  },
+  {
+   "key": "gfqiqod8ss",
+   "who": "FLIGHT",
+   "lang": "es",
+   "text": "CAPCOM, tenemos GO para la TEI.",
+   "src": [
+    "src/missions/apollo11/tei.js:35"
+   ]
+  },
+  {
+   "key": "zsrsyk7kbj",
+   "who": "FLIGHT",
+   "lang": "es",
+   "text": "Control de lanzamiento, Houston está GO para el lanzamiento.",
+   "src": [
+    "src/missions/common/launch.js:82"
+   ]
+  },
+  {
+   "key": "wpe4xg50nl",
+   "who": "FLIGHT",
+   "lang": "es",
+   "text": "Controladores: GO / NO GO para el encendido PC+2.",
+   "src": [
+    "src/missions/apollo13/pc2.js:44"
+   ]
+  },
+  {
+   "key": "5sv37xqx4",
+   "who": "FLIGHT",
+   "lang": "es",
+   "text": "Controladores: GO / NO GO para la TEI.",
+   "src": [
+    "src/missions/apollo11/tei.js:34"
+   ]
+  },
+  {
+   "key": "t091f6oqjj",
+   "who": "FLIGHT",
+   "lang": "es",
+   "text": "EECOM, eso no explica lo que están expulsando.",
+   "src": [
+    "src/missions/apollo13/explosion.js:97"
+   ]
+  },
+  {
+   "key": "lw5ghyw76y",
+   "who": "FLIGHT",
+   "lang": "es",
+   "text": "EECOM, necesito algo mejor que eso.",
+   "src": [
+    "src/missions/apollo12/lightning.js:61"
+   ]
+  },
+  {
+   "key": "l20eiecfw6",
+   "who": "FLIGHT",
+   "lang": "es",
+   "text": "El cohete va bien y la tripulación habla. No abortamos por datos dudosos.",
+   "src": [
+    "src/missions/apollo12/lightning.js:60"
+   ]
+  },
+  {
+   "key": "db4acfq496",
+   "who": "FLIGHT",
+   "lang": "es",
+   "text": "Esa es la sala. Bienvenido al equipo.",
+   "src": [
+    "src/missions/training/mocr.js:56"
+   ]
+  },
+  {
+   "key": "104535hqmuq",
+   "who": "FLIGHT",
+   "lang": "es",
+   "text": "Eso nos da horas, no días.",
+   "src": [
+    "src/missions/apollo13/co2.js:80"
+   ]
+  },
+  {
+   "key": "1199s5qqe5u",
+   "who": "FLIGHT",
+   "lang": "es",
+   "text": "FIDO, no hay motivo para retrasarla. Primera oportunidad.",
+   "src": [
+    "src/missions/apollo11/tli.js:47"
+   ]
+  },
+  {
+   "key": "izkk9jnvgp",
+   "who": "FLIGHT",
+   "lang": "es",
+   "text": "Muy bien, controladores: GO / NO GO para el lanzamiento.",
+   "src": [
+    "src/missions/common/launch.js:81"
+   ]
+  },
+  {
+   "key": "8x185kt1af",
+   "who": "FLIGHT",
+   "lang": "es",
+   "text": "Muy bien, controladores: unos 45 segundos para T1, STAY / NO STAY.",
+   "src": [
+    "src/missions/apollo11/landing.js:299"
+   ]
+  },
+  {
+   "key": "1712l85euxp",
+   "who": "FLIGHT",
+   "lang": "es",
+   "text": "Negativo, BOOSTER: todavía podemos llegar a la órbita.",
+   "src": [
+    "src/missions/apollo13/launch.js:47"
+   ]
+  },
+  {
+   "key": "jxoiaed3ip",
+   "who": "FLIGHT",
+   "lang": "es",
+   "text": "Negativo, BOOSTER: todos los parámetros están bien.",
+   "src": [
+    "src/missions/common/launch.js:147"
+   ]
+  },
+  {
+   "key": "zcvhvtrhw5",
+   "who": "FLIGHT",
+   "lang": "es",
+   "text": "Negativo. No sabemos cómo quedó el SPS después de la explosión.",
+   "src": [
+    "src/missions/apollo13/freereturn.js:61"
+   ]
+  },
+  {
+   "key": "tsvlxjyp1m",
+   "who": "FLIGHT",
+   "lang": "es",
+   "text": "NO GO, Flight.",
+   "src": [
+    "src/missions/MissionRunner.js:674",
+    "src/missions/MissionRunner.js:684"
+   ]
+  },
+  {
+   "key": "16v8i2n6ksu",
+   "who": "FLIGHT",
+   "lang": "es",
+   "text": "No hace falta, BOOSTER: el S-IVB tiene margen.",
+   "src": [
+    "src/missions/apollo13/launch.js:48"
+   ]
+  },
+  {
+   "key": "16gs2qhm8ca",
+   "who": "FLIGHT",
+   "lang": "es",
+   "text": "No podemos encender el CM: necesitamos esas baterías para la reentrada.",
+   "src": [
+    "src/missions/apollo13/co2.js:79"
+   ]
+  },
+  {
+   "key": "yntk4kx562",
+   "who": "FLIGHT",
+   "lang": "es",
+   "text": "No: queremos el retorno libre ya. No sabemos cuánto aguantará el LM.",
+   "src": [
+    "src/missions/apollo13/freereturn.js:60"
+   ]
+  },
+  {
+   "key": "zha1nv40ef",
+   "who": "FLIGHT",
+   "lang": "es",
+   "text": "Resolvamos el problema, pero no lo empeoremos adivinando.",
+   "src": [
+    "src/missions/apollo13/explosion.js:96"
+   ]
+  },
+  {
+   "key": "byabt2oa7d",
+   "who": "FLIGHT",
+   "lang": "es",
+   "text": "RETRO, siempre enviamos los PAD de aborto.",
+   "src": [
+    "src/missions/apollo11/loi.js:45"
+   ]
+  },
+  {
+   "key": "z71jpwmhp0",
+   "who": "GNC",
+   "lang": "es",
+   "text": "¡GO!",
+   "src": [
+    "src/missions/MissionRunner.js:673",
+    "src/missions/MissionRunner.js:684"
+   ]
+  },
+  {
+   "key": "baattc2c6j",
+   "who": "GNC",
+   "lang": "es",
+   "text": "NO GO, Flight.",
+   "src": [
+    "src/missions/MissionRunner.js:674",
+    "src/missions/MissionRunner.js:684"
+   ]
+  },
+  {
+   "key": "quvocu8fxo",
+   "who": "GUIDO",
+   "lang": "es",
+   "text": "¡GO!",
+   "src": [
+    "src/missions/MissionRunner.js:673",
+    "src/missions/MissionRunner.js:684"
+   ]
+  },
+  {
+   "key": "rewoggpj9a",
+   "who": "GUIDO",
+   "lang": "es",
+   "text": "NO GO, Flight.",
+   "src": [
+    "src/missions/MissionRunner.js:674",
+    "src/missions/MissionRunner.js:684"
+   ]
+  },
+  {
+   "key": "nb4meaffko",
+   "who": "GUIDO",
+   "lang": "es",
+   "text": "Seguimos GO con esa alarma, Flight.",
+   "src": [
+    "src/missions/apollo11/landing.js:142"
+   ]
+  },
+  {
+   "key": "f3otaqpa5z",
+   "who": "INCO",
+   "lang": "es",
+   "text": "¡GO!",
+   "src": [
+    "src/missions/MissionRunner.js:673",
+    "src/missions/MissionRunner.js:684"
+   ]
+  },
+  {
+   "key": "rohf6jy55j",
+   "who": "INCO",
+   "lang": "es",
+   "text": "NO GO, Flight.",
+   "src": [
+    "src/missions/MissionRunner.js:674",
+    "src/missions/MissionRunner.js:684"
+   ]
+  },
+  {
+   "key": "e7k8us8mdu",
+   "who": "LCC",
+   "lang": "es",
+   "text": "¡Despegue! ¡Tenemos despegue!",
+   "src": [
+    "src/missions/free/index.js:175"
+   ]
+  },
+  {
+   "key": "wx5ejlaxex",
+   "who": "LCC",
+   "lang": "es",
+   "text": "Apolo 11, aquí control de lanzamiento. Buena suerte y que Dios los acompañe.",
+   "src": [
+    "src/missions/common/launch.js:83"
+   ]
+  },
+  {
+   "key": "g1kocglpcl",
+   "who": "LCC",
+   "lang": "es",
+   "text": "Apolo 12, aquí control de lanzamiento. Buena suerte y que Dios los acompañe.",
+   "src": [
+    "src/missions/common/launch.js:83"
+   ]
+  },
+  {
+   "key": "6gkw0t8toh",
+   "who": "LCC",
+   "lang": "es",
+   "text": "Apolo, aquí control de lanzamiento. Buena suerte y que Dios los acompañe.",
+   "src": [
+    "src/missions/common/launch.js:83"
+   ]
+  },
+  {
+   "key": "1433cau192l",
+   "who": "LCC",
+   "lang": "es",
+   "text": "Aquí control de lanzamiento de Kennedy. La cuenta atrás continúa.",
+   "src": [
+    "src/missions/free/index.js:313"
+   ]
+  },
+  {
+   "key": "z145gcd72y",
+   "who": "LCC",
+   "lang": "es",
+   "text": "Detenemos la cuenta en T menos 1 minuto. Apolo 11, avisen cuando estén listos.",
+   "src": [
+    "src/missions/common/launch.js:68"
+   ]
+  },
+  {
+   "key": "a5w6xj987e",
+   "who": "LCC",
+   "lang": "es",
+   "text": "Detenemos la cuenta en T menos 1 minuto. Apolo 12, avisen cuando estén listos.",
+   "src": [
+    "src/missions/common/launch.js:68"
+   ]
+  },
+  {
+   "key": "dz5prndk7p",
+   "who": "LCC",
+   "lang": "es",
+   "text": "Detenemos la cuenta en T menos 1 minuto. Apolo, avisen cuando estén listos.",
+   "src": [
+    "src/missions/common/launch.js:68"
+   ]
+  },
+  {
+   "key": "sr1pndhw93",
+   "who": "LCC",
+   "lang": "es",
+   "text": "Detenemos la cuenta en T menos 1 minuto. Trece, avisen cuando estén listos.",
+   "src": [
+    "src/missions/common/launch.js:68"
+   ]
+  },
+  {
+   "key": "fur6dcdmf4",
+   "who": "LCC",
+   "lang": "es",
+   "text": "Reanudamos la cuenta. T menos 60 segundos y contando.",
+   "src": [
+    "src/missions/common/launch.js:72"
+   ]
+  },
+  {
+   "key": "981sessfjy",
+   "who": "LCC",
+   "lang": "es",
+   "text": "Trece, aquí control de lanzamiento. Buena suerte y que Dios los acompañe.",
+   "src": [
+    "src/missions/common/launch.js:83"
+   ]
+  },
+  {
+   "key": "5b1m2ufdub",
+   "who": "LMP",
+   "lang": "es",
+   "text": "¡Miren eso! La cara oculta.",
+   "src": [
+    "src/missions/apollo8/loi.js:59"
+   ]
+  },
+  {
+   "key": "esc8mu1eme",
+   "who": "LMP",
+   "lang": "es",
+   "text": "10 adelante.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "16tbau25aiv",
+   "who": "LMP",
+   "lang": "es",
+   "text": "10 pies,",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "cssar23rgy",
+   "who": "LMP",
+   "lang": "es",
+   "text": "100 adelante.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "u1t85cz6jf",
+   "who": "LMP",
+   "lang": "es",
+   "text": "100 pies,",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "mhotx0zdp8",
+   "who": "LMP",
+   "lang": "es",
+   "text": "1000 pies,",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "hour2h3wpn",
+   "who": "LMP",
+   "lang": "es",
+   "text": "11 adelante.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "137153bsnbc",
+   "who": "LMP",
+   "lang": "es",
+   "text": "12 adelante.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "12napu7lvum",
+   "who": "LMP",
+   "lang": "es",
+   "text": "120 adelante.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "vpd2xn88n7",
+   "who": "LMP",
+   "lang": "es",
+   "text": "13 adelante.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "lxsic0bjke",
+   "who": "LMP",
+   "lang": "es",
+   "text": "14 adelante.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "cek84s3sll",
+   "who": "LMP",
+   "lang": "es",
+   "text": "15 adelante.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "os2ftqfobj",
+   "who": "LMP",
+   "lang": "es",
+   "text": "150 adelante.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "qfagydho4v",
+   "who": "LMP",
+   "lang": "es",
+   "text": "16 adelante.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "ncfmeulga0",
+   "who": "LMP",
+   "lang": "es",
+   "text": "160 pies,",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "148a1j55ath",
+   "who": "LMP",
+   "lang": "es",
+   "text": "17 adelante.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "189ef1smp4e",
+   "who": "LMP",
+   "lang": "es",
+   "text": "18 adelante.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "xxrdoze43v",
+   "who": "LMP",
+   "lang": "es",
+   "text": "19 adelante.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "xdefwz3rg6",
+   "who": "LMP",
+   "lang": "es",
+   "text": "2 adelante.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "z8g5nf8wrm",
+   "who": "LMP",
+   "lang": "es",
+   "text": "20 adelante.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "bkqv9dpif5",
+   "who": "LMP",
+   "lang": "es",
+   "text": "20 pies,",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "nfkdmqnlsx",
+   "who": "LMP",
+   "lang": "es",
+   "text": "200 pies,",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "scijmes1up",
+   "who": "LMP",
+   "lang": "es",
+   "text": "2000 pies,",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "zb33o1rnf",
+   "who": "LMP",
+   "lang": "es",
+   "text": "22 adelante.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "10cn9ots578",
+   "who": "LMP",
+   "lang": "es",
+   "text": "220 pies,",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "11ddyp8t1v4",
+   "who": "LMP",
+   "lang": "es",
+   "text": "25 adelante.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "njy7429a82",
+   "who": "LMP",
+   "lang": "es",
+   "text": "3 adelante.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "17y61uglpkr",
+   "who": "LMP",
+   "lang": "es",
+   "text": "30 adelante.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "59ntuhehdz",
+   "who": "LMP",
+   "lang": "es",
+   "text": "30 pies,",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "vhed6g7rc2",
+   "who": "LMP",
+   "lang": "es",
+   "text": "300 pies,",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "vj20kr4zhr",
+   "who": "LMP",
+   "lang": "es",
+   "text": "35 adelante.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "6ao4m8539d",
+   "who": "LMP",
+   "lang": "es",
+   "text": "4 adelante.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "1p67hyl93k",
+   "who": "LMP",
+   "lang": "es",
+   "text": "40 adelante.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "s9msekv2tp",
+   "who": "LMP",
+   "lang": "es",
+   "text": "40 pies,",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "159si6zqv0d",
+   "who": "LMP",
+   "lang": "es",
+   "text": "400 pies,",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "wm8nt6sjy4",
+   "who": "LMP",
+   "lang": "es",
+   "text": "45 adelante.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "npm6zlmi4t",
+   "who": "LMP",
+   "lang": "es",
+   "text": "5 adelante.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "o2wnjm88w2",
+   "who": "LMP",
+   "lang": "es",
+   "text": "50 adelante.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "wo9ffp7qis",
+   "who": "LMP",
+   "lang": "es",
+   "text": "50 pies,",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "9gsctafxhy",
+   "who": "LMP",
+   "lang": "es",
+   "text": "500 pies,",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "vdngyhucep",
+   "who": "LMP",
+   "lang": "es",
+   "text": "6 adelante.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "j8c6d5ocwq",
+   "who": "LMP",
+   "lang": "es",
+   "text": "60 adelante.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "igb5azf89y",
+   "who": "LMP",
+   "lang": "es",
+   "text": "60 pies,",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "ubq8tigrxe",
+   "who": "LMP",
+   "lang": "es",
+   "text": "600 pies,",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "10292wjx5fe",
+   "who": "LMP",
+   "lang": "es",
+   "text": "7 adelante.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "ffsng2wyc1",
+   "who": "LMP",
+   "lang": "es",
+   "text": "70 adelante.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "13hxfagezca",
+   "who": "LMP",
+   "lang": "es",
+   "text": "75 pies,",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "vn05hfb9nr",
+   "who": "LMP",
+   "lang": "es",
+   "text": "750 pies,",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "zcy31qupzr",
+   "who": "LMP",
+   "lang": "es",
+   "text": "8 adelante.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "12ctyu1n2b6",
+   "who": "LMP",
+   "lang": "es",
+   "text": "80 adelante.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "ygd9g2cunx",
+   "who": "LMP",
+   "lang": "es",
+   "text": "9 adelante.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "8raq1e5je3",
+   "who": "LMP",
+   "lang": "es",
+   "text": "9, 8, 7, 6, 5, separación de etapa, motor armado, ascenso, proceder.",
+   "src": [
+    "src/missions/apollo11/ascent.js:78"
+   ]
+  },
+  {
+   "key": "e25440j7wy",
+   "who": "LMP",
+   "lang": "es",
+   "text": "90 adelante.",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "12kdfffocyx",
+   "who": "LMP",
+   "lang": "es",
+   "text": "Aceleración. Empuje máximo.",
+   "src": [
+    "src/missions/apollo11/landing.js:118"
+   ]
+  },
+  {
+   "key": "3j1kuki150",
+   "who": "LMP",
+   "lang": "es",
+   "text": "Alarma de programa. Del mismo tipo: 1201.",
+   "src": [
+    "src/missions/apollo11/landing.js:153"
+   ]
+  },
+  {
+   "key": "k5rlk5hk2a",
+   "who": "LMP",
+   "lang": "es",
+   "text": "bajando a 0",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "v8vh9c4g1v",
+   "who": "LMP",
+   "lang": "es",
+   "text": "bajando a 1",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "9o2u4n41ts",
+   "who": "LMP",
+   "lang": "es",
+   "text": "bajando a 10",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "rimn7ipz0i",
+   "who": "LMP",
+   "lang": "es",
+   "text": "bajando a 100",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "16xd3jb2tzl",
+   "who": "LMP",
+   "lang": "es",
+   "text": "bajando a 11",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "vualj0h3hf",
+   "who": "LMP",
+   "lang": "es",
+   "text": "bajando a 12",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "rpqpzmyqf9",
+   "who": "LMP",
+   "lang": "es",
+   "text": "bajando a 120",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "kr6pttr5qr",
+   "who": "LMP",
+   "lang": "es",
+   "text": "bajando a 13",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "9o1gfcmm4d",
+   "who": "LMP",
+   "lang": "es",
+   "text": "bajando a 14",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "16xbpu0kz3o",
+   "who": "LMP",
+   "lang": "es",
+   "text": "bajando a 15",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "4si2mjrvmb",
+   "who": "LMP",
+   "lang": "es",
+   "text": "bajando a 150",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "vu97tpzai7",
+   "who": "LMP",
+   "lang": "es",
+   "text": "bajando a 16",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "kr5c4jcwqe",
+   "who": "LMP",
+   "lang": "es",
+   "text": "bajando a 17",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "9o02pqz0ln",
+   "who": "LMP",
+   "lang": "es",
+   "text": "bajando a 18",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "16xac4evhp6",
+   "who": "LMP",
+   "lang": "es",
+   "text": "bajando a 19",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "16bxz9fkeb4",
+   "who": "LMP",
+   "lang": "es",
+   "text": "bajando a 2",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "vidm6n5hrn",
+   "who": "LMP",
+   "lang": "es",
+   "text": "bajando a 20",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "9c78hczxgx",
+   "who": "LMP",
+   "lang": "es",
+   "text": "bajando a 22",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "16lg46mtxp5",
+   "who": "LMP",
+   "lang": "es",
+   "text": "bajando a 25",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "92npurn2ch",
+   "who": "LMP",
+   "lang": "es",
+   "text": "bajando a 3",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "9fql0o03vm",
+   "who": "LMP",
+   "lang": "es",
+   "text": "bajando a 30",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "16ozgr1spi0",
+   "who": "LMP",
+   "lang": "es",
+   "text": "bajando a 35",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "k5q7v9cdh3",
+   "who": "LMP",
+   "lang": "es",
+   "text": "bajando a 4",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "vaceopxiej",
+   "who": "LMP",
+   "lang": "es",
+   "text": "bajando a 40",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "16dewnwnbv5",
+   "who": "LMP",
+   "lang": "es",
+   "text": "bajando a 45",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "v8u3kg251q",
+   "who": "LMP",
+   "lang": "es",
+   "text": "bajando a 5",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "98mi8xahbo",
+   "who": "LMP",
+   "lang": "es",
+   "text": "bajando a 50",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "16bwlkjfitw",
+   "who": "LMP",
+   "lang": "es",
+   "text": "bajando a 6",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "v38bvtvnqg",
+   "who": "LMP",
+   "lang": "es",
+   "text": "bajando a 60",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "92mc5vis4d",
+   "who": "LMP",
+   "lang": "es",
+   "text": "bajando a 7",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "90laqe0eqa",
+   "who": "LMP",
+   "lang": "es",
+   "text": "bajando a 70",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "k5ou5kiuvt",
+   "who": "LMP",
+   "lang": "es",
+   "text": "bajando a 8",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "uuw2su6avv",
+   "who": "LMP",
+   "lang": "es",
+   "text": "bajando a 80",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "v8spur9595",
+   "who": "LMP",
+   "lang": "es",
+   "text": "bajando a 9",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "8th7xofxsu",
+   "who": "LMP",
+   "lang": "es",
+   "text": "bajando a 90",
+   "src": [
+    "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "13wbzrecy53",
+   "who": "LMP",
+   "lang": "es",
+   "text": "Bien. Motor parado. ACA fuera de retén.",
+   "src": [
+    "src/missions/apollo11/landing.js:278"
+   ]
+  },
+  {
+   "key": "186usii4l9j",
+   "who": "LMP",
+   "lang": "es",
+   "text": "Cinco por ciento. Luz de cantidad.",
+   "src": [
+    "src/missions/apollo11/landing.js:209"
+   ]
+  },
+  {
+   "key": "c0ylsp3c3e",
+   "who": "LMP",
+   "lang": "es",
+   "text": "Diez segundos.",
+   "src": [
+    "src/missions/apollo13/mcc5.js:84"
+   ]
+  },
+  {
+   "key": "fekfj9r76g",
+   "who": "LMP",
+   "lang": "es",
+   "text": "es",
+   "src": [
+    "src/missions/apollo11/landing.js:200",
+    "src/missions/training/landing.js:101"
+   ]
+  },
+  {
+   "key": "16l3elfptu4",
+   "who": "LMP",
+   "lang": "es",
+   "text": "Es un desastre.",
+   "src": [
+    "src/missions/apollo13/powerup.js:67"
+   ]
+  },
+  {
+   "key": "mmgrkg61ga",
+   "who": "LMP",
+   "lang": "es",
+   "text": "Houston, aquí Aquarius. El LM está encendido.",
+   "src": [
+    "src/missions/apollo13/lifeboat.js:71"
+   ]
+  },
+  {
+   "key": "1344c4z4n1k",
+   "who": "LMP",
+   "lang": "es",
+   "text": "Houston, aquí Aquarius. Tenemos la luz de CO2.",
+   "src": [
+    "src/missions/apollo13/co2.js:70"
+   ]
+  },
+  {
+   "key": "8gmv8ukpva",
+   "who": "LMP",
+   "lang": "es",
+   "text": "Houston, tenemos un problema con un disyuntor: el de ENG ARM del panel 16 está roto, sin la palanca.",
+   "src": [
+    "src/missions/apollo11/ascent.js:43"
+   ]
+  },
+  {
+   "key": "zs5omejage",
+   "who": "LMP",
+   "lang": "es",
+   "text": "Ignición. Diez por ciento.",
+   "src": [
+    "src/missions/apollo11/landing.js:116"
+   ]
+  },
+  {
+   "key": "6vwegn3kx9",
+   "who": "LMP",
+   "lang": "es",
+   "text": "La vista de la Luna por la ventana es magnífica. Parece una gigantesca maqueta de yeso.",
+   "src": [
+    "src/missions/apollo11/loi.js:90"
+   ]
+  },
+  {
+   "key": "8ghrd8i9r5",
+   "who": "LMP",
+   "lang": "es",
+   "text": "Listo: lo empujé con un rotulador. Está dentro.",
+   "src": [
+    "src/missions/apollo11/ascent.js:62"
+   ]
+  },
+  {
+   "key": "112qwv0sisq",
+   "who": "LMP",
+   "lang": "es",
+   "text": "Luz de contacto.",
+   "src": [
+    "src/missions/apollo11/landing.js:234"
+   ]
+  },
+  {
+   "key": "ooqsd449vf",
+   "who": "LMP",
+   "lang": "es",
+   "text": "Luz de contacto. Motor parado.",
+   "src": [
+    "src/missions/training/landing.js:126"
+   ]
+  },
+  {
+   "key": "uzpsaq7sx9",
+   "who": "LMP",
+   "lang": "es",
+   "text": "Miren eso. La cara oculta de la Luna.",
+   "src": [
+    "src/missions/apollo13/pc2.js:28"
+   ]
+  },
+  {
+   "key": "10ob2ydw29o",
+   "who": "LMP",
+   "lang": "es",
+   "text": "Parece que funciona.",
+   "src": [
+    "src/missions/apollo13/co2.js:121"
+   ]
+  },
+  {
+   "key": "8eics7g9tz",
+   "who": "LMP",
+   "lang": "es",
+   "text": "Plataforma alineada. Aquarius está listo.",
+   "src": [
+    "src/missions/apollo13/lifeboat.js:112"
+   ]
+  },
+  {
+   "key": "lr3uttztb1",
+   "who": "LMP",
+   "lang": "es",
+   "text": "Precioso. 26, 36 pies por segundo hacia arriba. Atentos al cabeceo. Muy suave.",
+   "src": [
+    "src/missions/apollo11/ascent.js:94"
+   ]
+  },
+  {
+   "key": "169lig0jyor",
+   "who": "LMP",
+   "lang": "es",
+   "text": "Proceder.",
+   "src": [
+    "src/missions/apollo11/landing.js:103"
+   ]
+  },
+  {
+   "key": "sx73epdch",
+   "who": "LMP",
+   "lang": "es",
+   "text": "Recibido. Entendido: GO para alunizar. 3.000 pies.",
+   "src": [
+    "src/missions/apollo11/landing.js:180"
+   ]
+  },
+  {
+   "key": "j5t93iaaiq",
+   "who": "LMP",
+   "lang": "es",
+   "text": "Recibido. Entendido: somos los primeros en la pista.",
+   "src": [
+    "src/missions/apollo11/ascent.js:37"
+   ]
+  },
+  {
+   "key": "e6s9xru5f7",
+   "who": "LMP",
+   "lang": "es",
+   "text": "SCE en auxiliar.",
+   "src": [
+    "src/missions/apollo12/lightning.js:79"
+   ]
+  },
+  {
+   "key": "179pgoke106",
+   "who": "NETWORK",
+   "lang": "es",
+   "text": "¡GO!",
+   "src": [
+    "src/missions/MissionRunner.js:673",
+    "src/missions/MissionRunner.js:684"
+   ]
+  },
+  {
+   "key": "9kqgahrkg8",
+   "who": "NETWORK",
+   "lang": "es",
+   "text": "NO GO, Flight.",
+   "src": [
+    "src/missions/MissionRunner.js:674",
+    "src/missions/MissionRunner.js:684"
+   ]
+  },
+  {
+   "key": "180u07r4lfa",
+   "who": "PAO",
+   "lang": "es",
+   "text": "¡GO!",
+   "src": [
+    "src/missions/MissionRunner.js:673",
+    "src/missions/MissionRunner.js:684"
+   ]
+  },
+  {
+   "key": "17puuj882xv",
+   "who": "PAO",
+   "lang": "es",
+   "text": "Aquí Control Apolo a las 55 horas 50 minutos. Terminó la transmisión de televisión. El Apolo 13 está a 320.000 km de la Tierra.",
+   "src": [
+    "src/missions/apollo13/explosion.js:39"
+   ]
+  },
+  {
+   "key": "15uqik5g3y4",
+   "who": "PAO",
+   "lang": "es",
+   "text": "Aquí Control Apolo. El Apolo 11 está a 15.000 km de la Luna y se acerca a 6.400 km/h.",
+   "src": [
+    "src/missions/apollo11/loi.js:30"
+   ]
+  },
+  {
+   "key": "ie7zppv895",
+   "who": "PAO",
+   "lang": "es",
+   "text": "Aquí Control Apolo. El Apolo 11 está en una órbita de aparcamiento casi perfecta. Próxima parada: la inyección translunar.",
+   "src": [
+    "src/missions/apollo11/launch.js:35"
+   ]
+  },
+  {
+   "key": "115wpm69ndb",
+   "who": "PAO",
+   "lang": "es",
+   "text": "Aquí Control Apolo. El Apolo 8 está a 3.500 km de la Luna y acelerando.",
+   "src": [
+    "src/missions/apollo8/loi.js:30"
+   ]
+  },
+  {
+   "key": "10koz6z457g",
+   "who": "PAO",
+   "lang": "es",
+   "text": "Aquí Control Apolo. La tripulación prepara una transmisión de televisión desde la órbita lunar en Nochebuena.",
+   "src": [
+    "src/missions/apollo8/earthrise.js:98"
+   ]
+  },
+  {
+   "key": "w5vi8sd5z8",
+   "who": "PAO",
+   "lang": "es",
+   "text": "Aquí Control Apolo. La tripulación usa ahora el módulo lunar como bote salvavidas.",
+   "src": [
+    "src/missions/apollo13/lifeboat.js:127"
+   ]
+  },
+  {
+   "key": "2vljp289j5",
+   "who": "PAO",
+   "lang": "es",
+   "text": "Aquí Control Apolo. Pese al apagado prematuro del motor central, el Apolo 13 está en una buena órbita de aparcamiento.",
+   "src": [
+    "src/missions/apollo13/launch.js:60"
+   ]
+  },
+  {
+   "key": "7g52wssmdn",
+   "who": "PAO",
+   "lang": "es",
+   "text": "Aquí control de lanzamiento del Apolo Saturno. T menos 3 minutos 30 segundos y contando.",
+   "src": [
+    "src/missions/apollo13/launch.js:31",
+    "src/missions/training/launch.js:30"
+   ]
+  },
+  {
+   "key": "phaxl2hru2",
+   "who": "PAO",
+   "lang": "es",
+   "text": "Aquí control de lanzamiento del Apolo Saturno. T menos 3 minutos 30 segundos y contando. Todo marcha bien.",
+   "src": [
+    "src/missions/apollo11/launch.js:30"
+   ]
+  },
+  {
+   "key": "7sh8p3tt5j",
+   "who": "PAO",
+   "lang": "es",
+   "text": "Aquí control de lanzamiento del Apolo Saturno. Tenemos nubes y lluvia, y seguimos con la cuenta.",
+   "src": [
+    "src/missions/apollo12/lightning.js:34"
+   ]
+  },
+  {
+   "key": "oqeom22fcx",
+   "who": "PAO",
+   "lang": "es",
+   "text": "Comenzó la base de tiempo 6: el S-IVB se prepara para su segundo encendido.",
+   "src": [
+    "src/missions/apollo11/tli.js:71"
+   ]
+  },
+  {
+   "key": "yi6yywoiyb",
+   "who": "PAO",
+   "lang": "es",
+   "text": "El Apolo 11 amerizó. 195 horas y 18 minutos de vuelo. El hombre caminó sobre la Luna y volvió.",
+   "src": [
+    "src/missions/apollo11/entry.js:112"
+   ]
+  },
+  {
+   "key": "n21cnokpte",
+   "who": "PAO",
+   "lang": "es",
+   "text": "El Apolo 11 cruzó la interfaz de reentrada. Se espera el apagón en breve.",
+   "src": [
+    "src/missions/apollo11/entry.js:73"
+   ]
+  },
+  {
+   "key": "78b9sz7jgq",
+   "who": "PAO",
+   "lang": "es",
+   "text": "El Apolo 13 está en casa. Un fracaso exitoso.",
+   "src": [
+    "src/missions/apollo13/entry.js:116"
+   ]
+  },
+  {
+   "key": "93te6dtpks",
+   "who": "PAO",
+   "lang": "es",
+   "text": "El guiado ya es interno.",
+   "src": [
+    "src/missions/common/launch.js:95"
+   ]
+  },
+  {
+   "key": "bvxabatldt",
+   "who": "PAO",
+   "lang": "es",
+   "text": "Estamos en el apagón. Esperamos unos 3 minutos.",
+   "src": [
+    "src/missions/apollo13/entry.js:86"
+   ]
+  },
+  {
+   "key": "zom61z3m9m",
+   "who": "PAO",
+   "lang": "es",
+   "text": "Máxima presión dinámica.",
+   "src": [
+    "src/missions/common/launch.js:132"
+   ]
+  },
+  {
+   "key": "rvum2vfrqm",
+   "who": "PAO",
+   "lang": "es",
+   "text": "NO GO, Flight.",
+   "src": [
+    "src/missions/MissionRunner.js:674",
+    "src/missions/MissionRunner.js:684"
+   ]
+  },
+  {
+   "key": "rmww6s1vze",
+   "who": "PAO",
+   "lang": "es",
+   "text": "Perdimos la señal. El Apolo 11 está detrás de la Luna.",
+   "src": [
+    "src/missions/apollo11/loi.js:64"
+   ]
+  },
+  {
+   "key": "16v2m4icg68",
+   "who": "PAO",
+   "lang": "es",
+   "text": "T menos 50 segundos. Transferencia de energía del lanzador completa: el Saturn V ya funciona con sus baterías.",
+   "src": [
+    "src/missions/common/launch.js:91"
+   ]
+  },
+  {
+   "key": "10cdl6nxes5",
+   "who": "PROCEDURES",
+   "lang": "es",
+   "text": "¡GO!",
+   "src": [
+    "src/missions/MissionRunner.js:673",
+    "src/missions/MissionRunner.js:684"
+   ]
+  },
+  {
+   "key": "1bqpwfr4lg",
+   "who": "PROCEDURES",
+   "lang": "es",
+   "text": "NO GO, Flight.",
+   "src": [
+    "src/missions/MissionRunner.js:674",
+    "src/missions/MissionRunner.js:684"
+   ]
+  },
+  {
+   "key": "4ralcp86cc",
+   "who": "RECOVERY",
+   "lang": "es",
+   "text": "¡Amerizaje! Tenemos contacto visual con la nave.",
+   "src": [
+    "src/missions/free/index.js:218"
+   ]
+  },
+  {
+   "key": "76vm9pjt8r",
+   "who": "RECOVERY",
+   "lang": "es",
+   "text": "Amerizaje. Buena reentrada.",
+   "src": [
+    "src/missions/training/entry.js:81"
+   ]
+  },
+  {
+   "key": "yq5oepq533",
+   "who": "RECOVERY",
+   "lang": "es",
+   "text": "Apolo 11, aquí el Hornet. Bienvenidos a casa.",
+   "src": [
+    "src/missions/apollo11/entry.js:111"
+   ]
+  },
+  {
+   "key": "c9wu18icpm",
+   "who": "RECOVERY",
+   "lang": "es",
+   "text": "Apolo 11, aquí Recuperación. Vemos tres paracaídas buenos.",
+   "src": [
+    "src/missions/apollo11/entry.js:104"
+   ]
+  },
+  {
+   "key": "17tr1ulqb1n",
+   "who": "RECOVERY",
+   "lang": "es",
+   "text": "Odyssey, aquí el Iwo Jima. Los tenemos a la vista. Bienvenidos a casa.",
+   "src": [
+    "src/missions/apollo13/entry.js:115"
+   ]
+  },
+  {
+   "key": "qhlwudjbkt",
+   "who": "RETRO",
+   "lang": "es",
+   "text": "¡GO!",
+   "src": [
+    "src/missions/MissionRunner.js:673",
+    "src/missions/MissionRunner.js:684"
+   ]
+  },
+  {
+   "key": "jzjolgi12c",
+   "who": "RETRO",
+   "lang": "es",
+   "text": "Flight, RETRO. Los PAD de aborto están enviados.",
+   "src": [
+    "src/missions/apollo11/loi.js:44"
+   ]
+  },
+  {
+   "key": "njmkutpb1q",
+   "who": "RETRO",
+   "lang": "es",
+   "text": "NO GO, Flight.",
+   "src": [
+    "src/missions/MissionRunner.js:674",
+    "src/missions/MissionRunner.js:684"
+   ]
+  },
+  {
+   "key": "12k815jq5w2",
+   "who": "SURGEON",
+   "lang": "es",
+   "text": "¡GO!",
+   "src": [
+    "src/missions/MissionRunner.js:673",
+    "src/missions/MissionRunner.js:684"
+   ]
+  },
+  {
+   "key": "ku5fvm4zth",
+   "who": "SURGEON",
+   "lang": "es",
+   "text": "NO GO, Flight.",
+   "src": [
+    "src/missions/MissionRunner.js:674",
+    "src/missions/MissionRunner.js:684"
+   ]
+  },
+  {
+   "key": "11gv38l5nqy",
+   "who": "TELMU",
+   "lang": "es",
+   "text": "¡GO!",
+   "src": [
+    "src/missions/MissionRunner.js:673",
+    "src/missions/MissionRunner.js:684"
+   ]
+  },
+  {
+   "key": "tw65ezjhmw",
+   "who": "TELMU",
+   "lang": "es",
+   "text": "NO GO, Flight.",
+   "src": [
+    "src/missions/MissionRunner.js:674",
+    "src/missions/MissionRunner.js:684"
+   ]
+  }
+ ]
+}

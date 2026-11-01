@@ -121,7 +121,7 @@ export default {
     radio(ctx, 'CMP', 'Okay, they are closed.', 'Listo, cerradas.');
     await ctx.wait(30);
     const p1 = v.tm['CM.CRYO.O2_1.P_PSI'] ?? 0;
-    await ctx.say('CAPCOM', 'Thirteen, we are still losing O2 tank 1. We would like you to start thinking about the LM lifeboat.', `Trece, el tanque de O2 número 1 sigue perdiendo (${Math.round(p1)} psi). Empiecen a pensar en el LM como bote salvavidas.`);
+    await ctx.say('CAPCOM', 'Thirteen, we are still losing O2 tank 1. We would like you to start thinking about the LM lifeboat.', `Trece, el tanque de O2 número 1 sigue perdiendo (${Math.round(p1)} psi). Empiecen a pensar en el LM como bote salvavidas.`, { voiceEs: 'Trece, el tanque de O2 número 1 sigue perdiendo. Empiecen a pensar en el LM como bote salvavidas.' });
     radio(ctx, 'CDR', "Roger. We're thinking about the LM.", 'Recibido. Ya estamos pensando en el LM.');
     ctx.achievement('a13-problem');
     ctx.complete({

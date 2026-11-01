@@ -7,6 +7,7 @@ import { GET } from '../../core/MissionClock.js';
 import { MISSION_EPOCH, R_MOON, NMI } from '../../core/constants.js';
 import { SITES, siteDir } from '../../sim/terrain/lunarTerrain.js';
 import { planTLI, planMCC, planLOI, planTEI, planCircularize, planApsis, planDeorbit, planDOI, contextFromSim, fmtGET } from '../../sim/physics/targeting.js';
+import { padReadout } from '../common/callouts.js';
 
 export const FREE_VEHICLES = [
   {
@@ -232,7 +233,7 @@ export async function buildFreeChapter(chapterId) {
         comp.loadBurn({ ...padObj, dvECI: padObj.dvECI });
         ctx.pad({ ...padObj, dv: undefined });
         const n = padObj.dvTotal / 0.3048;
-        say('CAPCOM', `${padObj.name} PAD: TIG ${fmtGET(padObj.tig)}, delta-V ${n.toFixed(1)} feet per second, ${engineName}. Loaded in your computer.`, `PAD de ${padObj.name}: TIG ${fmtGET(padObj.tig)}, ΔV ${n.toFixed(1)} pies/s con el ${engineName}. Cargado en el ordenador.`);
+        say('CAPCOM', `${padObj.name} PAD: TIG ${fmtGET(padObj.tig)}, delta-V ${n.toFixed(1)} feet per second, ${engineName}. Loaded in your computer.`, `PAD de ${padObj.name}: TIG ${fmtGET(padObj.tig)}, ΔV ${n.toFixed(1)} pies/s con el ${engineName}. Cargado en el ordenador.`, { voiceEn: padReadout(padObj, 'en', { burn: false, loaded: true }), voiceEs: padReadout(padObj, 'es', { burn: false, loaded: true }) });
         ctx.hint('Haz la lista «Encendido del SPS con el ordenador (P30 / P40)»: motores de cardán, ΔV THRUST, V37E40E y PRO en V99.', { durationS: 12 });
       };
       ctx.on('free:service', async ({ id }) => {
@@ -244,7 +245,7 @@ export async function buildFreeChapter(chapterId) {
             const st = v.state;
             const R0 = st.primary === 'MOON' ? 'perilunio' : 'perigeo';
             const A0 = st.primary === 'MOON' ? 'apolunio' : 'apogeo';
-            say('CAPCOM', 'Houston with a status update.', `Informe de Houston: ${A0} ${Number.isFinite(st.apoAlt) ? (st.apoAlt / NMI).toFixed(1) + ' nmi' : 'abierto (trayectoria de escape)'}, ${R0} ${(st.periAlt / NMI).toFixed(1)} nmi, velocidad ${(st.speed / 0.3048).toFixed(0)} pies/s.`);
+            say('CAPCOM', 'Houston with a status update.', `Informe de Houston: ${A0} ${Number.isFinite(st.apoAlt) ? (st.apoAlt / NMI).toFixed(1) + ' nmi' : 'abierto (trayectoria de escape)'}, ${R0} ${(st.periAlt / NMI).toFixed(1)} nmi, velocidad ${(st.speed / 0.3048).toFixed(0)} pies/s.`, { voiceEs: 'Informe de Houston: les pasamos los datos de su órbita.' });
           } else if (id === 'tli') {
             say('CAPCOM', 'Roger, stand by for TLI numbers.', 'Recibido, esperen los datos de la TLI.');
             ctx.alert('Houston calcula la TLI…', 'info', 4);
@@ -252,7 +253,7 @@ export async function buildFreeChapter(chapterId) {
             sim.saturn.startTB6({ c3: p.c3, tb6: p.tb6 });
             v.sw.set('CM.LV.XLUNAR', 'INJECT', 'script');
             ctx.pad({ name: 'TLI', tig: p.tig, dvTotal: p.dvTotal, burnTime: p.burnTime, engine: 'S-IVB', notes: `TB6 a GET ${fmtGET(p.tb6)}. ${p.notes}` });
-            say('CAPCOM', `Apollo, Houston. You are GO for TLI. TB6 at ${fmtGET(p.tb6)}.`, `Apolo, Houston. Tienen GO para la TLI. El TB6 empieza a GET ${fmtGET(p.tb6)}; ignición 9 minutos 38 segundos después.`);
+            say('CAPCOM', `Apollo, Houston. You are GO for TLI. TB6 at ${fmtGET(p.tb6)}.`, `Apolo, Houston. Tienen GO para la TLI. El TB6 empieza a GET ${fmtGET(p.tb6)}; ignición 9 minutos 38 segundos después.`, { voiceEn: 'Apollo, Houston. You are GO for TLI.', voiceEs: 'Apolo, Houston. Tienen GO para la TLI.' });
           } else if (id === 'tliStop') {
             sim.saturn.inhibitTLI('crew');
             v.sw.set('CM.LV.XLUNAR', 'SAFE', 'script');

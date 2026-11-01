@@ -381,10 +381,10 @@ export class MissionRunner {
         const st = this.sim.vehicle.state;
         if (st.losEarth || st.inBlackout) await this._wait(() => !st.losEarth && !st.inBlackout);
       }
-      const words = `${line.en ?? line.es ?? ''}`.split(/\s+/).length;
-      line.durationS ??= Math.max(1.6, words / 2.6 + 0.6);
-      this.bus.emit('mission:say', line);
       const audio = this.game?.audio;
+      const words = `${line.en ?? line.es ?? ''}`.split(/\s+/).length;
+      line.durationS ??= (line.clip && audio?.clipDuration?.(line.clip)) || audio?.voiceDuration?.(line) || Math.max(1.6, words / 2.6 + 0.6);
+      this.bus.emit('mission:say', line);
       try {
         if (audio?.radio) await Promise.race([audio.radio(line), this.waitReal(line.durationS + 12)]);
         else await this.waitReal(line.durationS);

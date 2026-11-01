@@ -691,7 +691,7 @@ export class FlightDynamics {
     const misalign = Math.acos(Math.max(-1, Math.min(1, -myAxis.dot(axisB)))) / DEG;
     // attitude that points our +X against the target axis (nose to nose)
     const alignQ = GNCQuat(axisB.clone().negate(), new Vector3(0, 0, 1).applyQuaternion(tgt.q), true);
-    return { target: tgt, range, rangeRate, lateral: { y: relBody.y, z: relBody.z }, latRate: { y: relVBody.y, z: relVBody.z }, axial: relBody.x, misalign, alignQ };
+    return { target: tgt, range, rangeRate, lateral: { y: relBody.y, z: relBody.z }, latRate: { y: relVBody.y, z: relVBody.z }, axial: relBody.x, misalign, alignQ, portA, portB };
   }
 
   _findDockTarget() {

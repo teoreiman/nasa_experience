@@ -5,6 +5,7 @@ import { GET } from '../../core/MissionClock.js';
 import { NMI } from '../../core/constants.js';
 import { planLOI } from '../../sim/physics/targeting.js';
 import { radio, houstonPad, flyBurn, grade, orbitText, warpHint, waitLOS, waitAOS } from '../common/kit.js';
+import { readDigits } from '../common/callouts.js';
 
 export default {
   setup: {
@@ -34,9 +35,13 @@ export default {
     ctx.spawn(async () => {
       await ctx.waitUntil(() => v.state.losEarth || ctx.t > pad.tig - 400);
       if (!v.state.losEarth) {
-        await ctx.say('CAPCOM', 'Apollo 8, Houston. One minute to LOS. All systems GO. Safe journey, guys.', 'Apolo 8, Houston. Un minuto para la pérdida de señal. Todos los sistemas GO. Buen viaje, muchachos.');
-        radio(ctx, 'LMP', 'Thanks a lot, troops.', 'Muchas gracias, gente.');
-        radio(ctx, 'CMP', 'We will see you on the other side.', 'Nos vemos del otro lado.');
+        // the real air-to-ground recording of the last minute before the far side
+        await ctx.say(
+          'CAPCOM',
+          'Apollo 8, Houston. One minute to LOS. All systems GO. Safe journey, guys. — Thanks a lot, troops. — We\'ll see you on the other side.',
+          'Apolo 8, Houston. Un minuto para la pérdida de señal. Todos los sistemas GO. Buen viaje, muchachos. — Muchas gracias, gente. — Nos vemos del otro lado.',
+          { clip: 'a08_prior_loi', whoLabel: 'CAPCOM y tripulación · grabación original' },
+        );
       }
       await waitLOS(ctx);
       ctx.alert('LOS: los primeros humanos detrás de la Luna', 'info', 7);
@@ -60,9 +65,17 @@ export default {
     await waitAOS(ctx);
     obj3.done();
     ctx.alert('AOS: señal adquirida', 'info', 5);
-    await ctx.say('CAPCOM', 'Apollo 8, Houston. Over.', 'Apolo 8, Houston. Cambio.');
-    await ctx.say('CMP', 'Go ahead, Houston, Apollo 8. Burn complete. Our orbit 169.1 by 60.5.', `Adelante, Houston, aquí Apolo 8. Encendido completo. Nuestra órbita: ${apo.toFixed(1)} por ${peri.toFixed(1)}.`);
-    await ctx.say('CAPCOM', 'Apollo 8, Houston. Roger. 169.1 by 60.5. Good to hear your voice.', 'Apolo 8, Houston. Recibido. Qué bueno oír su voz.');
+    // close to the historical 169.1 × 60.5 nmi: the real AOS exchange; otherwise the crew reads its own numbers
+    if (Math.abs(apo - 169.1) < 12 && Math.abs(peri - 60.5) < 8) {
+      await ctx.say(
+        'CAPCOM',
+        'Apollo 8, Houston. Over. — Go ahead, Houston. This is Apollo 8. Burn complete. Our orbit 169.1 by 60.5. — Apollo 8, this is Houston. Roger. 169.1 by 60.5. Good to hear your voice.',
+        'Apolo 8, Houston. Cambio. — Adelante, Houston, aquí Apolo 8. Encendido completo. Nuestra órbita: 169,1 por 60,5. — Apolo 8, aquí Houston. Recibido, 169,1 por 60,5. Qué bueno oír su voz.',
+        { clip: 'a08_first_orbit', whoLabel: 'CAPCOM y Lovell · grabación original' },
+      );
+    } else {
+      await sayOwnOrbit(ctx, apo, peri);
+    }
     radio(ctx, 'CMP', 'The Moon is essentially gray, no color; looks like plaster of Paris or sort of a grayish beach sand.', 'La Luna es esencialmente gris, sin color; parece yeso, o una arena de playa grisácea.');
     ctx.achievement('a8-loi');
     ctx.complete({
@@ -71,3 +84,10 @@ export default {
     });
   },
 };
+
+/** The AOS exchange with the player's own orbit (when it differs from the historical one). */
+async function sayOwnOrbit(ctx, apo, peri) {
+    await ctx.say('CAPCOM', 'Apollo 8, Houston. Over.', 'Apolo 8, Houston. Cambio.');
+    await ctx.say('CMP', 'Go ahead, Houston, Apollo 8. Burn complete. Our orbit 169.1 by 60.5.', `Adelante, Houston, aquí Apolo 8. Encendido completo. Nuestra órbita: ${apo.toFixed(1)} por ${peri.toFixed(1)}.`, { voiceEs: ['Adelante, Houston, aquí Apolo 8. Encendido completo. Nuestra órbita:', ...readDigits(apo, 'es', { decimals: 1 }), 'por', ...readDigits(peri, 'es', { decimals: 1 })] });
+    await ctx.say('CAPCOM', 'Apollo 8, Houston. Roger. 169.1 by 60.5. Good to hear your voice.', 'Apolo 8, Houston. Recibido. Qué bueno oír su voz.');
+}

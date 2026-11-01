@@ -86,7 +86,7 @@ export default {
     ctx.alert('AOS: señal adquirida', 'info', 5);
     await ctx.say('CAPCOM', 'Apollo 11, Apollo 11, this is Houston. Do you read? Over.', 'Apolo 11, Apolo 11, aquí Houston. ¿Nos copian?');
     await ctx.say('CDR', 'Read you loud and clear, Houston. It was like perfect.', 'Los recibimos fuerte y claro, Houston. Fue como perfecto.');
-    await ctx.say('CAPCOM', 'Roger. We copy your burn status report. We are all breathing again.', `Recibido, copiamos el informe del encendido: ${orbitText(st)}. Todos respiramos de nuevo.`);
+    await ctx.say('CAPCOM', 'Roger. We copy your burn status report. We are all breathing again.', `Recibido, copiamos el informe del encendido: ${orbitText(st)}. Todos respiramos de nuevo.`, { voiceEs: 'Recibido, copiamos el informe del encendido. Todos respiramos de nuevo.' });
     radio(ctx, 'LMP', 'The view of the Moon out the window is magnificent. It looks like a giant plaster model.', 'La vista de la Luna por la ventana es magnífica. Parece una gigantesca maqueta de yeso.');
     await ctx.wait(10);
     ctx.complete({

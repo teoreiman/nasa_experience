@@ -12,6 +12,7 @@ import '@fontsource/barlow-condensed/700.css';
 import '@fontsource/share-tech-mono/400.css';
 import './styles/base.css';
 import './styles/ui.css';
+import './styles/phone.css';
 
 import { Game } from './core/Game.js';
 import { AudioEngine } from './audio/AudioEngine.js';
@@ -19,11 +20,17 @@ import { store } from './core/Store.js';
 
 const game = new Game({ canvas: document.getElementById('gl'), uiRoot: document.getElementById('ui') });
 game.audio = new AudioEngine(game);
+game.audio.loadVoices();
 window.__game = game;
 
 const unlockAudio = () => game.audio.unlock();
 window.addEventListener('pointerdown', unlockAudio, { once: true, capture: true });
 window.addEventListener('keydown', unlockAudio, { once: true, capture: true });
+
+// "turn your phone" prompt: fullscreen + landscape lock where the browser allows it (Android)
+document.getElementById('rotate-fs')?.addEventListener('click', () => {
+  document.documentElement.requestFullscreen?.().then(() => screen.orientation?.lock?.('landscape').catch(() => {})).catch(() => {});
+});
 
 game.registerScene('menu', () => import('./scenes/MenuScene.js'));
 game.registerScene('briefing', () => import('./scenes/BriefingScene.js'));

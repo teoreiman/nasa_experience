@@ -29,6 +29,16 @@ const _q2 = new THREE.Quaternion();
 const _m = new THREE.Matrix4();
 const _e = new THREE.Euler();
 const X = new THREE.Vector3(1, 0, 0);
+
+// pilot view bases (camera frame in the body frame): along +X with the CSM crew's head toward −Z;
+// along +X out of the LM overhead docking window (top of the screen = LM forward, +Z); out of the
+// LM front windows (+Z, up +X) tilted 25° down toward the ground
+const basisQ = (right, up) => new THREE.Quaternion().setFromRotationMatrix(new THREE.Matrix4().makeBasis(new THREE.Vector3(...right), new THREE.Vector3(...up), new THREE.Vector3().crossVectors(new THREE.Vector3(...right), new THREE.Vector3(...up))));
+const Q_PILOT_CSM = basisQ([0, 1, 0], [0, 0, -1]);
+const Q_PILOT_LM_UP = basisQ([0, -1, 0], [0, 0, 1]);
+const Q_PILOT_LM_FWD = basisQ([0, 1, 0], [1, 0, 0]).multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), -25 * DEG));
+const LM_WINDOW_EYE = new THREE.Vector3(5.5, -0.35, 1.45);
+const CSM_NOSE_EYE = new THREE.Vector3(GEOM.csm.dockRingX + 0.35, 0, 0);
 const OMEGA = 7.2921159e-5;
 
 /** Visual model for a passive body spawned by physics (stages, LES, targets…). */
@@ -473,6 +483,7 @@ export class FlightView {
     const v = this.sim.vehicle;
     const st = v.state;
     const list = this.observer ? [] : ['cockpit'];
+    if (!this.observer && this.pilotViewAvailable()) list.push('pilot');
     list.push('exterior:chase', 'exterior:wide');
     if (this.site && st.primary === 'EARTH' && st.alt < 60000) list.push('pad:far', 'pad:tower', 'pad:deck');
     const sat = v.modules.saturn;
@@ -486,6 +497,73 @@ export class FlightView {
     const list = this.availableCameras();
     const i = list.indexOf(this.cameraMode);
     this.setCamera(list[(i + 1) % list.length]);
+  }
+
+  /** The flying views (C / camera button): cabin → pilot view (when there is one) → outside → cabin. */
+  toggleCamera() {
+    const pilot = this.pilotViewAvailable();
+    const m = this.cameraMode;
+    this.setCamera(m === 'cockpit' ? (pilot ? 'pilot' : 'exterior:chase') : m === 'pilot' ? 'exterior:chase' : 'cockpit');
+  }
+
+  /** A view to fly by eye: the CSM on its own (docking probe line of sight) or the LM. */
+  pilotViewAvailable() {
+    const c = this.sim.vehicle.config;
+    return c === 'CSM' || c === 'LM' || c === 'LM_ASC';
+  }
+
+  /** What the pilot view shows now: 'dock' (target ahead), 'land' (LM front windows) or 'fwd'. */
+  get pilotKind() {
+    return this._pilot?.kind ?? null;
+  }
+
+  /** Screen position (CSS px) of a world point in the current view, or null when behind the camera. */
+  projectToScreen(world, out = { x: 0, y: 0 }) {
+    const c = this.nearCam;
+    _v3.copy(world).sub(this.camWorld).applyQuaternion(_q2.copy(this.camQ).invert());
+    if (_v3.z >= -1e-3) return null;
+    const f = 1 / Math.tan((c.fov * DEG) / 2);
+    out.x = (0.5 + ((_v3.x / -_v3.z) * f) / c.aspect / 2) * this.game.width;
+    out.y = (0.5 - ((_v3.y / -_v3.z) * f) / 2) * this.game.height;
+    return out;
+  }
+
+  /** Camera pose of the pilot view (world position + orientation + fov). */
+  _pilotPose(v, st) {
+    const p = (this._pilot ??= { pos: new THREE.Vector3(), q: new THREE.Quaternion(), fov: 55, kind: 'fwd', tel: null, telT: -1 });
+    const lm = v.config === 'LM' || v.config === 'LM_ASC';
+    // docking geometry at ~20 Hz (the telemetry allocates)
+    if (this.time - p.telT > 0.05) {
+      p.telT = this.time;
+      try {
+        p.tel = this.sim.dyn.bodies.size ? this.sim.dyn.dockingTelemetry() : null;
+      } catch {
+        p.tel = null;
+      }
+    }
+    const tel = p.tel && p.tel.range < 2500 ? p.tel : null;
+    const landing = lm && st.primary === 'MOON' && v.config === 'LM' && (st.altTerrain ?? st.alt) < 60000;
+    if (tel && !landing) {
+      // flying the probe into the drogue: from just ahead of our docking port, along our +X
+      p.kind = 'dock';
+      p.pos.copy(tel.portA).addScaledVector(_v.copy(X).applyQuaternion(st.q), 0.05);
+      p.q.copy(st.q).multiply(lm ? Q_PILOT_LM_UP : Q_PILOT_CSM);
+      p.fov = tel.range < 25 ? 38 : 50;
+      return p;
+    }
+    let mt;
+    try {
+      mt = moduleTransform(v.config, lm ? (v.config === 'LM_ASC' ? 'LM_ASC' : 'LM') : 'CSM');
+    } catch {
+      mt = { offset: new THREE.Vector3(), quat: new THREE.Quaternion() };
+    }
+    const eye = lm ? LM_WINDOW_EYE : CSM_NOSE_EYE;
+    _v2.copy(eye).applyQuaternion(mt.quat).add(mt.offset).applyQuaternion(st.q);
+    p.pos.copy(st.r).add(_v2);
+    p.q.copy(st.q).multiply(mt.quat).multiply(lm ? Q_PILOT_LM_FWD : Q_PILOT_CSM);
+    p.kind = lm ? 'land' : 'fwd';
+    p.fov = lm ? 62 : 55;
+    return p;
   }
 
   cameraDistance() {
@@ -537,7 +615,7 @@ export class FlightView {
     if (input.pressed('lpdRight')) c.lpdAz += 1;
     if (input.pressed('lpdFwd')) c.lpdEl += 1;
     if (input.pressed('lpdBack')) c.lpdEl -= 1;
-    if (input.pressed('camera')) this.setCamera(this.cameraMode === 'cockpit' ? 'exterior:chase' : 'cockpit');
+    if (input.pressed('camera')) this.toggleCamera();
     if (input.pressed('cameraNext')) this.cycleCamera();
   }
 
@@ -614,6 +692,12 @@ export class FlightView {
       camWorld.copy(st.r).add(_v2);
       camQ.copy(st.q).multiply(mt.quat).multiply(eye.quaternion);
       if (shake) camQ.multiply(_q.setFromEuler(_e.set((Math.random() - 0.5) * shake, (Math.random() - 0.5) * shake, (Math.random() - 0.5) * shake)));
+    } else if (mode === 'pilot') {
+      const p = this._pilotPose(v, st);
+      camWorld.copy(p.pos);
+      camQ.copy(p.q);
+      fovOverride = p.fov;
+      if (shake) camQ.multiply(_q.setFromEuler(_e.set((Math.random() - 0.5) * shake, (Math.random() - 0.5) * shake, 0)));
     } else if (mode.startsWith('pad:') && this.site) {
       let look;
       if (mode === 'pad:far') {

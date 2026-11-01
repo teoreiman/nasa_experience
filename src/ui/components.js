@@ -3,6 +3,7 @@
 
 import { h, clear } from '../core/dom.js';
 import { store, DEFAULT_SETTINGS } from '../core/Store.js';
+import { MUSIC_CUES, guessCue, saveTrack, removeTrack, listTracks } from '../audio/userMusic.js';
 
 let _uid = 0;
 
@@ -39,6 +40,7 @@ const ICONS = {
   globe: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/>',
   book: '<path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5zM4 20.5A2.5 2.5 0 0 0 6.5 23H20v-5M8 7h8M8 10.5h6"/>',
   flag: '<path d="M5 21V4M5 4h11l-2 4 2 4H5"/>',
+  music: '<path d="M9 17.5V5.5l11-2v12"/><circle cx="6.5" cy="17.5" r="2.5"/><circle cx="17.5" cy="15.5" r="2.5"/>',
 };
 
 export function icon(name, cls = '') {
@@ -324,6 +326,61 @@ function selectCtl(key, options) {
 
 const row = (label, desc, ctl) => h('div', { class: 'setting' }, h('label', null, label, desc ? h('small', null, desc) : null), ctl);
 
+/** Ajustes → Audio: the player's own soundtrack files (kept in this browser), one per mission moment. */
+function soundtrackPanel() {
+  const list = h('div', { class: 'ost-list' });
+  const status = h('small', { class: 'ost-status' });
+  const picker = h('input', { type: 'file', accept: 'audio/*,.mp3,.m4a,.aac,.ogg,.wav,.flac', multiple: true, hidden: true });
+  let target = null; // a cue picked by its own button; null = guess every file from its name
+  const refresh = async () => {
+    const tracks = await listTracks();
+    clear(list).append(
+      ...MUSIC_CUES.map((c) =>
+        h(
+          'div',
+          { class: `ost-row ${tracks[c.id] ? 'set' : ''}` },
+          h('div', { class: 'ost-cue' }, h('b', null, c.label), h('small', null, tracks[c.id] ? `♪ ${tracks[c.id]}` : `Ideal: «${c.hint}» · ahora suena la música del juego`)),
+          h('button', { class: 'btn btn-sm', on: { click: () => ((target = c.id), picker.click()) } }, tracks[c.id] ? 'Cambiar' : 'Elegir'),
+          tracks[c.id]
+            ? h('button', { class: 'btn btn-sm btn-ghost', title: 'Quitar', on: { click: async () => (await removeTrack(c.id), window.__game?.audio?.reloadUserMusic?.(), refresh()) } }, '✕')
+            : null,
+        ),
+      ),
+    );
+  };
+  picker.addEventListener('change', async () => {
+    const files = [...picker.files];
+    picker.value = '';
+    let n = 0;
+    const unknown = [];
+    for (const f of files) {
+      const cue = target ?? guessCue(f.name);
+      if (!cue) {
+        unknown.push(f.name);
+        continue;
+      }
+      if (await saveTrack(cue, f)) n++;
+      if (target) break;
+    }
+    target = null;
+    status.textContent = `${n ? `${n} pista${n > 1 ? 's' : ''} guardada${n > 1 ? 's' : ''} en este navegador.` : 'No se guardó ninguna pista.'}${unknown.length ? ` Sin momento reconocido: ${unknown.join(', ')} (usa «Elegir» en la fila que quieras).` : ''}`;
+    window.__game?.audio?.reloadUserMusic?.();
+    refresh();
+  });
+  refresh();
+  return h(
+    'div',
+    { class: 'ost' },
+    h('div', { class: 'ost-head' },
+      h('label', null, 'Banda sonora propia', h('small', null, 'El juego no incluye música con derechos de autor. Si tienes la banda sonora de «Apollo 13» de James Horner (u otra), cárgala aquí: cada pista suena en su momento de la misión. Los archivos quedan solo en este dispositivo.')),
+      h('button', { class: 'btn btn-sm btn-primary', on: { click: () => ((target = null), picker.click()) } }, icon('music'), 'Cargar archivos…'),
+    ),
+    picker,
+    list,
+    status,
+  );
+}
+
 export function openSettings({ inGame = false } = {}) {
   const game = window.__game;
   return openModal({
@@ -376,11 +433,12 @@ export function openSettings({ inGame = false } = {}) {
             row('Voces de radio', null, rangeCtl('volumeVoice', 0, 1, 0.01)),
             row('Música', null, rangeCtl('volumeMusic', 0, 1, 0.01)),
             row('Ambiente', 'Ventiladores de cabina, sala de control', rangeCtl('volumeAmbience', 0, 1, 0.01)),
-            row('Voces', 'Inglés original con subtítulos, doblaje sintético en español, o solo texto', selectCtl('voiceMode', [['en-sub', 'Inglés + subtítulos'], ['es', 'Español'], ['text', 'Solo texto']])),
+            row('Voces', 'Radio de la NASA en inglés con subtítulos o doblada al español (mismas voces en todos los modos), o solo texto', selectCtl('voiceMode', [['en-sub', 'Inglés + subtítulos'], ['es', 'Español'], ['text', 'Solo texto']])),
             row('Tonos Quindar', 'Los pitidos de inicio y fin de cada transmisión de Houston', toggleCtl('quindar')),
             row('Estática de radio', null, toggleCtl('radioStatic')),
             row('Subtítulos', null, toggleCtl('subtitles')),
             row('Mostrar el original en inglés', 'Debajo del subtítulo en español', toggleCtl('showOriginal')),
+            soundtrackPanel(),
           ),
       },
       {

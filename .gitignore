@@ -8,3 +8,7 @@ tools/screenshots/
 # player-supplied music (copyrighted, personal use only)
 public/audio/music/*
 !public/audio/music/LEEME.txt
+
+# radio voices recorded with the macOS system voices (personal use only, see public/audio/voice/LEEME.txt)
+public/audio/voice/*
+!public/audio/voice/LEEME.txt

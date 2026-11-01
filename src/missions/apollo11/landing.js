@@ -9,6 +9,7 @@ import { getInitialState } from '../../sim/physics/initialStates.js';
 import { coast } from '../../sim/physics/targeting.js';
 import { SITES, siteDir } from '../../sim/terrain/lunarTerrain.js';
 import { radio, procedure, grade } from '../common/kit.js';
+import { altitudeCallout } from '../common/callouts.js';
 
 const PDI = GET(102, 33, 5);
 const START = GET(102, 26, 30);
@@ -196,7 +197,7 @@ export default {
       if (mi < marks.length && h < marks[mi] && sim.gnc.lmGuidance.phase && ['64', '66'].includes(sim.gnc.lgc.program)) {
         const rate = Math.abs(st.hdot / FT);
         const fwd = Math.abs(v.tm['LM.GNC.XPTR_FWD_FPS'] ?? 0);
-        radio(ctx, 'LMP', `${marks[mi]} feet, down ${rate.toFixed(0)}${fwd > 1 ? `, ${fwd.toFixed(0)} forward` : ''}.`, `${marks[mi]} pies, bajando a ${rate.toFixed(0)}${fwd > 1 ? `, ${fwd.toFixed(0)} adelante` : ''}.`);
+        radio(ctx, 'LMP', `${marks[mi]} feet, down ${rate.toFixed(0)}${fwd > 1 ? `, ${fwd.toFixed(0)} forward` : ''}.`, `${marks[mi]} pies, bajando a ${rate.toFixed(0)}${fwd > 1 ? `, ${fwd.toFixed(0)} adelante` : ''}.`, { voiceEn: altitudeCallout(marks[mi], rate, fwd, 'en'), voiceEs: altitudeCallout(marks[mi], rate, fwd, 'es') });
         while (mi < marks.length && h < marks[mi]) mi++;
       }
     });

@@ -10,11 +10,13 @@ import { FT, NMI, R_EARTH, R_MOON } from '../core/constants.js';
 import { icon, iconSVG, openSettings, openModal, helpContent, toast, achievementById } from './components.js';
 import { ProcedureTracker } from './ProcedureTracker.js';
 import { FlightDirector, EntryDirector } from './FlightDirector.js';
+import { PilotHUD } from './PilotHUD.js';
 import { PROCEDURES } from '../missions/common/procedures.js';
 import { availableServices } from '../missions/free/index.js';
 
 const CAMERA_NAMES = {
   cockpit: 'Cabina',
+  pilot: 'Piloto',
   'exterior:chase': 'Exterior',
   'exterior:wide': 'Exterior lejana',
   'pad:far': 'Cámara de seguimiento',
@@ -123,6 +125,7 @@ export class HUD {
     if (game.input.isTouch && role === 'astronaut') this._buildTouch();
     this.fd = role === 'astronaut' && sim.saturn ? new FlightDirector({ game, sim, root: this.root }) : null;
     this.ed = role === 'astronaut' && sim.csm ? new EntryDirector({ game, sim, root: this.root }) : null;
+    this.pilot = role === 'astronaut' && view?.projectToScreen ? new PilotHUD({ game, sim, view, root: this.root }) : null;
 
     // ---- bus
     this._off = [
@@ -173,6 +176,8 @@ export class HUD {
         if (role === 'astronaut' && agc === this.sim.gnc?.activeComputer?.id) this._alert('V99 · el ordenador pide permiso para encender: pulsa PRO en el DSKY (tecla P con el cursor encima)', 'caution', 7);
       }),
       bus.on('vehicle:event', (e) => this._event(e)),
+      // a control the checklist wants flipped (the pilot view steps aside for it)
+      bus.on('mission:highlight', ({ ids }) => (this._hl = ids?.length ? ids : null)),
     ];
     this._setCam(view?.cameraMode ?? (role === 'controller' ? null : 'cockpit'), role === 'controller' ? 'Control de Misión' : null);
     this._render();
@@ -188,7 +193,34 @@ export class HUD {
   }
 
   _camera() {
-    if (this.view?.setCamera) this.view.setCamera(this.view.cameraMode === 'cockpit' ? 'exterior:chase' : 'cockpit');
+    if (this.view?.toggleCamera) this.view.toggleCamera();
+    else if (this.view?.setCamera) this.view.setCamera(this.view.cameraMode === 'cockpit' ? 'exterior:chase' : 'cockpit');
+  }
+
+  /** Flying by hand needs to see out: the pilot view comes up by itself for the final approach of a
+   *  docking and for the LM landing from P64 (once each; the camera button goes back). */
+  _autoPilotView(ph) {
+    const v = this.view;
+    if (this.role !== 'astronaut' || !v?.pilotViewAvailable) return;
+    // a switch to flip in the cabin first (DOCK PROBE, ENGINE STOP…): back inside
+    if (this._hl && this._pilotAuto && v.cameraMode === 'pilot') {
+      this._pilotAuto = false;
+      this._autoDock = false;
+      v.setCamera('cockpit');
+      return;
+    }
+    if (this._hl || !v.pilotViewAvailable() || v.cameraMode !== 'cockpit') return;
+    if (!this._autoDock && ph === 'docking' && this._dockTel && this._dockTel.range < 45) {
+      this._autoDock = this._pilotAuto = true;
+      v.setCamera('pilot');
+      this._alert('Vista de acoplamiento: mete el puerto en el círculo y la cruz sobre el puerto · 📷 cambia la vista', 'info', 7);
+    }
+    const prog = this.sim.gnc?.lgc?.program;
+    if (!this._autoLand && ph === 'descent' && (prog === '64' || prog === '66')) {
+      this._autoLand = this._pilotAuto = true;
+      v.setCamera('pilot');
+      this._alert('Vista por la ventana del LM: el rombo es el sitio, el círculo verde adónde vas · 📷 cambia la vista', 'info', 7);
+    }
   }
 
   _setCam(mode, label = null) {
@@ -311,7 +343,7 @@ export class HUD {
     const realistic = store.settings.difficulty === 'realistic';
     const bus = this.sim.bus;
     fill(this.clEl,
-      h('div', { class: 'cl-head', on: { click: () => this._toggleChecklist() } }, iconSVGEl('list'), h('span', { class: 't' }, c.title), h('span', { class: 'count' }, `${done}/${c.items.length}`)),
+      h('div', { class: 'cl-head', on: { click: () => this._toggleChecklist() } }, iconSVGEl('list'), h('span', { class: 't' }, c.title), h('span', { class: 'count' }, `${done}/${c.items.length}`), cur ? h('span', { class: 'cur' }, `▸ ${cur.text}`) : null),
       c.mode === 'ai' ? h('div', { class: 'cl-ai' }, this.role === 'controller' ? 'La tripulación ejecuta la lista. Vigila la telemetría.' : 'Lista ejecutada por la tripulación.') : null,
       h(
         'div',
@@ -821,6 +853,7 @@ export class HUD {
 
   _renderTelemetry() {
     const { ph, F } = this._fields();
+    this._autoPilotView(ph);
     const sig = ph + F.map((f) => f.lbl).join('|');
     if (sig !== this._tlmSig) {
       this._tlmSig = sig;
@@ -1051,6 +1084,7 @@ export class HUD {
     this.tracker?.update(dt);
     this.fd?.update(dt);
     this.ed?.update(dt);
+    this.pilot?.update(dt);
     this._updateTouch();
     this._render();
     this._tlmAcc += dt;
@@ -1086,6 +1120,7 @@ export class HUD {
     this.tracker?.dispose();
     this.fd?.dispose();
     this.ed?.dispose();
+    this.pilot?.dispose();
     this._closeModal();
     this.helpModal?.close();
     clearTimeout(this._hintT);

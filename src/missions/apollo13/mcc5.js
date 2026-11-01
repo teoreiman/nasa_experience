@@ -10,6 +10,7 @@ import { GNCHost } from '../../sim/gnc/GNCHost.js';
 import { DEG } from '../../core/constants.js';
 import { radio, grade, entryPrediction } from '../common/kit.js';
 import { lifeboatSetup } from './freereturn.js';
+import { padReadout } from '../common/callouts.js';
 
 export default {
   setup: () => lifeboatSetup(GET(104, 58), { maxWarp: 10 }),
@@ -26,7 +27,7 @@ export default {
     const lm = ctx.lm;
     ctx.caption('CORRECCIÓN MANUAL', 'Apolo 13 · MCC-5 · GET 105:00', 6);
     const before = entryPrediction(ctx);
-    await ctx.say('CAPCOM', 'Aquarius, Houston. Your entry angle is shallowing. We want a midcourse correction, MCC-5, and you are going to fly it manually.', `Aquarius, Houston. El ángulo de reentrada se está volviendo rasante (${Number.isFinite(before.gammaEI) ? before.gammaEI.toFixed(2) + '°' : 'fuera del corredor'}). Queremos la corrección MCC-5 y la van a volar a mano.`);
+    await ctx.say('CAPCOM', 'Aquarius, Houston. Your entry angle is shallowing. We want a midcourse correction, MCC-5, and you are going to fly it manually.', `Aquarius, Houston. El ángulo de reentrada se está volviendo rasante (${Number.isFinite(before.gammaEI) ? before.gammaEI.toFixed(2) + '°' : 'fuera del corredor'}). Queremos la corrección MCC-5 y la van a volar a mano.`, { voiceEs: 'Aquarius, Houston. El ángulo de reentrada se está volviendo rasante. Queremos la corrección MCC-5 y la van a volar a mano.' });
 
     // ---- the PAD: direction from the RTCC, burn time at 10 % throttle
     const c = contextFromSim(sim);
@@ -36,7 +37,7 @@ export default {
     const burnS = pad.dvTotal / accel;
     const tig = Math.max(ctx.t + 600, GET(105, 18, 28));
     ctx.pad({ name: 'MCC-5', tig, dvTotal: pad.dvTotal, burnTime: burnS, engine: 'DPS 10 %', notes: 'Actitud manual con el terminador en el COAS · encendido y apagado manuales' });
-    await ctx.say('CAPCOM', `MCC-5 PAD: TIG ${fmtGET(tig)}, delta-V ${(pad.dvTotal / 0.3048).toFixed(1)} feet per second, burn time ${Math.round(burnS)} seconds at 10 percent.`, `PAD de la MCC-5: TIG ${fmtGET(tig)}, ΔV ${(pad.dvTotal / 0.3048).toFixed(1)} pies/s, ${Math.round(burnS)} s al 10 %.`);
+    await ctx.say('CAPCOM', `MCC-5 PAD: TIG ${fmtGET(tig)}, delta-V ${(pad.dvTotal / 0.3048).toFixed(1)} feet per second, burn time ${Math.round(burnS)} seconds at 10 percent.`, `PAD de la MCC-5: TIG ${fmtGET(tig)}, ΔV ${(pad.dvTotal / 0.3048).toFixed(1)} pies/s, ${Math.round(burnS)} s al 10 %.`, { voiceEn: padReadout({ name: 'MCC-5', tig, dvTotal: pad.dvTotal, burnTime: burnS }, 'en'), voiceEs: padReadout({ name: 'MCC-5', tig, dvTotal: pad.dvTotal, burnTime: burnS }, 'es') });
 
     // ---- attitude: the FDAI needles show the burn attitude (the terminator in the COAS)
     const target = GNCHost.attitudeFor(dir, v.state.r.clone().normalize().negate(), new Quaternion());
@@ -116,7 +117,7 @@ export default {
     ctx.score('corridor', grade(Math.abs(gam + 6.5), 0.2, 1.6, 150), 150, `γ de reentrada ${gam.toFixed(2)}°`);
     ctx.score('timing', grade(Math.abs(tOn - tig), 2, 60, 50), 50, `Ignición a ${(tOn - tig).toFixed(0)} s del TIG`);
     if (gam < -6 && gam > -7) ctx.achievement('a13-terminator');
-    await ctx.say('CAPCOM', 'Aquarius, Houston. Nice burn. You are right in the corridor.', `Aquarius, Houston. Buen encendido: γ ${gam.toFixed(2)}°, reentrada a GET ${fmtGET(after.tEI)}.`);
+    await ctx.say('CAPCOM', 'Aquarius, Houston. Nice burn. You are right in the corridor.', `Aquarius, Houston. Buen encendido: γ ${gam.toFixed(2)}°, reentrada a GET ${fmtGET(after.tEI)}.`, { voiceEs: 'Aquarius, Houston. Buen encendido: están justo en el corredor.' });
     ctx.complete({
       summary: `MCC-5 volada a mano: ${(tOff - tOn).toFixed(1)} s de DPS, ${(gained / 0.3048).toFixed(1)} ft/s. Ángulo de reentrada ${Number.isFinite(before.gammaEI) ? before.gammaEI.toFixed(2) : '—'}° → ${gam.toFixed(2)}°.`,
       stats: { 'γ antes': Number.isFinite(before.gammaEI) ? `${before.gammaEI.toFixed(2)}°` : '—', 'γ después': `${gam.toFixed(2)}°`, 'ΔV': `${(gained / 0.3048).toFixed(1)} ft/s`, 'Encendido': `${(tOff - tOn).toFixed(1)} s` },

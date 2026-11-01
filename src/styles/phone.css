@@ -1,0 +1,1487 @@
+/* Phones: the layouts above are built for a 1280×720 window. Here every screen is re-fitted for a
+   phone held sideways (≈ 640–950 × 320–430) and the menus also for a phone held upright
+   (the 3D scenes ask to turn the phone, see base.css). Loaded after ui.css. */
+
+/* ================================================================== shared (both orientations) */
+
+.ost {
+  margin-top: 1rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--edge);
+}
+
+.ost-head {
+  display: flex;
+  gap: 0.8rem;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 0.6rem;
+}
+
+.ost-head label {
+  font-weight: 600;
+}
+
+.ost-head small {
+  display: block;
+  margin-top: 0.15rem;
+  font-weight: 400;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  color: var(--text-dim);
+}
+
+.ost-head .btn {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.ost-head .btn svg {
+  width: 1.05em;
+  height: 1.05em;
+}
+
+.ost-list {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.3rem;
+}
+
+/* the tab strip never shrinks in the modal's flex column (it scrolls sideways on narrow screens) */
+.modal .tabs {
+  flex: none;
+  overflow-y: hidden;
+}
+
+.ost-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.5rem;
+  border-radius: var(--r);
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid transparent;
+}
+
+.ost-row.set {
+  border-color: rgba(109, 255, 160, 0.22);
+  background: rgba(109, 255, 160, 0.05);
+}
+
+.ost-cue {
+  flex: 1;
+  min-width: 0;
+}
+
+.ost-cue b {
+  display: block;
+  font-family: var(--font-title);
+  font-size: 0.92rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.ost-cue small {
+  display: block;
+  font-size: 0.74rem;
+  color: var(--text-dim);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ost-row.set .ost-cue small {
+  color: var(--crt);
+}
+
+.ost-row .btn {
+  margin: 0;
+  flex: none;
+}
+
+.ost-status {
+  display: block;
+  min-height: 1em;
+  margin-top: 0.5rem;
+  font-size: 0.78rem;
+  color: var(--amber);
+}
+
+/* the checklist head carries the current step: on phones it is all that shows while collapsed */
+.cl-head .cur {
+  display: none;
+}
+
+/* ================================================================== phone held sideways */
+
+@media (max-height: 500px) and (orientation: landscape) {
+  /* ---------------------------------------------------------------- menu frame */
+  .menu-bar {
+    gap: 0.3rem;
+    padding: calc(0.45rem + var(--safe-t)) calc(0.8rem + var(--safe-r)) 0 calc(0.9rem + var(--safe-l));
+  }
+
+  .menu-bar .btn {
+    margin: 0;
+    padding: 0.4em 0.65em;
+    font-size: 0.8rem;
+  }
+
+  .menu-brand {
+    font-size: 0.78rem;
+    letter-spacing: 0.22em;
+  }
+
+  .menu-brand svg {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  .menu-foot {
+    padding: 0 calc(0.9rem + var(--safe-r)) calc(0.35rem + var(--safe-b)) calc(0.9rem + var(--safe-l));
+    font-size: 0.62rem;
+  }
+
+  .menu-foot > span:first-child {
+    display: none;
+  }
+
+  .menu.letterbox-on::before,
+  .menu.letterbox-on::after {
+    height: 3vh;
+  }
+
+  .cine-caption {
+    right: calc(0.9rem + var(--safe-r));
+    bottom: calc(1.7rem + var(--safe-b));
+  }
+
+  .cine-caption .c1 {
+    font-size: 0.68rem;
+  }
+
+  .cine-caption .c2 {
+    font-size: 0.6rem;
+  }
+
+  .cine-dots {
+    display: none;
+  }
+
+  /* ---------------------------------------------------------------- title */
+  .title-screen {
+    padding: 0 calc(0.9rem + var(--safe-l)) 0;
+    max-width: min(30rem, 62vw);
+    justify-content: center;
+  }
+
+  .title-screen .overline {
+    font-size: 0.6rem;
+  }
+
+  .title-screen h1 {
+    font-size: min(15vh, 9vw);
+    margin: 0.25rem 0 0.15rem;
+  }
+
+  .title-rule {
+    margin: 0.35rem 0 0.5rem;
+    width: 6rem;
+  }
+
+  .title-screen .lead {
+    font-size: 0.82rem;
+    line-height: 1.4;
+    margin: 0 0 0.75rem;
+  }
+
+  .title-actions {
+    gap: 0.4rem;
+  }
+
+  .title-actions .btn {
+    margin: 0;
+  }
+
+  .btn-lg {
+    font-size: 1.02rem;
+    padding: 0.55em 1.2em;
+  }
+
+  .quote {
+    margin-top: 0.7rem;
+    max-width: none;
+    font-size: 0.74rem;
+    line-height: 1.35;
+    padding-left: 0.6rem;
+  }
+
+  .quote cite {
+    font-size: 0.58rem;
+    margin-top: 0.15rem;
+  }
+
+  .quote .btn {
+    margin: 0.35rem 0 0 !important;
+    font-size: 0.72rem;
+    padding: 0.3em 0.6em;
+  }
+
+  /* ---------------------------------------------------------------- role */
+  .role-screen {
+    justify-content: center;
+    gap: 0.6rem;
+    padding: 0 calc(0.9rem + var(--safe-r)) 0.2rem calc(0.9rem + var(--safe-l));
+  }
+
+  .screen-head .overline {
+    font-size: 0.6rem;
+  }
+
+  .screen-head h2 {
+    font-size: 1.55rem;
+    margin-top: 0.15rem;
+  }
+
+  .screen-head p {
+    font-size: 0.78rem;
+    margin-top: 0.15rem;
+  }
+
+  .role-cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.6rem;
+  }
+
+  .role-card {
+    flex-direction: row;
+    align-items: stretch;
+  }
+
+  .role-art {
+    height: auto;
+    width: 6.4rem;
+    flex: none;
+    border-bottom: none;
+    border-right: 1px solid var(--edge);
+  }
+
+  .role-art svg {
+    height: 4.6rem;
+  }
+
+  .role-info {
+    padding: 0.6rem 0.75rem;
+  }
+
+  .role-info h3 {
+    font-size: 1.15rem;
+    margin-bottom: 0.2rem;
+  }
+
+  .role-info p {
+    font-size: 0.78rem;
+    line-height: 1.35;
+    margin: 0 0 0.35rem;
+  }
+
+  .role-info ul {
+    display: grid;
+    font-size: 0.68rem;
+    gap: 0.15rem;
+  }
+
+  .role-screen > div:last-child .btn {
+    margin: 0;
+  }
+
+  /* ---------------------------------------------------------------- missions */
+  .missions-screen {
+    grid-template-columns: minmax(9.5rem, 12.5rem) minmax(0, 1fr);
+    gap: 0.55rem;
+    padding: 0.35rem calc(0.7rem + var(--safe-r)) 0.25rem calc(0.7rem + var(--safe-l));
+  }
+
+  .missions-screen .screen-head .btn {
+    margin: 0.15rem 0 0 !important;
+    font-size: 0.72rem;
+    padding: 0.3em 0.6em;
+  }
+
+  .mission-list {
+    gap: 0.3rem;
+  }
+
+  .mission-group-label {
+    margin: 0.4rem 0 0 0.1rem;
+    font-size: 0.58rem;
+  }
+
+  .mission-item {
+    gap: 0.5rem;
+    padding: 0.35rem 0.5rem;
+  }
+
+  .mission-item .patch-sm {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .mission-item b {
+    font-size: 0.9rem;
+  }
+
+  .mission-item .chip {
+    font-size: 0.55rem;
+    padding: 0.15em 0.5em;
+  }
+
+  .mission-detail {
+    padding: 0.6rem 0.75rem 0.5rem;
+  }
+
+  .mission-hero {
+    gap: 0.7rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .mission-hero .patch-lg {
+    width: 3.4rem;
+    height: 3.4rem;
+  }
+
+  .mission-hero .overline {
+    font-size: 0.58rem;
+  }
+
+  .mission-hero h2 {
+    font-size: 1.45rem;
+    margin: 0.05rem 0;
+  }
+
+  .mission-hero .tagline {
+    font-size: 0.8rem;
+    line-height: 1.3;
+  }
+
+  .mission-meta {
+    display: none;
+  }
+
+  .chapter-grid {
+    grid-template-columns: repeat(auto-fill, minmax(11.5rem, 1fr));
+    gap: 0.4rem;
+  }
+
+  .chapter-card {
+    min-height: 0;
+    padding: 0.5rem 0.6rem 0.45rem;
+    gap: 0.15rem;
+  }
+
+  .chapter-card .num {
+    font-size: 0.6rem;
+  }
+
+  .chapter-card h4 {
+    font-size: 0.95rem;
+  }
+
+  .chapter-card p {
+    font-size: 0.7rem;
+    line-height: 1.3;
+  }
+
+  .chapter-card .row {
+    margin-top: 0.15rem;
+  }
+
+  .chapter-card .chip {
+    font-size: 0.58rem;
+  }
+
+  /* free flight picker: compact cards, the launch button pinned at the bottom of the panel */
+  .mission-hero .free-hero {
+    width: 2.4rem;
+    height: 3.4rem;
+  }
+
+  .free-vehicles {
+    grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+    gap: 0.45rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .veh-card {
+    grid-template-columns: 1.8rem minmax(0, 1fr);
+    gap: 0.5rem;
+    padding: 0.5rem 0.6rem;
+  }
+
+  .veh-card .sil {
+    height: 5rem;
+  }
+
+  .veh-card h4 {
+    font-size: 1rem;
+  }
+
+  .veh-card .sub {
+    font-size: 0.66rem;
+    margin-bottom: 0.2rem;
+  }
+
+  .veh-card p {
+    font-size: 0.68rem;
+    line-height: 1.3;
+    margin-bottom: 0.25rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .veh-card .specs {
+    display: none;
+  }
+
+  .veh-card .fav {
+    top: 0.35rem;
+    right: 0.4rem;
+    font-size: 0.55rem;
+  }
+
+  .free-starts {
+    grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
+    gap: 0.35rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .start-card {
+    padding: 0.4rem 0.55rem;
+  }
+
+  .start-card b {
+    font-size: 0.82rem;
+  }
+
+  .start-card small {
+    font-size: 0.64rem;
+  }
+
+  .mission-detail .brief-actions {
+    padding: 0.4rem 0 0;
+  }
+
+  .mission-detail .brief-actions .muted {
+    display: none;
+  }
+
+  /* ---------------------------------------------------------------- briefing */
+  .briefing {
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+    gap: 0.6rem;
+    padding: calc(0.5rem + var(--safe-t)) calc(0.8rem + var(--safe-r)) calc(0.4rem + var(--safe-b)) calc(0.8rem + var(--safe-l));
+    overflow: hidden;
+  }
+
+  .briefing .col {
+    gap: 0.5rem;
+    overflow-y: auto;
+    min-height: 0;
+    max-height: 100%;
+    padding-right: 0.15rem;
+  }
+
+  .brief-head {
+    gap: 0.6rem;
+  }
+
+  .brief-head .patch-lg {
+    width: 3.6rem;
+    height: 3.6rem;
+  }
+
+  .brief-head .overline {
+    font-size: 0.56rem;
+    letter-spacing: 0.2em;
+  }
+
+  .brief-head h1 {
+    font-size: 1.6rem;
+    margin: 0.1rem 0;
+  }
+
+  .brief-head .sub {
+    font-size: 0.8rem;
+  }
+
+  .brief-head .mission-meta {
+    display: flex;
+    font-size: 0.66rem;
+    gap: 0.2rem 0.8rem;
+    margin-top: 0.2rem;
+  }
+
+  .brief-card {
+    padding: 0.55rem 0.7rem;
+  }
+
+  .brief-card h3 {
+    font-size: 0.66rem;
+    margin-bottom: 0.3rem;
+  }
+
+  .brief-card p {
+    font-size: 0.8rem;
+    line-height: 1.45;
+  }
+
+  .obj-list {
+    gap: 0.25rem;
+    font-size: 0.78rem;
+  }
+
+  .tip-list {
+    font-size: 0.74rem;
+  }
+
+  .crew-row b {
+    font-size: 0.86rem;
+  }
+
+  .crew-row div {
+    font-size: 0.68rem;
+  }
+
+  .keys {
+    font-size: 0.72rem;
+    gap: 0.3rem 0.5rem;
+  }
+
+  kbd {
+    font-size: 0.64rem;
+  }
+
+  .brief-controls h4 {
+    font-size: 0.6rem;
+    margin: 0.45rem 0 0.25rem;
+  }
+
+  .brief-actions {
+    gap: 0.4rem;
+    padding: 0.45rem 0 0.1rem;
+  }
+
+  .brief-actions .btn {
+    margin: 0;
+  }
+
+  .brief-actions .muted {
+    display: none;
+  }
+
+  /* ---------------------------------------------------------------- debrief */
+  .debrief {
+    padding: calc(0.5rem + var(--safe-t)) calc(0.8rem + var(--safe-r)) calc(0.5rem + var(--safe-b)) calc(0.8rem + var(--safe-l));
+  }
+
+  .debrief-card {
+    grid-template-columns: minmax(8rem, 10rem) minmax(0, 1fr);
+    gap: 0.8rem;
+    padding: 0.8rem 0.9rem;
+    overflow-y: auto;
+  }
+
+  .grade-big {
+    border-right: 1px solid var(--edge);
+    padding-right: 0.8rem;
+  }
+
+  .grade-big .letter {
+    font-size: 4rem;
+  }
+
+  .debrief h2 {
+    font-size: 1.4rem;
+  }
+
+  .score-rows {
+    gap: 0.25rem;
+    margin: 0.5rem 0;
+    font-size: 0.78rem;
+  }
+
+  /* ---------------------------------------------------------------- modals & settings */
+  .modal-backdrop {
+    padding: calc(0.4rem + var(--safe-t)) calc(0.6rem + var(--safe-r)) calc(0.4rem + var(--safe-b)) calc(0.6rem + var(--safe-l));
+  }
+
+  .modal {
+    max-height: 100%;
+    border-radius: 8px;
+  }
+
+  .modal-head {
+    padding: 0.45rem 0.8rem 0.35rem;
+  }
+
+  .modal-head h3 {
+    font-size: 1.1rem;
+  }
+
+  .modal-head .btn {
+    margin: 0;
+  }
+
+  .tabs {
+    padding: 0.35rem 0.8rem 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .tab {
+    flex: none;
+    font-size: 0.72rem;
+    padding: 0.35em 0.75em;
+  }
+
+  .modal-body {
+    padding: 0.5rem 0.8rem 0.7rem;
+  }
+
+  .setting {
+    grid-template-columns: minmax(0, 1fr) minmax(8rem, 12rem);
+    padding: 0.4rem 0;
+    gap: 0.3rem 0.7rem;
+  }
+
+  .setting label {
+    font-size: 0.86rem;
+  }
+
+  .setting small {
+    font-size: 0.7rem;
+  }
+
+  .ach-grid {
+    grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+    gap: 0.4rem;
+  }
+
+  .ost-head {
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  /* ---------------------------------------------------------------- loading */
+  .ls-rocket {
+    height: 62vh;
+  }
+
+  .ls-fact {
+    font-size: 0.74rem;
+    bottom: calc(0.9rem + var(--safe-b));
+  }
+
+  /* ================================================================ HUD */
+  /* top-left: clock (GET + time warp); the mission name is in the pause menu */
+  .hud-clock {
+    top: calc(0.35rem + var(--safe-t));
+    left: calc(0.45rem + var(--safe-l));
+  }
+
+  .hud-clock .blk {
+    padding: 0.18rem 0.5rem 0.2rem;
+  }
+
+  .hud-clock .blk:first-child {
+    display: none;
+  }
+
+  .hud-clock .lbl {
+    font-size: 0.5rem;
+    letter-spacing: 0.18em;
+  }
+
+  .hud-clock .val {
+    font-size: 1rem;
+  }
+
+  .warp {
+    gap: 0.15rem;
+  }
+
+  .warp button {
+    width: 1.75rem;
+    height: 1.55rem;
+  }
+
+  .warp .val {
+    min-width: 2.6rem;
+    font-size: 0.92rem;
+  }
+
+  /* top-right: the tool buttons (the bottom corners belong to the hand controllers) */
+  .hud-tools {
+    top: calc(0.35rem + var(--safe-t));
+    bottom: auto;
+    right: calc(0.45rem + var(--safe-r));
+    gap: 0.25rem;
+  }
+
+  .hud-tools .btn {
+    margin: 0;
+  }
+
+  .hud-tools .btn-icon {
+    width: 2.2rem;
+    height: 2.2rem;
+    padding: 0;
+  }
+
+  .hud-tools .btn-icon svg {
+    width: 1.05rem;
+    height: 1.05rem;
+  }
+
+  .hud-cam {
+    display: none;
+  }
+
+  .hud-houston-btn {
+    font-size: 0.72rem;
+    padding: 0.3em 0.6em;
+  }
+
+  .hud-skip {
+    top: calc(2.9rem + var(--safe-t));
+    bottom: auto;
+    right: calc(0.45rem + var(--safe-r));
+    font-size: 0.72rem;
+    padding: 0.35em 0.7em;
+    margin: 0;
+  }
+
+  /* left: objectives under the clock */
+  .hud-objectives {
+    top: calc(2.75rem + var(--safe-t));
+    left: calc(0.45rem + var(--safe-l));
+    width: min(15rem, 32vw);
+    gap: 0.2rem;
+  }
+
+  .hud-obj {
+    font-size: 0.7rem;
+    padding: 0.22rem 0.45rem;
+    line-height: 1.25;
+  }
+
+  .hud-obj .mk {
+    width: 0.7rem;
+    height: 0.7rem;
+  }
+
+  /* right: the checklist under the tools, clear of the right-hand stick */
+  .hud-checklist {
+    top: calc(2.9rem + var(--safe-t));
+    right: calc(0.45rem + var(--safe-r));
+    width: min(16.5rem, 36vw);
+    max-height: calc(100% - 2.9rem - 10.6rem - var(--safe-t) - var(--safe-b));
+  }
+
+  .hud:has(.hud-skip:not([hidden])) .hud-checklist {
+    top: calc(5.2rem + var(--safe-t));
+    max-height: calc(100% - 5.2rem - 10.6rem - var(--safe-t) - var(--safe-b));
+  }
+
+  .cl-head {
+    padding: 0.3rem 0.5rem;
+    gap: 0.35rem;
+  }
+
+  .cl-head .t {
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .cl-head .count {
+    font-size: 0.68rem;
+  }
+
+  .hud-checklist.collapsed .cl-head {
+    flex-wrap: wrap;
+  }
+
+  .hud-checklist.collapsed .cl-head .cur {
+    display: block;
+    flex-basis: 100%;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--amber);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .cl-body {
+    padding: 0.2rem 0.3rem 0.3rem;
+  }
+
+  .cl-item {
+    padding: 0.25rem 0.25rem;
+    gap: 0.35rem;
+  }
+
+  .cl-item .txt {
+    font-size: 0.7rem;
+  }
+
+  .cl-item .hint {
+    font-size: 0.64rem;
+  }
+
+  .cl-item .box {
+    width: 0.8rem;
+    height: 0.8rem;
+  }
+
+  .cl-item .act {
+    font-size: 0.62rem;
+    padding: 0.35em 0.55em;
+  }
+
+  .cl-ai {
+    font-size: 0.66rem;
+    padding: 0.2rem 0.5rem 0.3rem;
+  }
+
+  /* bottom-centre: telemetry between the two sticks, radio subtitles above it */
+  .hud-telemetry {
+    left: 50%;
+    right: auto;
+    bottom: calc(0.35rem + var(--safe-b));
+    transform: translateX(-50%);
+    max-width: calc(100vw - 19rem - var(--safe-l) - var(--safe-r));
+    overflow: hidden;
+  }
+
+  .hud-telemetry .tlm {
+    min-width: 0;
+    padding: 0.2rem 0.45rem 0.22rem;
+  }
+
+  .tlm .lbl {
+    font-size: 0.48rem;
+    letter-spacing: 0.12em;
+    white-space: nowrap;
+  }
+
+  .tlm .val {
+    font-size: 0.8rem;
+    white-space: nowrap;
+  }
+
+  .tlm .val small {
+    font-size: 0.6rem;
+  }
+
+  .hud-subs {
+    bottom: calc(2.85rem + var(--safe-b));
+    width: min(34rem, calc(100vw - 19rem - var(--safe-l) - var(--safe-r)));
+    gap: 0.2rem;
+  }
+
+  .sub-line {
+    padding: 0.22rem 0.55rem 0.26rem;
+  }
+
+  .sub-line .who {
+    font-size: 0.58rem;
+  }
+
+  .sub-line .es {
+    font-size: 0.78rem;
+    line-height: 1.3;
+  }
+
+  .sub-line .en {
+    display: none;
+  }
+
+  .sub-line:not(:last-child) {
+    display: none;
+  }
+
+  /* top-centre: alerts, script readouts, hints */
+  .hud-alerts {
+    top: calc(0.35rem + var(--safe-t));
+    width: min(26rem, calc(100vw - 27rem));
+    gap: 0.25rem;
+  }
+
+  .alert {
+    font-size: 0.72rem;
+    padding: 0.3rem 0.55rem;
+  }
+
+  .hud-task {
+    top: calc(2.9rem + var(--safe-t));
+    font-size: 0.72rem;
+    max-width: calc(100vw - 36rem);
+    padding: 0.25rem 0.55rem;
+  }
+
+  .hud-hint {
+    bottom: calc(6.4rem + var(--safe-b));
+    width: min(28rem, calc(100vw - 19rem));
+    max-width: none;
+    font-size: 0.72rem;
+    padding: 0.35rem 0.6rem;
+  }
+
+  .hud-caption {
+    top: 18%;
+  }
+
+  .hud-caption .c1 {
+    font-size: 1.6rem;
+  }
+
+  .hud-caption .c2 {
+    font-size: 0.8rem;
+  }
+
+  /* instruments: cross-pointer / COAS on the left, between the objectives and the stick */
+  .hud-instr {
+    left: calc(0.45rem + var(--safe-l));
+    right: auto;
+    top: 52%;
+    bottom: auto;
+    transform: translateY(-50%);
+    padding: 0.35rem 0.45rem;
+  }
+
+  .hud-instr canvas {
+    width: 6.2rem !important;
+    height: 6.2rem !important;
+  }
+
+  .hud-instr .title {
+    font-size: 0.5rem;
+    max-width: 7rem;
+  }
+
+  .hud-instr .ln {
+    font-size: 0.6rem;
+  }
+
+  /* PAD card: right side, compact */
+  .hud-pad {
+    width: 12.5rem;
+    font-size: 0.72rem;
+    top: calc(2.9rem + var(--safe-t));
+    transform: none;
+    z-index: 4;
+  }
+
+  .hud-log {
+    left: calc(0.45rem + var(--safe-l));
+    top: calc(2.75rem + var(--safe-t));
+    bottom: auto;
+    width: min(24rem, 46vw);
+    max-height: calc(100% - 6rem);
+    font-size: 0.72rem;
+    z-index: 5;
+  }
+
+  /* decisions: centred and scrollable */
+  .hud-modal-wrap:not(.docked) .hud-modal {
+    width: min(36rem, 86vw);
+    max-height: calc(100vh - 1rem - var(--safe-t) - var(--safe-b));
+    overflow-y: auto;
+    padding: 0.7rem 0.9rem 0.8rem;
+  }
+
+  .hud-modal h3 {
+    font-size: 1.15rem;
+    margin: 0.15rem 0 0.4rem;
+  }
+
+  .hud-modal p {
+    font-size: 0.8rem;
+    line-height: 1.4;
+    margin-bottom: 0.55rem;
+  }
+
+  .hud-modal .opt {
+    padding: 0.5rem 0.7rem;
+  }
+
+  .hud-modal .opt span {
+    font-size: 0.9rem;
+  }
+
+  .hud-modal .opt small {
+    font-size: 0.7rem;
+  }
+
+  .pause-card {
+    padding: 0.8rem 1rem;
+    max-height: calc(100vh - 1rem);
+    overflow-y: auto;
+  }
+
+  .pause-card h2 {
+    margin: 0 0 0.3rem;
+    font-size: 1.3rem;
+  }
+
+  .pause-card .btn {
+    padding: 0.45em 0.9em;
+    margin: 0.15rem 0;
+  }
+
+  .toast-wrap {
+    top: calc(2.9rem + var(--safe-t));
+  }
+
+  .toast {
+    padding: 0.4rem 0.6rem;
+    font-size: 0.75rem;
+  }
+
+  /* hand controllers: a little smaller, labels inside the ring */
+  .touch-ui .touch-stick {
+    width: 6.4rem;
+    height: 6.4rem;
+    bottom: calc(0.6rem + var(--safe-b));
+  }
+
+  .touch-stick.left {
+    left: calc(0.9rem + var(--safe-l));
+  }
+
+  .touch-stick.right {
+    right: calc(0.9rem + var(--safe-r));
+  }
+
+  .touch-ui.mode-ascent .touch-stick.left {
+    width: 7.2rem;
+    height: 7.2rem;
+  }
+
+  .touch-ui .touch-stick i {
+    width: 2.4rem;
+    height: 2.4rem;
+    margin: -1.2rem 0 0 -1.2rem;
+  }
+
+  .touch-stick span {
+    top: auto;
+    bottom: 0.35rem;
+    font-size: 0.5rem;
+  }
+
+  .touch-ui .touch-btns {
+    bottom: calc(7.5rem + var(--safe-b));
+    right: calc(0.9rem + var(--safe-r));
+    gap: 0.25rem;
+  }
+
+  .touch-ui .touch-btns .btn {
+    min-height: 2.2rem;
+    padding: 0.25rem 0.55rem;
+    font-size: 0.7rem;
+    margin: 0;
+  }
+
+  .touch-ui.mode-entry .touch-btns.roll {
+    bottom: calc(0.8rem + var(--safe-b));
+  }
+
+  .touch-ui.mode-entry .touch-btns.roll .btn {
+    min-height: 3rem;
+    min-width: 4.6rem;
+    font-size: 0.85rem;
+  }
+
+  .touch-ui.mode-landing .touch-btns.rod {
+    left: calc(0.9rem + var(--safe-l));
+    bottom: calc(7.5rem + var(--safe-b));
+  }
+
+  .touch-ui.mode-landing .touch-btns.throttle {
+    right: calc(0.9rem + var(--safe-r));
+    bottom: calc(0.8rem + var(--safe-b));
+  }
+
+  .touch-ui.mode-landing .touch-btns.throttle .btn {
+    min-height: 2.6rem;
+    min-width: 4.2rem;
+  }
+
+  .touch-toggle {
+    right: calc(0.9rem + var(--safe-r));
+    bottom: calc(0.8rem + var(--safe-b));
+    font-size: 0.72rem !important;
+    padding: 0.35em 0.7em !important;
+    margin: 0 !important;
+  }
+
+  .touch-ui.mode-rcs .touch-toggle {
+    bottom: calc(10.2rem + var(--safe-b));
+  }
+
+  .touch-ui.mode-rcs .touch-btns.roll {
+    bottom: calc(7.5rem + var(--safe-b));
+  }
+
+  /* with a hand controller on screen the telemetry and subtitles keep to the middle */
+  .hud:has(.touch-ui:not(.mode-off)) .hud-telemetry .tlm:nth-child(n + 6) {
+    display: none;
+  }
+}
+
+/* very small phones sideways (iPhone SE, small Androids: ≤ 700 wide) */
+@media (max-height: 500px) and (orientation: landscape) and (max-width: 700px) {
+  .menu-bar .btn:not(.btn-icon) {
+    font-size: 0;
+    padding: 0.45em;
+  }
+
+  .menu-bar .btn:not(.btn-icon) svg {
+    width: 1.1rem;
+    height: 1.1rem;
+  }
+
+  .title-screen .lead {
+    display: none;
+  }
+
+  .missions-screen {
+    grid-template-columns: minmax(8.4rem, 10rem) minmax(0, 1fr);
+  }
+
+  .mission-item .chip,
+  .mission-item .progress {
+    display: none;
+  }
+
+  .briefing {
+    grid-template-columns: minmax(0, 1fr);
+    overflow-y: auto;
+  }
+
+  .briefing .col {
+    overflow: visible;
+    max-height: none;
+  }
+
+  .hud-telemetry .tlm:nth-child(n + 5) {
+    display: none;
+  }
+
+  .hud-checklist {
+    width: min(14rem, 34vw);
+  }
+}
+
+/* ================================================================== phone held upright: menus */
+
+@media (orientation: portrait) and (max-width: 600px) {
+  .menu-bar {
+    gap: 0.25rem;
+    padding: calc(0.6rem + var(--safe-t)) calc(0.7rem + var(--safe-r)) 0 calc(0.8rem + var(--safe-l));
+  }
+
+  .menu-bar .btn {
+    margin: 0;
+  }
+
+  .menu-bar .btn:not(.btn-icon) {
+    font-size: 0;
+    padding: 0.5em;
+  }
+
+  .menu-bar .btn:not(.btn-icon) svg {
+    width: 1.2rem;
+    height: 1.2rem;
+  }
+
+  .menu-brand {
+    font-size: 0.78rem;
+    letter-spacing: 0.2em;
+  }
+
+  .menu-vignette {
+    background:
+      linear-gradient(0deg, rgba(2, 4, 8, 0.92) 0%, rgba(2, 4, 8, 0.6) 45%, rgba(2, 4, 8, 0.15) 75%, rgba(2, 4, 8, 0.4) 100%);
+  }
+
+  .menu-foot {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.2rem;
+    padding: 0 calc(0.9rem + var(--safe-r)) calc(0.6rem + var(--safe-b)) calc(0.9rem + var(--safe-l));
+    font-size: 0.62rem;
+  }
+
+  .cine-caption {
+    top: calc(3.6rem + var(--safe-t));
+    bottom: auto;
+    right: calc(0.9rem + var(--safe-r));
+  }
+
+  .cine-dots {
+    display: none;
+  }
+
+  .title-screen {
+    justify-content: flex-end;
+    max-width: none;
+    padding: 0 calc(0.9rem + var(--safe-r)) 1rem calc(0.9rem + var(--safe-l));
+  }
+
+  .title-screen h1 {
+    font-size: 19vw;
+  }
+
+  .title-screen .lead {
+    font-size: 0.95rem;
+    margin-bottom: 1.1rem;
+  }
+
+  .title-actions .btn {
+    flex: 1;
+    margin: 0;
+    justify-content: center;
+  }
+
+  .quote {
+    margin-top: 1.2rem;
+    font-size: 0.85rem;
+  }
+
+  .role-screen {
+    justify-content: flex-start;
+    overflow-y: auto;
+    gap: 0.8rem;
+    padding: 0.6rem calc(0.9rem + var(--safe-r)) 0.6rem calc(0.9rem + var(--safe-l));
+  }
+
+  .screen-head h2 {
+    font-size: 1.8rem;
+  }
+
+  .role-cards {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.7rem;
+  }
+
+  .role-card {
+    flex-direction: row;
+  }
+
+  .role-art {
+    height: auto;
+    width: 6.5rem;
+    flex: none;
+    border-bottom: none;
+    border-right: 1px solid var(--edge);
+  }
+
+  .role-art svg {
+    height: 5rem;
+  }
+
+  .role-info {
+    padding: 0.8rem 0.9rem;
+  }
+
+  .role-info h3 {
+    font-size: 1.3rem;
+  }
+
+  .role-info ul {
+    display: none;
+  }
+
+  .missions-screen {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    overflow-y: auto;
+    padding: 0.4rem calc(0.8rem + var(--safe-r)) 0.6rem calc(0.8rem + var(--safe-l));
+  }
+
+  .missions-screen > div:first-child {
+    flex: none;
+    min-height: auto !important;
+  }
+
+  .mission-list {
+    flex-direction: row;
+    overflow-x: auto;
+    overflow-y: hidden;
+    gap: 0.4rem;
+    padding-bottom: 0.3rem;
+  }
+
+  .mission-group-label {
+    display: none;
+  }
+
+  .mission-item {
+    flex: none;
+    padding: 0.4rem 0.6rem;
+  }
+
+  .mission-item small {
+    display: none;
+  }
+
+  .mission-item .patch-sm {
+    width: 2.2rem;
+    height: 2.2rem;
+  }
+
+  .mission-detail {
+    flex: none;
+    min-height: auto;
+    padding: 0.8rem 0.8rem 0.7rem;
+  }
+
+  .mission-hero .patch-lg {
+    width: 4.2rem;
+    height: 4.2rem;
+  }
+
+  .mission-hero h2 {
+    font-size: 1.7rem;
+  }
+
+  .mission-meta {
+    display: none;
+  }
+
+  .chapter-grid {
+    grid-template-columns: minmax(0, 1fr);
+    overflow: visible;
+  }
+
+  .chapter-card {
+    min-height: 0;
+  }
+
+  .free-vehicles,
+  .free-starts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .veh-card .sil {
+    height: 6rem;
+  }
+
+  .briefing {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.7rem;
+    overflow-y: auto;
+    padding: calc(0.8rem + var(--safe-t)) calc(0.8rem + var(--safe-r)) calc(0.6rem + var(--safe-b)) calc(0.8rem + var(--safe-l));
+  }
+
+  .briefing .col {
+    overflow: visible;
+  }
+
+  .brief-head .patch-lg {
+    width: 4.4rem;
+    height: 4.4rem;
+  }
+
+  .brief-head h1 {
+    font-size: 2rem;
+  }
+
+  .brief-actions {
+    position: sticky;
+    bottom: 0;
+  }
+
+  .brief-actions .muted {
+    display: none;
+  }
+
+  .debrief {
+    padding: calc(0.6rem + var(--safe-t)) calc(0.7rem + var(--safe-r)) calc(0.6rem + var(--safe-b)) calc(0.7rem + var(--safe-l));
+  }
+
+  .debrief-card {
+    grid-template-columns: minmax(0, 1fr);
+    overflow-y: auto;
+    padding: 1rem;
+  }
+
+  .grade-big {
+    border-right: none;
+    padding-right: 0;
+  }
+
+  .modal-backdrop {
+    padding: calc(0.5rem + var(--safe-t)) 0.5rem calc(0.5rem + var(--safe-b));
+  }
+
+  .modal {
+    max-height: 100%;
+  }
+
+  .tabs {
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .tab {
+    flex: none;
+  }
+
+  .setting {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .setting .switch {
+    justify-self: start;
+  }
+
+  .ost-head {
+    flex-direction: column;
+  }
+
+  .ls-center {
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+
+  .ls-rocket {
+    height: 34vh;
+  }
+}
+
+/* pilot view symbology: under the HUD panels, never in the way of a drag or a stick */
+.hud > .pilot-hud {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.hud.pilot-dock .hud-telemetry,
+.hud.pilot-dock .hud-instr,
+.hud.pilot-land .hud-telemetry {
+  display: none;
+}

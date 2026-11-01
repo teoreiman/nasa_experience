@@ -29,6 +29,9 @@ export default {
     const sat = ctx.saturn;
     ctx.caption('INYECCIÓN TRANSLUNAR', 'Apolo 11 · segunda órbita terrestre', 6);
     radio(ctx, 'CAPCOM', 'Apollo 11, Houston. We are working on your TLI numbers.', 'Apolo 11, Houston. Estamos calculando los datos de la TLI.');
+    // background: the real air-to-ground of launch day, relayed by the Canary Islands station
+    const loop = ctx.settings.voiceMode !== 'text' ? ctx.audio?.ambientClip?.('a11_canary', { gain: 0.32 }) : null;
+    ctx.on('mission:end', () => loop?.stop(0.5));
 
     // the RTCC solution is ready before FIDO's call (the opportunity must not slip while talking)
     const plan = await planTLI(contextFromSim(sim), { revs: 0.9 });
@@ -47,9 +50,10 @@ export default {
       aiDelay: 1,
       score: { key: 'fido', points: 40 },
     });
+    loop?.stop();
     sat.startTB6({ c3: plan.c3, tb6: Math.max(plan.tb6, ctx.t + 30) });
     ctx.pad({ name: 'TLI', tig: sat.tliIgnitionGET ?? plan.tig, dvTotal: plan.dvTotal, burnTime: plan.burnTime, engine: 'S-IVB', notes: `TB6 a GET ${fmtGET(sat.tb6 ?? plan.tb6)}. ${plan.notes}` });
-    await ctx.say('CAPCOM', 'Apollo 11, this is Houston. You are GO for TLI. Over.', `Apolo 11, aquí Houston. Tienen GO para la TLI. TB6 a GET ${fmtGET(sat.tb6 ?? plan.tb6)}, ignición a ${fmtGET(sat.tliIgnitionGET ?? plan.tig)}.`);
+    await ctx.say('CAPCOM', 'Apollo 11, this is Houston. You are GO for TLI. Over.', `Apolo 11, aquí Houston. Tienen GO para la TLI. TB6 a GET ${fmtGET(sat.tb6 ?? plan.tb6)}, ignición a ${fmtGET(sat.tliIgnitionGET ?? plan.tig)}.`, { voiceEs: 'Apolo 11, aquí Houston. Tienen GO para la TLI.' });
     radio(ctx, 'CDR', 'Roger, we are GO for TLI.', 'Recibido: GO para la TLI.');
 
     const obj1 = ctx.objective('config', 'Configura el CM para la TLI: XLUNAR INJECT y P15');

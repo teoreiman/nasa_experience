@@ -48,7 +48,7 @@ export default {
   async run(ctx) {
     ctx.caption('REGRESO LIBRE', 'Apolo 13 · GET 61:08', 6);
     const before = entryPrediction(ctx);
-    await ctx.say('CAPCOM', 'Aquarius, Houston. We want a DPS burn at 61:30 to put you back on a free return.', `Aquarius, Houston. Queremos un encendido del DPS a las 61:30 para devolverlos al retorno libre. Ahora mismo entrarían ${Number.isFinite(before.gammaEI) ? `con γ ${before.gammaEI.toFixed(0)}°: imposible de sobrevivir` : 'fuera del corredor'}.`);
+    await ctx.say('CAPCOM', 'Aquarius, Houston. We want a DPS burn at 61:30 to put you back on a free return.', `Aquarius, Houston. Queremos un encendido del DPS a las 61:30 para devolverlos al retorno libre. Ahora mismo entrarían ${Number.isFinite(before.gammaEI) ? `con γ ${before.gammaEI.toFixed(0)}°: imposible de sobrevivir` : 'fuera del corredor'}.`, { voiceEs: 'Aquarius, Houston. Queremos un encendido del DPS a las 61:30 para devolverlos al retorno libre.' });
     await ctx.ground({
       id: 'a13.fido.fr',
       console: 'FIDO',
@@ -80,7 +80,7 @@ export default {
     // a free return brings the spacecraft back to the Earth; PC+2 and the midcourse corrections trim the corridor
     ctx.score('corridor', back ? grade(Math.abs(peri - 37), 60, 3000, 140) : 0, 140, back ? `Perigeo de regreso ${peri.toFixed(0)} km` : 'Sin regreso a la Tierra');
     if (back) ctx.achievement('a13-freereturn');
-    await ctx.say('CAPCOM', 'Aquarius, Houston. You are on a free return trajectory.', back ? `Aquarius, Houston. Están en retorno libre: ${Number.isFinite(gam) ? `reentrada a GET ${fmtGET(after.tEI)} con γ ${gam.toFixed(2)}°` : `perigeo previsto a ${peri.toFixed(0)} km; el PC+2 afinará el corredor`}.` : 'Aquarius, Houston. Todavía no vuelven a la Tierra; haremos otra corrección.');
+    await ctx.say('CAPCOM', 'Aquarius, Houston. You are on a free return trajectory.', back ? `Aquarius, Houston. Están en retorno libre: ${Number.isFinite(gam) ? `reentrada a GET ${fmtGET(after.tEI)} con γ ${gam.toFixed(2)}°` : `perigeo previsto a ${peri.toFixed(0)} km; el PC+2 afinará el corredor`}.` : 'Aquarius, Houston. Todavía no vuelven a la Tierra; haremos otra corrección.', { voiceEs: back ? 'Aquarius, Houston. Están en retorno libre.' : 'Aquarius, Houston. Todavía no vuelven a la Tierra; haremos otra corrección.' });
     ctx.complete({
       summary: back ? `Retorno libre restablecido con el motor de descenso del LM: la nave volverá a la Tierra (perigeo ${peri.toFixed(0)} km), aunque llegaría al océano Índico en 152 h, sin barcos esperando. Hará falta el PC+2.` : 'La nave sigue sin una trayectoria de regreso: Houston preparará otra corrección.',
       stats: { 'γ antes': Number.isFinite(before.gammaEI) ? `${before.gammaEI.toFixed(1)}°` : '—', 'Perigeo después': Number.isFinite(peri) ? `${peri.toFixed(0)} km` : '—', 'ΔV': `${(pad.dvTotal / 0.3048).toFixed(1)} ft/s` },

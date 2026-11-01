@@ -106,7 +106,7 @@ export default {
     }
     obj4.done();
     ctx.score('orbit', grade(Math.abs(st.periAlt / NMI - 9.4) + Math.abs(st.apoAlt / NMI - 47.3) * 0.4, 2, 25, 100), 100, `Órbita ${orbitText(st)}`);
-    await ctx.say('CAPCOM', 'Eagle, Houston. You are looking good. We show you in orbit.', `Eagle, Houston. Se ven bien: los vemos en órbita, ${orbitText(st)}.`);
+    await ctx.say('CAPCOM', 'Eagle, Houston. You are looking good. We show you in orbit.', `Eagle, Houston. Se ven bien: los vemos en órbita, ${orbitText(st)}.`, { voiceEs: 'Eagle, Houston. Se ven bien: los vemos en órbita.' });
 
     // ---- rendezvous (CSI, CDH, TPI happen during a time skip) and docking
     ctx.caption('3 HORAS Y MEDIA DESPUÉS', 'CSI · CDH · TPI: el Eagle alcanza al Columbia', 5);

@@ -1,24 +1,42 @@
-// Global audio engine (Web Audio). Everything is synthesised at runtime except the NASA clips:
+// Global audio engine (Web Audio). Sounds are synthesised at runtime; voices and NASA clips are files:
 //   sfx(name, {gain, pan, rate})  one-shots (switches, pyros, docking latches, alarms, UI)
 //   loop(name, opts) → { setGain, setRate, setParam, stop }  engines, RCS, wind, plasma, fans…
-//   radio(line) → Promise   Quindar in/out + static bed + voice (NASA clip or speech synthesis)
+//   radio(line) → Promise   Quindar in/out + static bed + voice: a NASA clip, else the line's
+//                           pre-recorded radio voice (public/audio/voice, tools/voices), else the
+//                           device's speech synthesis
 //   clip(name, {radio}) → Promise   NASA public-domain recordings
-//   music(name|null)        generative ambient: menu, briefing, tension, triumph, sad
+//   music(name|null)        mission cues; the player's own soundtrack files win (USER_TRACKS)
 //   duck(amount, s), setPaused(p), stopAll()
 // Buses: master → compressor → out; sfx / sim (pausable) / voice / music / ambience.
 
 import { store } from '../core/Store.js';
+import { voiceKey, textKey, speechText } from './voiceKey.js';
+import { userTrackURL } from './userMusic.js';
 
 export const NASA_CLIPS = {
   a11_countdown_liftoff: 'audio/nasa/a11_countdown_liftoff.mp3',
   a11_eagle_has_landed: 'audio/nasa/a11_eagle_has_landed.mp3',
   a11_eagle_has_landed_ext: 'audio/nasa/a11_eagle_has_landed_ext.mp3',
   a11_one_small_step: 'audio/nasa/a11_one_small_step.mp3',
+  a11_canary: 'audio/nasa/a11_canary.m4a',
   a13_houston_problem: 'audio/nasa/a13_houston_problem.mp3',
   a08_merry_christmas: 'audio/nasa/a08_merry_christmas.mp3',
+  a08_prior_loi: 'audio/nasa/a08_prior_loi.m4a',
+  a08_first_orbit: 'audio/nasa/a08_first_orbit.m4a',
+  a08_earthrise: 'audio/nasa/a08_earthrise.m4a',
+  a08_genesis: 'audio/nasa/a08_genesis.m4a',
+  a08_describing_moon: 'audio/nasa/a08_describing_moon.m4a',
   jfk_we_choose_launch: 'audio/nasa/jfk_we_choose_launch.mp3',
   jfk_we_choose: 'audio/nasa/jfk_we_choose.mp3',
   jfk_return_safely: 'audio/nasa/jfk_return_safely.mp3',
+};
+
+/** Length of each recording in seconds (subtitles stay up and the next line waits for the end). */
+export const NASA_CLIP_SECONDS = {
+  a11_countdown_liftoff: 24.8, a11_eagle_has_landed: 5.4, a11_eagle_has_landed_ext: 14.8, a11_one_small_step: 13, a11_canary: 122.4,
+  a13_houston_problem: 17.1, a08_merry_christmas: 13.5, a08_prior_loi: 29.9, a08_first_orbit: 69.4, a08_earthrise: 106.6,
+  a08_genesis: 115.7, a08_describing_moon: 205.6, jfk_we_choose_launch: 20,
+  jfk_we_choose: 27.1, jfk_return_safely: 10.9,
 };
 
 // Real recordings used as sound layers (public domain, NASA): the pad microphone of a Saturn-class
@@ -28,13 +46,22 @@ export const REAL_SAMPLES = {
   launch_roar_loop: 'audio/real/launch_roar_loop.m4a',
 };
 
-// Music the player supplies (not shipped, not published): drop the files into public/audio/music/.
-// When a file is missing the original generative cue of the same moment plays instead.
+// Music the player supplies (not shipped, not published): files loaded in Ajustes → Banda sonora
+// (kept in this browser, see userMusic.js) or dropped into public/audio/music/ with these names.
+// When a cue has no file, the game's original music for that moment plays instead.
 export const USER_TRACKS = {
+  menu: ['main_title', 'main-title', 'menu'],
+  briefing: ['launch_control', 'launch-control', 'briefing'],
   launch: ['all_systems_go', 'all-systems-go', 'launch'],
+  tension: ['master_alarm', 'master-alarm', 'tension'],
+  lifeboat: ['into_the_lem', 'into-the-lem', 'lifeboat'],
+  darkside: ['darkside_of_the_moon', 'dark_side_of_the_moon', 'darkside'],
   reentry: ['reentry', 're-entry', 'reentry_and_splashdown'],
+  triumph: ['end_titles', 'end-titles', 'triumph'],
 };
 const TRACK_EXT = ['mp3', 'm4a', 'ogg'];
+// cues that accompany long stretches (menus, the lifeboat, the far side) loop; event cues play once
+const LOOPED_CUES = new Set(['menu', 'briefing', 'lifeboat', 'darkside']);
 
 class DummyLoop {
   setGain() {}
@@ -45,17 +72,27 @@ class DummyLoop {
 
 const GROUND = new Set(['CAPCOM', 'FLIGHT', 'EECOM', 'GNC', 'GUIDO', 'FIDO', 'RETRO', 'BOOSTER', 'TELMU', 'CONTROL', 'INCO', 'SURGEON', 'NETWORK', 'FAO', 'PROCEDURES', 'BACKROOM', 'RECOVERY']);
 
-// Per-speaker voice character (pitch / rate) so the crew and Houston are distinguishable. Every
-// speaker of 1968–70 Apollo radio was a man: synthesized lines use male voices only, pitched low.
+// Per-channel radio colour of a pre-recorded voice (the files already carry the S-band band-pass and
+// compression): static bed level, Quindar for Houston on air-to-ground, signal fading, level.
+const CHANNEL_FX = {
+  ag: { bed: 0.5, fade: 0.22, gain: 1.45 },
+  loop: { bed: 0.2, fade: 0, gain: 1.3 },
+  ic: { bed: 0.14, fade: 0, gain: 1.3 },
+  pao: { bed: 0, fade: 0, gain: 1.25 },
+  narration: { bed: 0, fade: 0, gain: 1.25 },
+};
+
+// Fallback for lines without a recording: per-speaker character of the device's speech synthesis.
+// Every speaker of 1968–70 Apollo radio was a man: male voices only, at their natural pitch.
 const VOICE_STYLE = {
-  CAPCOM: { pitch: 0.84, rate: 1.04, pref: 0 },
-  CDR: { pitch: 0.8, rate: 1.0, pref: 1 },
-  CMP: { pitch: 0.88, rate: 1.04, pref: 2 },
-  LMP: { pitch: 0.82, rate: 1.03, pref: 3 },
-  FLIGHT: { pitch: 0.74, rate: 1.0, pref: 4 },
-  LCC: { pitch: 0.8, rate: 1.0, pref: 5 },
-  PAO: { pitch: 0.82, rate: 0.98, pref: 5 },
-  NARRATOR: { pitch: 0.86, rate: 0.98, pref: 6 },
+  CAPCOM: { pitch: 1.02, rate: 1.06, pref: 0 },
+  CDR: { pitch: 0.97, rate: 1.02, pref: 1 },
+  CMP: { pitch: 1.06, rate: 1.06, pref: 2 },
+  LMP: { pitch: 1.0, rate: 1.06, pref: 3 },
+  FLIGHT: { pitch: 0.95, rate: 1.02, pref: 4 },
+  LCC: { pitch: 0.98, rate: 1.02, pref: 5 },
+  PAO: { pitch: 1.0, rate: 1.0, pref: 5 },
+  NARRATOR: { pitch: 1.0, rate: 1.0, pref: 6 },
 };
 
 // Voice names are the only gender hint the Web Speech API gives. Male names of the Windows/Edge
@@ -790,9 +827,9 @@ export class AudioEngine {
       const { voice: v, male } = this._pickVoice(line.who, lang);
       if (v) u.voice = v;
       u.lang = v?.lang ?? (lang === 'es' ? 'es-419' : 'en-US');
-      const st = VOICE_STYLE[line.who] ?? { pitch: 0.8 + ((line.who?.length ?? 3) % 5) * 0.025, rate: 1.02 };
-      // no male voice on this device: push the available one down to a baritone range
-      u.pitch = male ? st.pitch : Math.max(0.5, st.pitch * 0.72);
+      const st = VOICE_STYLE[line.who] ?? { pitch: 0.97 + ((line.who?.length ?? 3) % 5) * 0.02, rate: 1.04 };
+      // no male voice on this device: only a little lower (a deep, slowed-down voice sounds unnatural)
+      u.pitch = male ? st.pitch : st.pitch * 0.86;
       u.rate = st.rate * (line.urgent ? 1.12 : 1);
       u.volume = Math.min(1, store.settings.volumeVoice * store.settings.volumeMaster * 1.1);
       let done = false;
@@ -809,33 +846,196 @@ export class AudioEngine {
     });
   }
 
-  /** Radio line: Quindar + static + voice (NASA clip if line.clip, else speech synthesis). */
+  // ---------------------------------------------------------------- recorded radio voices
+
+  /** The recorder's index ({ en: {key: seconds}, es: {...}, text: {textKey: key} }), loaded once. */
+  loadVoices() {
+    this._voiceIdx ??= fetch(`${import.meta.env.BASE_URL}audio/voice/index.json`)
+      .then((r) => (r.ok ? r.json() : null))
+      .then((j) => (this.voices = j))
+      .catch(() => (this.voices = null));
+    return this._voiceIdx;
+  }
+
+  /** Words of the line in the voice language: a list of recorded phrases (voiceEn / voiceEs may be one). */
+  _voicePhrases(line, lang) {
+    const v = lang === 'es' ? line.voiceEs ?? line.es ?? line.en : line.voiceEn ?? line.en ?? line.es;
+    return [].concat(v ?? []).map(speechText).filter(Boolean);
+  }
+
+  /** Recording key of one phrase for this speaker (any speaker's recording of the same words as a fallback). */
+  _voiceRef(who, lang, phrase) {
+    const idx = this.voices?.[lang];
+    if (!idx) return null;
+    const k = voiceKey(who, lang, phrase);
+    if (idx[k] !== undefined) return k;
+    const alt = this.voices.text?.[textKey(lang, phrase)];
+    return alt && idx[alt] !== undefined ? alt : null;
+  }
+
+  /** Length in seconds of the recorded line, or null when it is not recorded (sync: index already loaded). */
+  voiceDuration(line) {
+    const mode = store.settings.voiceMode;
+    if (mode === 'text' || line.clip) return null;
+    const lang = mode === 'es' ? 'es' : 'en';
+    const phrases = this._voicePhrases(line, lang);
+    let total = 0;
+    for (const p of phrases) {
+      const k = this._voiceRef(line.who, lang, p);
+      if (!k) return null;
+      total += this.voices[lang][k] + 0.07;
+    }
+    return phrases.length ? total : null;
+  }
+
+  _voiceBuffer(lang, key) {
+    this._voiceBufs ??= new Map();
+    let p = this._voiceBufs.get(`${lang}/${key}`);
+    if (!p) {
+      p = fetch(`${import.meta.env.BASE_URL}audio/voice/${lang}/${key}.m4a`)
+        .then((r) => (r.ok ? r.arrayBuffer() : null))
+        .then((ab) => (ab ? this.ctx.decodeAudioData(ab) : null))
+        .catch(() => null);
+      this._voiceBufs.set(`${lang}/${key}`, p);
+      // a small cache: the radio rarely repeats a line, numbers and callouts do
+      if (this._voiceBufs.size > 160) this._voiceBufs.delete(this._voiceBufs.keys().next().value);
+    }
+    return p;
+  }
+
+  /** Decoded recordings of the whole line, or null when any phrase is missing. */
+  async _voiceBuffers(line, lang) {
+    if (!this.ctx) return null;
+    await this.loadVoices();
+    const phrases = this._voicePhrases(line, lang);
+    const keys = phrases.map((p) => this._voiceRef(line.who, lang, p));
+    if (!keys.length || keys.some((k) => !k)) return null;
+    const bufs = await Promise.all(keys.map((k) => this._voiceBuffer(lang, k)));
+    return bufs.every(Boolean) ? bufs : null;
+  }
+
+  /** Play recorded phrases back to back through the channel's radio colour. */
+  _playVoice(bufs, line) {
+    const c = this.ctx;
+    const fx = CHANNEL_FX[line.channel] ?? CHANNEL_FX.ag;
+    return new Promise((resolve) => {
+      const out = this._gain(fx.gain);
+      out.connect(this.voiceBus);
+      const t0 = c.currentTime + 0.03;
+      let t = t0;
+      const srcs = [];
+      for (const b of bufs) {
+        const s = c.createBufferSource();
+        s.buffer = b;
+        s.connect(out);
+        s.start(t);
+        srcs.push(s);
+        t += b.duration + 0.07;
+      }
+      // air-to-ground: the S-band signal fades a little as the antennas and the Earth turn
+      if (fx.fade && t - t0 > 0.6) {
+        const n = Math.max(4, Math.round((t - t0) * 3));
+        const curve = new Float32Array(n);
+        let v = 1;
+        for (let i = 0; i < n; i++) {
+          v += (Math.random() - 0.5) * fx.fade;
+          v = Math.min(1, Math.max(1 - fx.fade * 1.6, v + (1 - v) * 0.35));
+          curve[i] = fx.gain * v;
+        }
+        curve[0] = curve[n - 1] = fx.gain;
+        try {
+          out.gain.setValueCurveAtTime(curve, t0, t - t0);
+        } catch {
+          /* overlapping automation on a very short line: keep the flat level */
+        }
+      }
+      const voice = { srcs, out, done: null };
+      let finished = false;
+      const finish = () => {
+        if (finished) return;
+        finished = true;
+        clearTimeout(timer);
+        this._voicesPlaying.delete(voice);
+        setTimeout(() => out.disconnect(), 200);
+        resolve();
+      };
+      voice.done = finish;
+      this._voicesPlaying ??= new Set();
+      this._voicesPlaying.add(voice);
+      srcs[srcs.length - 1].onended = finish;
+      const timer = setTimeout(finish, (t - c.currentTime + 1.5) * 1000);
+    });
+  }
+
+  /** Radio line: Quindar + static + voice (NASA clip, else the recorded voice, else speech synthesis).
+   *  The same radio sound in every role and voice language. */
   async radio(line) {
     const mode = store.settings.voiceMode;
+    const lang = mode === 'es' ? 'es' : 'en';
     const ground = GROUND.has(line.who);
     const ag = line.channel === 'ag';
-    const useStatic = this.ctx && store.settings.radioStatic && (ag || line.channel === 'loop');
+    const clip = line.clip && NASA_CLIPS[line.clip];
+    const recorded = !clip && mode !== 'text' ? await this._voiceBuffers(line, lang) : null;
+    const fx = CHANNEL_FX[line.channel] ?? CHANNEL_FX.ag;
+    const useStatic = this.ctx && store.settings.radioStatic && (fx.bed > 0 || (!recorded && line.channel === 'loop'));
+    const quindar = ag && ground && store.settings.quindar && this.ctx && mode !== 'text';
     let bed = null;
-    this.duck(0.35, (line.durationS ?? 3) + 1);
-    if (ag && ground && store.settings.quindar && this.ctx) {
+    const dur = recorded ? recorded.reduce((a, b) => a + b.duration + 0.07, 0) : line.durationS ?? 3;
+    this.duck(0.32, dur + 1);
+    if (quindar) {
       this.sfx('quindarIn');
       await new Promise((r) => setTimeout(r, 260));
     }
-    const clip = line.clip && NASA_CLIPS[line.clip];
     if (useStatic) {
-      // a synthesized voice is studio-clean: a denser bed sells the radio link (NASA clips carry their own)
+      // a synthesized device voice is studio-clean: a denser bed sells the radio link
       bed = this.loop('static');
-      bed.setGain(ag ? (clip ? 0.4 : 0.62) : 0.22, 0.03);
+      bed.setGain(recorded ? fx.bed : ag ? (clip ? 0.4 : 0.62) : 0.22, 0.03);
       this.sfx('squelch', { gain: ag ? 0.9 : 0.45 });
     }
     try {
       if (clip) await this.clip(line.clip, { radio: false });
+      else if (recorded) await this._playVoice(recorded, line);
       else await this._speak(line, mode);
     } finally {
       if (useStatic) this.sfx('squelch', { gain: ag ? 0.8 : 0.4 });
       bed?.stop(0.15);
     }
-    if (ag && ground && store.settings.quindar && this.ctx) this.sfx('quindarOut');
+    if (quindar) this.sfx('quindarOut');
+  }
+
+  clipDuration(name) {
+    return NASA_CLIP_SECONDS[name] ?? null;
+  }
+
+  /** A long real recording as a background radio bed (the mission audio of the time, low under the
+   *  game's own lines, which duck it). Returns { stop(fade) }. */
+  ambientClip(name, { gain = 0.45 } = {}) {
+    const url = NASA_CLIPS[name];
+    const handle = { stop() {} };
+    if (!url || !this.ctx) return handle;
+    const a = new Audio(`${import.meta.env.BASE_URL}${url}`);
+    a.crossOrigin = 'anonymous';
+    const g = this._gain(0);
+    try {
+      this.ctx.createMediaElementSource(a).connect(g);
+      g.connect(this.duckGain);
+    } catch {
+      a.volume = gain * store.settings.volumeVoice * store.settings.volumeMaster;
+    }
+    g.gain.setTargetAtTime(gain * store.settings.volumeVoice, this.ctx.currentTime, 0.8);
+    this._clips ??= new Set();
+    this._clips.add(a);
+    a.addEventListener('ended', () => this._clips.delete(a));
+    a.play().catch(() => {});
+    handle.stop = (fade = 1.5) => {
+      g.gain.setTargetAtTime(0, this.ctx.currentTime, fade / 3);
+      setTimeout(() => {
+        a.pause();
+        this._clips.delete(a);
+        g.disconnect();
+      }, fade * 1000 + 300);
+    };
+    return handle;
   }
 
   /** NASA public-domain recording. {radio: true} adds the air-to-ground band-pass. */
@@ -881,6 +1081,11 @@ export class AudioEngine {
 
   // ---------------------------------------------------------------- music
 
+  /** Cue playing now (or pending), null when silent. */
+  get musicName() {
+    return this._musicName ?? null;
+  }
+
   music(name) {
     if (!this.ctx) {
       this._pendingMusic = name;
@@ -891,20 +1096,33 @@ export class AudioEngine {
     this._music?.stop();
     this._music = null;
     if (!name) return;
-    // a track the player dropped into public/audio/music/ wins over the generated cue
+    // the player's own soundtrack wins over the generated cue
     this._userTrack(name).then((url) => {
       if (this._musicName !== name || this._music) return;
-      this._music = url ? this._playTrack(url) : this._startMusic(name);
+      this._music = url ? this._playTrack(url, { loop: LOOPED_CUES.has(name) }) : this._startMusic(name);
     });
   }
 
-  /** URL of a player-supplied music file for this cue, or null. Probed once per cue. */
+  /** The player loaded or removed a soundtrack file: forget the probes and restart the current cue. */
+  reloadUserMusic() {
+    this._tracks = null;
+    const cur = this._musicName;
+    if (!cur || !this.ctx) return;
+    this._musicName = null;
+    this._music?.stop();
+    this._music = null;
+    this.music(cur);
+  }
+
+  /** URL of a player-supplied music file for this cue (browser storage, then public/audio/music/), or null. */
   _userTrack(name) {
     const bases = USER_TRACKS[name];
     if (!bases) return Promise.resolve(null);
     this._tracks ??= new Map();
     if (!this._tracks.has(name)) {
       const probe = async () => {
+        const stored = await userTrackURL(name).catch(() => null);
+        if (stored) return stored;
         for (const b of bases) {
           for (const ext of TRACK_EXT) {
             const url = `${import.meta.env.BASE_URL}audio/music/${b}.${ext}`;
@@ -924,11 +1142,12 @@ export class AudioEngine {
   }
 
   /** Stream a long music file (no full decode in memory) through the music bus. */
-  _playTrack(url) {
+  _playTrack(url, { loop = false } = {}) {
     const c = this.ctx;
     const el = new Audio(url);
-    el.crossOrigin = 'anonymous';
+    if (!url.startsWith('blob:')) el.crossOrigin = 'anonymous';
     el.preload = 'auto';
+    el.loop = loop;
     const g = this._gain(0);
     try {
       c.createMediaElementSource(el).connect(g);
@@ -966,13 +1185,16 @@ export class AudioEngine {
       tension: [[38, 45, 50, 51], [38, 44, 50, 53], [36, 43, 48, 51], [37, 44, 49, 52]],
       triumph: [[48, 55, 60, 64, 67, 74], [53, 60, 65, 69, 72], [55, 62, 67, 71, 74], [48, 55, 60, 64, 67, 76]],
       sad: [[45, 52, 57, 60], [41, 48, 53, 57], [38, 45, 50, 53], [40, 47, 52, 56]],
+      // the far side of the Moon: wide, still, unresolved; the lifeboat: tense but hopeful
+      darkside: [[38, 45, 50, 53, 57], [34, 41, 46, 50, 53], [36, 43, 48, 52, 55], [31, 38, 43, 46, 50, 57]],
+      lifeboat: [[40, 47, 52, 55], [36, 43, 48, 52], [38, 45, 50, 53, 57], [35, 42, 47, 50, 54]],
       // original cues for the big moments: a heroic D-major climb for the launch, a tense D-minor
       // ostinato for entry and blackout
       launch: [[38, 45, 50, 54, 57], [35, 42, 47, 50, 54], [31, 38, 43, 47, 50, 55], [33, 40, 45, 49, 52, 57], [31, 38, 43, 47, 50], [30, 38, 42, 45, 50], [28, 40, 43, 47, 52], [33, 40, 45, 49, 52, 57]],
       reentry: [[38, 45, 50, 53], [34, 41, 46, 50], [36, 43, 48, 52], [33, 40, 45, 49], [38, 45, 50, 53], [34, 41, 46, 53], [31, 38, 43, 46], [33, 40, 45, 49, 52]],
     };
     const prog = progressions[name] ?? progressions.menu;
-    const dur = name === 'tension' ? 6 : name === 'triumph' ? 5 : name === 'launch' ? 4.2 : name === 'reentry' ? 4.8 : 9;
+    const dur = name === 'tension' ? 6 : name === 'triumph' ? 5 : name === 'launch' ? 4.2 : name === 'reentry' ? 4.8 : name === 'darkside' ? 11 : name === 'lifeboat' ? 7 : 9;
     const epic = name === 'launch' || name === 'reentry';
     const mtof = (m) => 440 * Math.pow(2, (m - 69) / 12);
     const pad = (notes, t, d) => {
@@ -1046,6 +1268,47 @@ export class AudioEngine {
       o.start(t);
       o.stop(t + 0.3);
     };
+    // a warm solo horn: two detuned saws, a filter that opens with the breath, late vibrato
+    const horn = (m, t, d, a) => {
+      const g = this._gain(0);
+      const f = this._filter('lowpass', 500, 0.9);
+      f.frequency.setValueAtTime(420, t);
+      f.frequency.linearRampToValueAtTime(1500 + (m - 60) * 22, t + Math.min(0.5, d * 0.4));
+      f.frequency.linearRampToValueAtTime(900, t + d);
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.linearRampToValueAtTime(a, t + 0.14);
+      g.gain.setValueAtTime(a * 0.92, t + Math.max(0.15, d - 0.25));
+      g.gain.linearRampToValueAtTime(0.0001, t + d + 0.35);
+      const vib = c.createOscillator();
+      vib.frequency.value = 5.2;
+      const vg = this._gain(0);
+      vg.gain.setValueAtTime(0, t);
+      vg.gain.linearRampToValueAtTime(0, t + 0.35);
+      vg.gain.linearRampToValueAtTime(mtof(m) * 0.004, t + 0.8);
+      vib.connect(vg);
+      for (const det of [-5, 5]) {
+        const o = c.createOscillator();
+        o.type = 'sawtooth';
+        o.frequency.value = mtof(m);
+        o.detune.value = det;
+        vg.connect(o.frequency);
+        o.connect(f);
+        o.start(t);
+        o.stop(t + d + 0.4);
+        voices.add(o);
+        o.onended = () => voices.delete(o);
+      }
+      vib.start(t);
+      vib.stop(t + d + 0.4);
+      f.connect(g).connect(out);
+    };
+    // original themes (scale degrees over each chord): a slow call for the menu, a climbing fanfare
+    // for the launch, a broad statement for success. Each entry: [midi, beats] per chord.
+    const MELODY = {
+      menu: [[[62, 2], [69, 2]], [[71, 1.5], [69, 1.5], [66, 1]], [[67, 2], [74, 2]], [[73, 3], [69, 1]]],
+      launch: [[[62, 1], [69, 1]], [[66, 1], [71, 1]], [[67, 1], [74, 1]], [[73, 2]], [[74, 1], [71, 1]], [[69, 1], [74, 1]], [[76, 2]], [[74, 2]]],
+      triumph: [[[67, 1], [72, 1], [76, 2]], [[77, 2], [72, 2]], [[74, 1.5], [79, 2.5]], [[76, 4]]],
+    };
     let i = 0;
     let next = t0 + 0.1;
     const tick = () => {
@@ -1053,6 +1316,17 @@ export class AudioEngine {
       while (next < c.currentTime + 2) {
         const chord = prog[i % prog.length];
         pad(chord, next, dur);
+        // the theme sounds every other time round (A: theme, B: just the harmony)
+        const mel = MELODY[name]?.[i % prog.length];
+        if (mel && Math.floor(i / prog.length) % 2 === 0) {
+          const beats = mel.reduce((a, [, b]) => a + b, 0);
+          let tm = next + 0.05;
+          for (const [m, b] of mel) {
+            const d = (b / beats) * dur;
+            horn(m, tm, d * 0.96, name === 'launch' ? 0.05 : 0.04);
+            tm += d;
+          }
+        }
         if (name !== 'tension') {
           const top = chord[chord.length - 1] + 12;
           for (let k = 0; k < 3; k++) if (Math.random() < 0.6) bell(top - [0, 3, 5, 7, 12][Math.floor(Math.random() * 5)], next + 1 + Math.random() * (dur - 2), 0.03);
@@ -1117,6 +1391,12 @@ export class AudioEngine {
       if (p) speechSynthesis.pause();
       else speechSynthesis.resume();
     }
+    // recorded radio lines run on the audio clock: muted while paused
+    for (const v of this._voicesPlaying ?? []) {
+      const g = v.out.gain;
+      g.cancelScheduledValues(this.ctx.currentTime);
+      g.setTargetAtTime(p ? 0 : 1.4, this.ctx.currentTime, 0.05);
+    }
     for (const a of this._clips ?? []) {
       if (p) a.pause();
       else a.play().catch(() => {});
@@ -1130,6 +1410,16 @@ export class AudioEngine {
   /** Stop everything that belongs to a scene (loops, voices, clips). Music keeps going. */
   stopAll() {
     if ('speechSynthesis' in window) speechSynthesis.cancel();
+    for (const v of [...(this._voicesPlaying ?? [])]) {
+      for (const s of v.srcs) {
+        try {
+          s.stop();
+        } catch {
+          /* not started yet or already over */
+        }
+      }
+      v.done();
+    }
     for (const l of [...this._loops]) l.stop(0.2);
     for (const a of this._clips ?? []) a.pause();
     this._clips?.clear();
