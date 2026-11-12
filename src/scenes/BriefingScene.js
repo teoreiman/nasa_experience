@@ -62,13 +62,13 @@ function controlsFor(chapter, role) {
     flight.length ? { title: 'Pilotaje en este capítulo', rows: flight } : null,
     { title: CONTROLS.cockpit.title, rows: CONTROLS.cockpit.rows },
     { title: CONTROLS.dsky.title, rows: [[['V', 'N', '0–9', 'Intro'], 'Verbo, nombre, dígitos, ENTR'], [['P', 'R', 'K', 'Retroceso'], 'PRO · RSET · KEY REL · CLR']] },
-    { title: 'Misión', rows: [[['Tab'], 'Lista de comprobación'], time, [['F8'], 'Saltar al siguiente evento'], help] },
+    { title: 'Misión', rows: [[['Tab'], 'Lista de comprobación'], time, [['F8', '⏩'], 'Adelantar hasta el próximo momento importante'], help] },
   ].filter(Boolean);
 }
 
 /** The same cheat-sheet for phones and tablets: gestures and on-screen controls. */
 function touchControlsFor(chapter, role) {
-  const time = [['− ×1 +'], 'Arriba a la izquierda: frenar o acelerar el tiempo'];
+  const time = [['− ×1 + ⏩'], 'Arriba a la izquierda: frenar o acelerar el tiempo · ⏩ adelanta hasta el próximo momento'];
   const tools = [['☰', '?', 'II'], 'Lista de comprobación · ayuda · pausa'];
   if (role === 'controller') {
     return [{
@@ -83,6 +83,19 @@ function touchControlsFor(chapter, role) {
         tools,
       ],
     }];
+  }
+  if (chapterScene(chapter.id) === 'eva') {
+    return [{
+      title: 'Superficie lunar · táctil',
+      rows: [
+        [['Joystick izq.'], 'Caminar'],
+        [['🏃 Saltar'], 'Mantener: paso de canguro a 1/6 g'],
+        [['Botón dorado'], 'Hacer la tarea del anillo (aparece al pisarlo)'],
+        [['Arrastrar', 'Pellizcar'], 'Girar y acercar la cámara'],
+        [['📷'], 'Tercera persona ↔ visor del casco'],
+        [['📷 Foto'], 'Foto con la Hasselblad'],
+      ],
+    }, { title: 'Misión', rows: [time, tools] }];
   }
   const id = chapter.id;
   let flight = [];

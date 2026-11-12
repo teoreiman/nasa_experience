@@ -252,6 +252,9 @@ uniform float scale; uniform float limit; varying vec3 vC; varying float vA;
 void main(){
   vec4 mv = modelViewMatrix * vec4(position, 1.0);
   gl_Position = projectionMatrix * mv;
+  // no depth test: park the sky at mid-depth. At 2e9 m the sphere sits within a float ulp of the far
+  // plane, and camera jitter then clips random stars and whole Milky Way triangles (black polygons)
+  gl_Position.z = 0.0;
   float b = pow(2.512, limit - mag);
   gl_PointSize = clamp(1.0 + sqrt(b) * 0.9, 1.0, 7.0) * scale;
   vA = clamp(b * 0.35, 0.0, 1.0);
@@ -342,7 +345,9 @@ export function createStarfield({ count = 9000, radius = 1e9, milkyWay = true } 
   g.setAttribute('mag', new THREE.BufferAttribute(mag, 1));
   g.setAttribute('tint', new THREE.BufferAttribute(tint, 3));
   const starUniforms = { scale: { value: 1 }, limit: { value: 6.2 }, opacity: { value: 1 } };
-  const stars = new THREE.Points(g, new THREE.ShaderMaterial({ uniforms: starUniforms, vertexShader: STAR_VS, fragmentShader: STAR_FS, transparent: true, depthWrite: false, depthTest: false, blending: THREE.AdditiveBlending }));
+  // drawn first, in the opaque list (additive blending still applies): the Earth and the Moon then cover
+  // them. As "transparent" they would be drawn after the planets and show through the night side
+  const stars = new THREE.Points(g, new THREE.ShaderMaterial({ uniforms: starUniforms, vertexShader: STAR_VS, fragmentShader: STAR_FS, transparent: false, depthWrite: false, depthTest: false, blending: THREE.AdditiveBlending }));
   stars.frustumCulled = false;
   stars.renderOrder = -10;
   group.add(stars);
@@ -353,12 +358,12 @@ export function createStarfield({ count = 9000, radius = 1e9, milkyWay = true } 
       new THREE.SphereGeometry(radius * 1.01, 48, 24),
       new THREE.ShaderMaterial({
         uniforms: mwUniforms,
-        vertexShader: 'varying vec3 vDir; void main(){ vDir = position; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }',
+        vertexShader: 'varying vec3 vDir; void main(){ vDir = position; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); gl_Position.z = 0.0; }',
         fragmentShader: MW_FS,
         side: THREE.BackSide,
         depthWrite: false,
         depthTest: false,
-        transparent: true,
+        transparent: false,
         blending: THREE.AdditiveBlending,
       }),
     );

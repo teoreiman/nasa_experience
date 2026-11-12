@@ -20,6 +20,8 @@ import { createLaunchSite, DECK_Y } from './env/LaunchSite.js';
 import { createPlume, Particles, PLUME_SPEC } from './effects/Exhaust.js';
 import { createPostFX } from './effects/PostFX.js';
 import { createLunarSurface } from './env/LunarSurface.js';
+import { EVAController } from '../eva/EVAController.js';
+import { createRecovery } from './env/Recovery.js';
 
 const _v = new THREE.Vector3();
 const _v2 = new THREE.Vector3();
@@ -27,6 +29,7 @@ const _v3 = new THREE.Vector3();
 const _q = new THREE.Quaternion();
 const _q2 = new THREE.Quaternion();
 const _m = new THREE.Matrix4();
+const _c1 = new THREE.Color();
 const _e = new THREE.Euler();
 const X = new THREE.Vector3(1, 0, 0);
 
@@ -155,15 +158,29 @@ export class FlightView {
       this.site = createLaunchSite({ day, water }, { pad: pad.id, milkstool: !!pad.milkstool });
       this.near.add(this.site.group);
     }
-    // ---- lunar surface (landing, ascent, EVA)
+    // ---- coming home: entry fireball, parachutes, the Pacific and the recovery forces
     const st = sim.vehicle.state;
+    if (st.primary === 'EARTH' && !this.lunar) {
+      this.recovery = createRecovery({ recovery: this.chapter?.recovery ?? null, light: !sim.vehicle.hasSaturn });
+      this.near.add(this.recovery.group);
+    }
+    // ---- lunar surface (landing, ascent, EVA)
     if (st.primary === 'MOON' && (st.alt < 200000 || sim.dyn.mode === 'LANDED')) {
       this.lunar = createLunarSurface(game, { site: sim.dyn.site, moonTex, quality: q });
       this.mid.add(this.lunar.group);
     }
+    // ---- moonwalk: the astronaut on the surface instead of the cabin
+    const scene = this.chapter?.scene ?? this.chapter?.setup?.scene;
+    if (scene === 'eva' && this.lunar && !this.observer) {
+      this.eva = new EVAController({ game, sim, view: this, lunar: this.lunar });
+      this.cameraMode = 'eva';
+      this.orbit.yaw = this.eva.camYaw;
+      this.orbit.pitch = 0.32;
+      this.orbit.dist = 5.5;
+    }
 
     // ---- effects
-    this.smoke = new Particles({ max: Math.round(2600 * q.particles + 400) });
+    this.smoke = new Particles({ max: Math.round(3600 * q.particles + 600) });
     this.flames = new Particles({ max: 500, additive: true, renderOrder: 9 });
     this.near.add(this.smoke.mesh, this.flames.mesh);
     if (this.lunar) {
@@ -248,7 +265,7 @@ export class FlightView {
     this._onWheel = (e) => {
       if (!this.active || this.cameraMode === 'cockpit') return;
       const d = this.orbit.dist || this._defaultDist();
-      this.orbit.dist = Math.max(8, Math.min(20000, d * (e.deltaY > 0 ? 1.12 : 0.89)));
+      this.orbit.dist = Math.max(this.eva ? 2.5 : 8, Math.min(this.eva ? 16 : 20000, d * (e.deltaY > 0 ? 1.12 : 0.89)));
     };
     window.addEventListener('wheel', this._onWheel, { passive: true });
     this._drag = null;
@@ -361,6 +378,10 @@ export class FlightView {
     if (v.config === 'SIVB_STACK' || v.config === 'CSM_LM_SIVB') return 70;
     if (v.config.startsWith('CSM') || v.config === 'CSM_LM') return 32;
     if (v.config.startsWith('LM')) return 24;
+    // under the main chutes: far enough back to see the canopies; afloat: the capsule and the sea
+    if (v.config === 'CM' && v.state.splashed) return 34;
+    if (v.config === 'CM' && v.parts.mains) return 78;
+    if (v.config === 'CM' && v.parts.drogues) return 38;
     return 30;
   }
 
@@ -468,7 +489,8 @@ export class FlightView {
 
   setActive(on) {
     this.active = on;
-    this.game.input.setContext('flight', on && !this.observer);
+    this.game.input.setContext('flight', on && !this.observer && !this.eva);
+    this.game.input.setContext('walk', on && !!this.eva);
     this.cockpit?.setActive(on && this.cameraMode === 'cockpit');
   }
 
@@ -482,6 +504,7 @@ export class FlightView {
   availableCameras() {
     const v = this.sim.vehicle;
     const st = v.state;
+    if (this.eva) return ['eva', 'eva:fp', 'surface', 'exterior:chase'];
     const list = this.observer ? [] : ['cockpit'];
     if (!this.observer && this.pilotViewAvailable()) list.push('pilot');
     list.push('exterior:chase', 'exterior:wide');
@@ -501,6 +524,10 @@ export class FlightView {
 
   /** The flying views (C / camera button): cabin → pilot view (when there is one) → outside → cabin. */
   toggleCamera() {
+    if (this.eva) {
+      this.cycleCamera();
+      return;
+    }
     const pilot = this.pilotViewAvailable();
     const m = this.cameraMode;
     this.setCamera(m === 'cockpit' ? (pilot ? 'pilot' : 'exterior:chase') : m === 'pilot' ? 'exterior:chase' : 'cockpit');
@@ -641,7 +668,8 @@ export class FlightView {
     const st = v.state;
     if (!paused) this.time += dt;
     if (this.active && !paused) {
-      if (!this.observer) this._readControls();
+      if (this.eva) this.eva.update(dt, paused);
+      else if (!this.observer) this._readControls();
       else if (game.input.pressed('cameraNext') || game.input.pressed('camera')) this.cycleCamera();
     }
     if (!this.availableCameras().includes(this.cameraMode)) this.setCamera(this.observer ? 'exterior:chase' : 'cockpit');
@@ -670,6 +698,10 @@ export class FlightView {
     if (store.settings.cameraShake === false) shake = 0;
     const center = (this._centerW ??= new THREE.Vector3()).copy(this._modelCenter ?? X.clone().multiplyScalar(0)).applyQuaternion(st.q).add(st.r);
     const mode = this.cameraMode;
+    // under the mains the chase camera frames the capsule and its canopies together
+    const liftWant = v.config === 'CM' && v.parts.mains && !st.splashed ? 18 : 0;
+    this._lift = (this._lift ?? 0) + (liftWant - (this._lift ?? 0)) * Math.min(1, dt * 1.2);
+    if (mode.startsWith('exterior') && this._lift > 0.01) center.addScaledVector(_v.copy(st.r).normalize(), this._lift);
     if (mode === 'cinematic' && this.cinematicCam) {
       const c = this.cinematicCam(this, dt);
       camWorld.copy(c.pos);
@@ -692,6 +724,14 @@ export class FlightView {
       camWorld.copy(st.r).add(_v2);
       camQ.copy(st.q).multiply(mt.quat).multiply(eye.quaternion);
       if (shake) camQ.multiply(_q.setFromEuler(_e.set((Math.random() - 0.5) * shake, (Math.random() - 0.5) * shake, (Math.random() - 0.5) * shake)));
+    } else if (mode.startsWith('eva') && this.eva) {
+      // third person behind the astronaut (the camera drifts back behind him while he walks)
+      if (!this._drag && (this.eva._speed ?? 0) > 0.3 && mode === 'eva') {
+        const want = this.eva.yaw + Math.PI;
+        this.orbit.yaw += Math.atan2(Math.sin(want - this.orbit.yaw), Math.cos(want - this.orbit.yaw)) * Math.min(1, dt * 0.9);
+      }
+      this.orbit.pitch = Math.max(0.05, Math.min(1.2, this.orbit.pitch));
+      fovOverride = this.eva.cameraPose(mode, { evaYaw: this.orbit.yaw, evaPitch: this.orbit.pitch, evaDist: this.orbit.dist || 5.5, fpPitch: -this.orbit.pitch * 0.6 }, camWorld, camQ);
     } else if (mode === 'pilot') {
       const p = this._pilotPose(v, st);
       camWorld.copy(p.pos);
@@ -701,7 +741,15 @@ export class FlightView {
     } else if (mode.startsWith('pad:') && this.site) {
       let look;
       if (mode === 'pad:far') {
-        this._padPoint(-1480, 22, 640, camWorld);
+        // the long-lens tracking camera with the Sun at its back: the rocket lit from the front against
+        // a blue sky (toward the Sun the haze glows white); the old fixed site at night
+        const sE = sunDir.dot(pad.east);
+        const sN = sunDir.dot(pad.north);
+        const sh = Math.hypot(sE, sN);
+        if (sunDir.dot(pad.up) > 0.05 && sh > 0.05) {
+          const a = Math.atan2(-sN, -sE) + 0.45; // away from the Sun, a little off-axis for relief
+          this._padPoint(Math.cos(a) * 1600, 22, -Math.sin(a) * 1600, camWorld);
+        } else this._padPoint(-1480, 22, 640, camWorld);
         look = center;
         const d = camWorld.distanceTo(center);
         fovOverride = Math.max(0.8, Math.min(40, 2 * Math.atan(78 / Math.max(1, d)) * (180 / Math.PI)));
@@ -736,7 +784,9 @@ export class FlightView {
       fovOverride = 50;
     } else {
       // orbit camera in a frame aligned with the local vertical (keeps a level horizon)
-      const dist0 = this.orbit.dist || this._defaultDist();
+      const want = this._defaultDist();
+      this._autoDist = this._autoDist ? this._autoDist + (want - this._autoDist) * Math.min(1, dt * 1.2) : want;
+      const dist0 = this.orbit.dist || this._autoDist;
       const dist = mode === 'exterior:wide' ? dist0 * 5 : dist0;
       const up = (this._camUpV ??= new THREE.Vector3()).copy(st.rRel).normalize();
       if (st.alt > 5e6) up.set(0, 0, 1);
@@ -851,6 +901,24 @@ export class FlightView {
         // swing arms: CM access arm parked at T−5 min, the rest swing at T−0 (with a stagger)
         this.site.setArms((i) => (i === 8 ? Math.min(1, Math.max(0, (t + 300) / 30)) : Math.min(1, Math.max(0, (t + 0.5 - i * 0.12) / 6))));
       }
+    }
+
+    if (this.recovery) {
+      this.recovery.update({
+        camWorld,
+        camQ,
+        sunDir,
+        vehicle: v,
+        dyn: sim.dyn,
+        time: this.time,
+        dt: paused ? 0 : dt,
+        utc,
+        skyTint: hTop,
+        fogColor: _c1.copy(horizonCol).multiplyScalar(0.9),
+        nearLaunchSite: !!this.site?.group.visible,
+        flames: paused ? null : this.flames,
+        smoke: this.smoke,
+      });
     }
 
     // ------------------------------------------------ plumes
@@ -970,13 +1038,17 @@ export class FlightView {
       this.lunar.update({ dyn: sim.dyn, camWorld, sunDir, dt, vehicle: v, time: this.time });
       const showT = st.primary === 'MOON' && camWorld.distanceTo(sim.dyn.moonPos) - R_MOON < 120000;
       this.lunar.group.visible = showT;
+      this.eva?.sync(camWorld);
       if (this.dust) {
         this.dust.setLighting(sunView, new THREE.Vector3(1.4, 1.38, 1.32), new THREE.Vector3(0.05, 0.05, 0.05));
         this.dust.update(paused ? 0 : dt, camPos);
       }
       const dMoon = camWorld.distanceTo(sim.dyn.moonPos) - R_MOON;
       this.midCam.near = Math.max(0.5, Math.min(800, (dMoon - 50) * 0.3));
-      this.midCam.far = Math.max(5e4, dMoon * 4 + 6e4);
+      this.midCam.far = Math.max(8e4, dMoon * 4 + 6e4);
+      // below ~1 km the terrain grid reaches past the horizon; the globe's flat facets would rise
+      // above the eye there (a dark band in the sky)
+      this.moon.mesh.visible = !showT || dMoon > 1000;
       this.midCam.updateProjectionMatrix();
     }
 
@@ -994,7 +1066,7 @@ export class FlightView {
     if (this._flash > 0) this._flash -= dt;
     if (this.cockpit) {
       this.cockpit.setActive(this.active && mode === 'cockpit');
-      this.cockpit.update(dt, { sunDir, camQ, shake, paused });
+      this.cockpit.update(dt, { sunDir, camQ, shake, paused, plasma: this.recovery?.heat ?? 0 });
     }
   }
 
@@ -1022,7 +1094,7 @@ export class FlightView {
     if (this.site && sat && sat.ignited && st.primary === 'EARTH' && alt < 2500 && satThrust > 0) {
       const lift = Math.max(0, alt - 62);
       const k = Math.max(0, 1 - lift / 900);
-      const rate = 34 * q * k * Math.min(1, (t + 9) / 2);
+      const rate = 55 * q * k * Math.min(1, (t + 9) / 2);
       this._padAcc = (this._padAcc ?? 0) + rate * dt;
       while (this._padAcc >= 1) {
         this._padAcc -= 1;
@@ -1041,9 +1113,9 @@ export class FlightView {
           pos,
           vel,
           life: 32 + rnd() * 26,
-          size0: 26 + rnd() * 14,
-          size1: 95 + rnd() * 75,
-          alpha: steam ? 0.5 : 0.45,
+          size0: 30 + rnd() * 16,
+          size1: 120 + rnd() * 90,
+          alpha: steam ? 0.58 : 0.5,
           drag: 0.14,
           rise: this._padUp.clone().multiplyScalar(0.22),
           tint: steam ? [1, 1, 1] : [0.8, 0.76, 0.7],
@@ -1193,9 +1265,11 @@ export class FlightView {
     window.removeEventListener('pointermove', this._onMove);
     window.removeEventListener('pointerup', this._onUp);
     this.cockpit?.dispose();
+    this.eva?.dispose();
     this.fadeEl?.remove();
     this.post?.dispose();
     this.site?.dispose();
+    this.recovery?.dispose();
     this.lunar?.dispose();
     this.stars?.dispose();
     this.earth?.dispose();

@@ -12,6 +12,8 @@ import { radio, procedure, grade, askEntryPilot } from '../common/kit.js';
 const IWO_JIMA = { lat: -21.63, lon: -165.37 };
 
 export default {
+  // the recovery carrier on station (FlightView draws her, with the helicopter, near the splash point)
+  recovery: { name: 'USS Iwo Jima', hull: '2', length: 183, ...IWO_JIMA },
   async setup() {
     const s = await apollo13State(GET(141, 20));
     const up = s.r.clone().normalize();
@@ -23,7 +25,6 @@ export default {
       seat: 'CDR',
       csm: 'ENTRY',
       lm: 'LIFEBOAT',
-      maxWarp: 10,
     };
   },
   briefing: {

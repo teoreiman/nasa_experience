@@ -26,7 +26,7 @@ function regolithTextures() {
   const hg = hc.getContext('2d');
   let seed = 11;
   const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
-  g.fillStyle = '#8a8680';
+  g.fillStyle = '#8c8b88';
   g.fillRect(0, 0, S, S);
   hg.fillStyle = '#808080';
   hg.fillRect(0, 0, S, S);
@@ -36,7 +36,7 @@ function regolithTextures() {
     const n = (rnd() - 0.5) * 26;
     img.data[i] += n;
     img.data[i + 1] += n;
-    img.data[i + 2] += n * 0.95;
+    img.data[i + 2] += n * 0.98;
   }
   g.putImageData(img, 0, 0);
   // micro craters (wrap around the tile edges so the texture tiles seamlessly)
@@ -47,26 +47,27 @@ function regolithTextures() {
         const cy = y + oy;
         if (cx + r * 1.6 < 0 || cx - r * 1.6 > S || cy + r * 1.6 < 0 || cy - r * 1.6 > S) continue;
         const grd = hg.createRadialGradient(cx, cy, 0, cx, cy, r * 1.5);
-        grd.addColorStop(0, `rgba(0,0,0,${0.5 * depth})`);
-        grd.addColorStop(0.62, `rgba(0,0,0,${0.12 * depth})`);
-        grd.addColorStop(0.7, `rgba(255,255,255,${0.35 * depth})`);
+        grd.addColorStop(0, `rgba(0,0,0,${0.38 * depth})`);
+        grd.addColorStop(0.62, `rgba(0,0,0,${0.1 * depth})`);
+        grd.addColorStop(0.72, `rgba(255,255,255,${0.09 * depth})`);
         grd.addColorStop(1, 'rgba(255,255,255,0)');
         hg.fillStyle = grd;
         hg.fillRect(cx - r * 1.6, cy - r * 1.6, r * 3.2, r * 3.2);
-        g.fillStyle = `rgba(${rnd() < 0.3 ? '190,186,178' : '60,58,55'},${0.06 + rnd() * 0.08})`;
+        g.fillStyle = `rgba(${rnd() < 0.3 ? '178,176,172' : '72,71,69'},${0.03 + rnd() * 0.05})`;
         g.beginPath();
         g.arc(cx, cy, r * (0.9 + rnd() * 0.5), 0, Math.PI * 2);
         g.fill();
       }
     }
   };
-  for (let i = 0; i < 260; i++) crater(rnd() * S, rnd() * S, 2 + Math.pow(rnd(), 3) * 40, 0.5 + rnd() * 0.5);
+  // mostly small pits, a few metre-size craters per tile (36 m): soft bowls, not rings
+  for (let i = 0; i < 190; i++) crater(rnd() * S, rnd() * S, 1.5 + Math.pow(rnd(), 4) * 30, 0.4 + rnd() * 0.5);
   // pebbles
   for (let i = 0; i < 900; i++) {
     const x = rnd() * S;
     const y = rnd() * S;
     const r = 0.6 + rnd() * 2.2;
-    hg.fillStyle = 'rgba(255,255,255,0.5)';
+    hg.fillStyle = 'rgba(255,255,255,0.3)';
     hg.beginPath();
     hg.arc(x, y, r, 0, Math.PI * 2);
     hg.fill();
@@ -84,8 +85,8 @@ function regolithTextures() {
   const H = (x, y) => hd[(((y + S) % S) * S + ((x + S) % S)) * 4] / 255;
   for (let y = 0; y < S; y++) {
     for (let x = 0; x < S; x++) {
-      const dx = (H(x + 1, y) - H(x - 1, y)) * 3.2;
-      const dy = (H(x, y + 1) - H(x, y - 1)) * 3.2;
+      const dx = (H(x + 1, y) - H(x - 1, y)) * 2.4;
+      const dy = (H(x, y + 1) - H(x, y - 1)) * 2.4;
       const l = Math.hypot(dx, dy, 1);
       const i = (y * S + x) * 4;
       out.data[i] = (-dx / l * 0.5 + 0.5) * 255;
@@ -95,6 +96,11 @@ function regolithTextures() {
     }
   }
   ng.putImageData(out, 0, 0);
+  // mean colour (linear) of the tile: the coarse layers multiply by colour / mean (no net darkening)
+  const px = g.getImageData(0, 0, S, S).data;
+  let sum = 0;
+  for (let i = 0; i < px.length; i += 4) sum += Math.pow((px[i] + px[i + 1] + px[i + 2]) / (3 * 255), 2.2);
+  const mean = sum / (px.length / 4);
   const map = new THREE.CanvasTexture(c);
   map.colorSpace = THREE.SRGBColorSpace;
   map.wrapS = map.wrapT = THREE.RepeatWrapping;
@@ -102,7 +108,144 @@ function regolithTextures() {
   const normal = new THREE.CanvasTexture(nc);
   normal.wrapS = normal.wrapT = THREE.RepeatWrapping;
   normal.anisotropy = 8;
-  return { map, normal };
+  return { map, normal, mean };
+}
+
+// ---- craters seen from altitude (rendering only)
+// The physics terrain (lunarTerrain.heightLocal) is detailed around the landing site and nearly flat
+// elsewhere. From the descent orbit the player sees tens of kilometres of ground, so the rendered
+// terrain adds a deterministic crater field at three scales, faded out within ~10 km of the site where
+// the LM actually comes down (there the picture and the collision terrain stay identical).
+const CRATER_SCALES = [
+  { cell: 26000, p: 0.38, r0: 2600, r1: 8500, depth: 0.1 },
+  { cell: 5200, p: 0.55, r0: 380, r1: 2100, depth: 0.15 },
+  { cell: 1300, p: 0.6, r0: 70, r1: 480, depth: 0.18 },
+];
+function hash2(i, j, k) {
+  let h = (i * 374761393 + j * 668265263 + k * 2147483647) | 0;
+  h = Math.imul(h ^ (h >>> 13), 1274126177);
+  return () => {
+    h = Math.imul(h ^ (h >>> 15), 2246822519) ^ Math.imul(h + 0x9e3779b9, 3266489917);
+    return ((h >>> 0) % 1000003) / 1000003;
+  };
+}
+/** → { h: height offset (m), a: albedo factor (fresh rims and ejecta are brighter) } */
+const _crater = { h: 0, a: 1 };
+function visualCraters(e, n) {
+  let h = 0;
+  let a = 1;
+  for (let s = 0; s < CRATER_SCALES.length; s++) {
+    const S = CRATER_SCALES[s];
+    const ci = Math.floor(e / S.cell);
+    const cj = Math.floor(n / S.cell);
+    for (let di = -1; di <= 1; di++) {
+      for (let dj = -1; dj <= 1; dj++) {
+        const rnd = hash2(ci + di, cj + dj, s + 1);
+        if (rnd() > S.p) continue;
+        const cx = (ci + di + rnd()) * S.cell;
+        const cy = (cj + dj + rnd()) * S.cell;
+        const r = S.r0 + Math.pow(rnd(), 2.2) * (S.r1 - S.r0);
+        const dx = e - cx;
+        const dy = n - cy;
+        const q = (dx * dx + dy * dy) / (r * r);
+        if (q > 3.2) continue;
+        const d = r * S.depth;
+        const fresh = rnd();
+        if (q < 1) h -= d * (1 - q) * (1 - q * 0.3);
+        else if (q < 2.3) h += d * 0.25 * Math.max(0, 1 - (q - 1) / 1.3);
+        // young craters: a bright rim and ejecta blanket
+        if (fresh > 0.72) a += (fresh - 0.72) * 1.2 * Math.max(0, 1 - Math.abs(Math.sqrt(q) - 1.15) / 0.65);
+      }
+    }
+  }
+  _crater.h = h;
+  _crater.a = a;
+  return _crater;
+}
+
+/** Large-scale albedo of the real Moon (the LROC map of the global sphere), sampled on the CPU so the
+ *  terrain around the vehicle shows the same maria and highlands as the globe it blends into.
+ *  Returns sample(xMoonFixed, y, z) → relative albedo (≈1 on average), or null if the image is not ready. */
+function albedoSampler(moonTex) {
+  const img = moonTex?.image;
+  if (!img || !(img.width > 0)) return null;
+  const W = Math.min(2048, img.width);
+  const H = Math.round((W * img.height) / img.width);
+  const c = document.createElement('canvas');
+  c.width = W;
+  c.height = H;
+  const g = c.getContext('2d', { willReadFrequently: true });
+  g.drawImage(img, 0, 0, W, H);
+  let data;
+  try {
+    data = g.getImageData(0, 0, W, H).data;
+  } catch {
+    return null;
+  }
+  const lum = new Float32Array(W * H);
+  let sum = 0;
+  for (let i = 0; i < W * H; i++) {
+    const l = (0.299 * data[i * 4] + 0.587 * data[i * 4 + 1] + 0.114 * data[i * 4 + 2]) / 255;
+    lum[i] = l;
+    sum += l;
+  }
+  const mean = sum / (W * H);
+  const at = (x, y) => lum[Math.min(H - 1, Math.max(0, y)) * W + (((x % W) + W) % W)];
+  // same mapping as the globe: SphereGeometry rotated +90° about X (poles on Z), default UVs
+  return (x, y, z) => {
+    const r = Math.hypot(x, y, z) || 1;
+    const theta = Math.acos(Math.max(-1, Math.min(1, z / r)));
+    let u = Math.atan2(-y, -x) / (2 * Math.PI);
+    if (u < 0) u += 1;
+    const fx = u * W - 0.5;
+    const fy = (theta / Math.PI) * H - 0.5;
+    const x0 = Math.floor(fx);
+    const y0 = Math.floor(fy);
+    const tx = fx - x0;
+    const ty = fy - y0;
+    const v = (at(x0, y0) * (1 - tx) + at(x0 + 1, y0) * tx) * (1 - ty) + (at(x0, y0 + 1) * (1 - tx) + at(x0 + 1, y0 + 1) * tx) * ty;
+    return v / mean;
+  };
+}
+
+/** Lunar regolith photometry on a standard material: Lommel–Seeliger (bright at grazing views, flat
+ *  at full phase) with a little Lambert, the same law as the globe's shader so the terrain around the
+ *  vehicle and the distant Moon match in brightness. */
+function regolithPhotometry(mat, mean = 0.25) {
+  mat.onBeforeCompile = (shader) => {
+    shader.uniforms.texMean = { value: mean };
+    // the same crater texture at ~1 km and ~17 km per tile on top of the 36 m one: from the descent
+    // orbit the ground is a field of craters instead of a smooth average (offset + rotated layers)
+    shader.fragmentShader = 'uniform float texMean;\n' + shader.fragmentShader
+      .replace(
+        'vec4 sampledDiffuseColor = texture2D( map, vMapUv );',
+        `vec4 sampledDiffuseColor = texture2D( map, vMapUv );
+	float camDist = length( vViewPosition );
+	float fadeA = smoothstep( 250.0, 900.0, camDist );
+	float fadeB = smoothstep( 2500.0, 9000.0, camDist );
+	vec2 uvA = mat2(0.8, -0.6, 0.6, 0.8) * vMapUv * 0.031 + vec2(0.37, 0.61);
+	vec2 uvB = mat2(0.28, 0.96, -0.96, 0.28) * vMapUv * 0.0021 + vec2(0.13, 0.29);
+	sampledDiffuseColor.rgb *= mix( vec3(1.0), clamp(texture2D( map, uvA ).rgb / texMean, 0.55, 1.6), fadeA ) * mix( vec3(1.0), clamp(texture2D( map, uvB ).rgb / texMean, 0.5, 1.7), fadeB );`,
+      )
+      .replace(
+        'vec3 mapN = texture2D( normalMap, vNormalMapUv ).xyz * 2.0 - 1.0;',
+        `vec3 mapN = texture2D( normalMap, vNormalMapUv ).xyz * 2.0 - 1.0;
+	vec2 nA = texture2D( normalMap, mat2(0.8, -0.6, 0.6, 0.8) * vNormalMapUv * 0.031 + vec2(0.37, 0.61) ).xy * 2.0 - 1.0;
+	vec2 nB = texture2D( normalMap, mat2(0.28, 0.96, -0.96, 0.28) * vNormalMapUv * 0.0021 + vec2(0.13, 0.29) ).xy * 2.0 - 1.0;
+	float camDistN = length( vViewPosition );
+	mapN = normalize( vec3( mapN.xy + mat2(0.8, 0.6, -0.6, 0.8) * nA * 0.8 * smoothstep( 250.0, 900.0, camDistN ) + mat2(0.28, -0.96, 0.96, 0.28) * nB * 1.0 * smoothstep( 2500.0, 9000.0, camDistN ), mapN.z ) );`,
+      )
+      .replace(
+      '#include <lights_physical_pars_fragment>',
+      THREE.ShaderChunk.lights_physical_pars_fragment.replace(
+        'vec3 irradiance = dotNL * directLight.color;',
+        `float dotNVls = saturate( dot( geometryNormal, geometryViewDir ) );
+	float lsShade = dotNL / max( dotNL + dotNVls, 1e-3 );
+	vec3 irradiance = ( lsShade * 1.45 + dotNL * 0.3 ) * directLight.color;`,
+      ),
+    );
+  };
+  mat.customProgramCacheKey = () => 'regolith-ls-ms';
 }
 
 function rockGeometry(seed) {
@@ -119,20 +262,23 @@ function rockGeometry(seed) {
   return g;
 }
 
-export function createLunarSurface(game, { site = 'TRANQUILITY', quality = {} } = {}) {
+export function createLunarSurface(game, { site = 'TRANQUILITY', quality = {}, moonTex = null } = {}) {
   const group = new THREE.Group();
+  let albedo = null; // built from the globe's colour map on the first rebuild where it is loaded
   group.name = 'LunarSurface';
   const frame = siteFrame(site);
   const tex = regolithTextures();
   const mat = new THREE.MeshStandardMaterial({
-    color: 0xa39e96,
+    color: 0xc6c5c2,
     map: tex.map,
     normalMap: tex.normal,
-    normalScale: new THREE.Vector2(0.9, 0.9),
+    // gentle: under a 10° Sun a strong micro-relief turns every small crater into a glowing ring
+    normalScale: new THREE.Vector2(0.4, 0.4),
     roughness: 1,
     metalness: 0,
     vertexColors: true,
   });
+  regolithPhotometry(mat, tex.mean);
   // ---- radial grid
   const radii = [0];
   for (let r = RINGS_MIN; r < RING_MAX; r *= RING_K) radii.push(r);
@@ -162,7 +308,7 @@ export function createLunarSurface(game, { site = 'TRANQUILITY', quality = {} } 
   group.add(terrain);
 
   // ---- boulders
-  const rockMat = new THREE.MeshStandardMaterial({ color: 0x9a958c, roughness: 0.95, metalness: 0, map: tex.map });
+  const rockMat = new THREE.MeshStandardMaterial({ color: 0x8f8d89, roughness: 0.95, metalness: 0, map: tex.map });
   const feats = siteFeatures(site);
   const rocks = [];
   let rs = 1234;
@@ -209,7 +355,8 @@ export function createLunarSurface(game, { site = 'TRANQUILITY', quality = {} } 
   group.add(proxy);
 
   // ---- lights for this pass
-  const sun = new THREE.DirectionalLight(0xfffaf2, 3.6);
+  // as bright as the globe's shader at the same spot (the terrain blends into it at the horizon)
+  const sun = new THREE.DirectionalLight(0xfffcf6, 8.2);
   sun.castShadow = quality.shadows !== false;
   if (sun.castShadow) {
     const size = quality.name === 'high' ? 4096 : 2048;
@@ -239,19 +386,32 @@ export function createLunarSurface(game, { site = 'TRANQUILITY', quality = {} } 
   function rebuild(cx, cy) {
     state.cx = cx;
     state.cy = cy;
+    albedo ??= albedoSampler(moonTex);
+    state.albedo = !!albedo;
     const c0 = lmToMoonFixed(cx, cy, 0, new THREE.Vector3());
     const near = Math.hypot(cx, cy) < 40000;
     let k = 0;
     const put = (e, n) => {
-      const h = near && Math.abs(e) < 32000 && Math.abs(n) < 32000 ? heightLocal(e, n, site) : 0;
-      lmToMoonFixed(e, n, h, _p).sub(c0);
+      let h = near && Math.abs(e) < 32000 && Math.abs(n) < 32000 ? heightLocal(e, n, site) : 0;
+      // the crater field fades in beyond ~10 km of the site (see visualCraters)
+      const fade = Math.min(1, Math.max(0, (Math.hypot(e, n) - 8000) / 8000));
+      let ejecta = 1;
+      if (fade > 0) {
+        const c = visualCraters(e, n);
+        h += c.h * fade;
+        ejecta = 1 + (c.a - 1) * fade;
+      }
+      lmToMoonFixed(e, n, h, _p);
+      // the real Moon's albedo at this spot (maria dark, highlands and rays bright)
+      const real = albedo ? Math.max(0.42, Math.min(1.5, albedo(_p.x, _p.y, _p.z))) : 1;
+      _p.sub(c0);
       pos[k * 3] = _p.dot(frame.east);
       pos[k * 3 + 1] = _p.dot(frame.north);
       pos[k * 3 + 2] = _p.dot(frame.up);
       uv[k * 2] = e / TILE;
       uv[k * 2 + 1] = n / TILE;
       // large-scale albedo: brighter ejecta near crater rims, darker mare patches
-      const v = 0.86 + 0.08 * Math.sin(e * 0.0021 + Math.cos(n * 0.0017) * 2) + 0.05 * Math.sin((e - n) * 0.009) + Math.max(0, h - 1.5) * 0.02;
+      const v = Math.min(1.6, (0.86 + 0.06 * Math.sin(e * 0.0021 + Math.cos(n * 0.0017) * 2) + 0.04 * Math.sin((e - n) * 0.009)) * real * ejecta);
       col[k * 3] = v;
       col[k * 3 + 1] = v * 0.985;
       col[k * 3 + 2] = v * 0.96;
@@ -292,10 +452,45 @@ export function createLunarSurface(game, { site = 'TRANQUILITY', quality = {} } 
 
   const tmpRel = new THREE.Vector3();
   const moonRotQ = new THREE.Quaternion();
+  const _gi = new THREE.Quaternion();
   return {
     group,
     get center() {
       return { x: state.cx, y: state.cy };
+    },
+    /** The vehicle's sub-point in site metres (x east, y north). */
+    get vehicleLocal() {
+      return { x: state.lmx ?? 0, y: state.lmy ?? 0 };
+    },
+    /** Ground height (m) at a site-local point (the collision terrain). */
+    heightAt: (e, n) => heightLocal(e, n, site),
+    /** ECI position of a site-local point (east, north, height above the reference sphere). */
+    siteToEci(dyn, e, n, h, out) {
+      lmToMoonFixed(e, n, h, out);
+      return dyn.moonFixedToEci(out, out).add(dyn.moonPos);
+    },
+    /** An invisible copy of `object` that throws its shadow on the regolith (EVA astronauts, props). */
+    addShadowCaster(object) {
+      const c = object.clone(true);
+      c.traverse((o) => {
+        if (o.isMesh) {
+          o.material = proxyMat;
+          o.castShadow = true;
+          o.receiveShadow = false;
+          o.renderOrder = -5;
+        }
+      });
+      group.add(c);
+      return c;
+    },
+    /** Place a shadow caster at an ECI pose (camera-relative frame of this frame; after update()). */
+    placeCaster(obj, posEci, quatEci, camWorld) {
+      _gi.copy(group.quaternion).invert();
+      obj.position.copy(posEci).sub(camWorld).sub(group.position).applyQuaternion(_gi);
+      obj.quaternion.copy(_gi).multiply(quatEci);
+    },
+    removeCaster(obj) {
+      group.remove(obj);
     },
     /** surface "TV camera" a few tens of metres from the vehicle (or the site) in ECI. */
     tvCameraWorld(dyn, out) {
@@ -313,7 +508,8 @@ export function createLunarSurface(game, { site = 'TRANQUILITY', quality = {} } 
       state.lmy = l.y;
       const alt = Math.max(5, st.altTerrain ?? st.alt);
       const moved = Math.hypot(l.x - state.cx, l.y - state.cy);
-      if (!state.built || moved > Math.max(15, alt * 0.12)) rebuild(l.x, l.y);
+      // also once the globe's colour map has loaded (it tints the terrain)
+      if (!state.built || moved > Math.max(15, alt * 0.12) || (!state.albedo && moonTex?.image?.width > 0)) rebuild(l.x, l.y);
       // place the grid: centre point (moon-fixed) → ECI, camera-relative
       moonRotQ.setFromAxisAngle(_d.set(0, 0, 1), dyn.moonAngle);
       _p.copy(state.c0).applyQuaternion(moonRotQ).add(dyn.moonPos).sub(camWorld);

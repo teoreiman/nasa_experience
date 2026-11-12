@@ -21,7 +21,7 @@ const DEFAULT_BINDINGS = {
     help: ['F1'],
     screenshot: ['F2'],
     toggleView: ['KeyT'], // controller mode: MOCR ↔ spacecraft TV view
-    skip: ['F8'], // skip to next scripted event (when the mission allows it)
+    skip: ['F8'], // fast-forward to the next important moment (or a scripted skip point)
   },
   flight: {
     pitchDown: ['KeyW', 'Numpad8'],

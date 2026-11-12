@@ -9,6 +9,9 @@ import { getInitialState } from './initialStates.js';
 import { heightLocal, boulderAt, siteFrame } from '../terrain/lunarTerrain.js';
 import { CONFIGS, GEOM, moduleTransform } from '../geometry.js';
 
+// vehicles the active one can dock with (the rest are spent stages, panels and modules)
+const DOCKABLE = new Set(['SIVB_LM', 'CSM', 'LM_ASC', 'LM']);
+
 /** Altitude of the SATURN_V reference point on the pad: ML deck (29 m above sea level) + 33 m. */
 export const PAD_REF_ALT = 62;
 export const MOON_OMEGA = (2 * Math.PI) / (27.321661 * 86400); // sidereal rotation (rad/s)
@@ -90,19 +93,33 @@ export class FlightDynamics {
     if (v.modules.saturn && v.isAttached('saturn') && (v.modules.saturn.thrust > 0 || v.modules.saturn.tb6 !== null && this.clock.get > v.modules.saturn.tb6 + 560)) return 0.1;
     if (st.primary === 'MOON' && st.alt < 30000) return 0.05;
     if (st.primary === 'EARTH' && st.alt < 140000) return 0.1;
-    if (this.bodies.size && this.nearestBodyDist() < 2000) return 0.05;
+    if (this.bodies.size && this.nearestDockTargetDist() < 2000) return 0.05;
     return st.alt > 5e6 ? 8 : 1;
   }
 
+  /** Highest time warp the dynamics allow now. `fastForward` (the player's "Adelantar") lets the
+   *  computer-flown phases run faster: the steps stay as small, there are just more of them. */
   maxWarp() {
     const v = this.vehicle;
     const st = v.state;
-    if (this.mode === 'ASCENT' || this.mode === 'ENTRY') return 10;
-    if (v.cmd.sps || v.cmd.dps || v.cmd.aps || v.tm['CM.SPS.THRUST'] || v.tm['LM.ENG.THRUST_PCT'] > 0) return 5;
+    const ff = !!this.fastForward;
+    if (this.mode === 'ENTRY') return ff && v.sw?.get?.('CM.GNC.SC_CONT') !== 'SCS' ? 60 : 10;
+    if (this.mode === 'ASCENT') return ff && !v.modules.saturn?.manual ? 25 : 10;
+    const firing = v.cmd.sps || v.cmd.dps || v.cmd.aps || v.tm['CM.SPS.THRUST'] || v.tm['LM.ENG.THRUST_PCT'] > 0;
+    if (firing) return ff && !v.controls?.outOfDetent ? 10 : 5;
     if (v.modules.saturn?.thrust > 0 && v.isAttached('saturn')) return 10;
-    if (st.primary === 'MOON' && st.alt < 30000 && !st.landed) return 4;
-    if (this.bodies.size && this.nearestBodyDist() < 500) return 2;
+    // low over the Moon: the landing itself in near real time, the coast down to PDI much faster
+    if (st.primary === 'MOON' && st.alt < 30000 && !st.landed) return (st.altTerrain ?? st.alt) > 8000 ? 50 : ff ? 10 : 4;
+    if (this.bodies.size && this.nearestDockTargetDist() < 500) return 2;
     return 10000;
+  }
+
+  /** Distance to the nearest vehicle we could dock with (spent stages and jettisoned modules do not
+   *  slow time down). */
+  nearestDockTargetDist() {
+    let d = Infinity;
+    for (const b of this.bodies.values()) if (!b.debris && !b.jettisoned && DOCKABLE.has(b.config)) d = Math.min(d, b.r.distanceTo(this.vehicle.state.r));
+    return d;
   }
 
   nearestBodyDist() {
@@ -282,7 +299,8 @@ export class FlightDynamics {
       case 'LM_JETT': {
         if (cfg !== 'CSM_LM' && cfg !== 'CSM_LMASC' && cfg !== 'CM_LM') return;
         const asc = cfg === 'CSM_LMASC';
-        this._spawnPart('LM', asc ? 'LM_ASC' : 'LM', asc ? 'LM_ASC_DOCKED' : 'LM_DOCKED', asc ? 'LM_ASC' : 'LM', new Vector3(0.6, 0, 0), null, { label: req.label ?? 'Aquarius' });
+        // jettisoned for good: not a docking target any more
+        this._spawnPart('LM', asc ? 'LM_ASC' : 'LM', asc ? 'LM_ASC_DOCKED' : 'LM_DOCKED', asc ? 'LM_ASC' : 'LM', new Vector3(0.6, 0, 0), null, { label: req.label ?? 'Aquarius', jettisoned: true });
         v.setStation('CM');
         if (cfg === 'CM_LM') this._reframe('CM', 'CM', 'CM', true, { event: kind });
         else this._reframe('CSM', 'CSM', 'CSM', true, { event: kind });
@@ -461,11 +479,14 @@ export class FlightDynamics {
     } else if (this.mode === 'SPLASHED') {
       st.v.set(-7.2921159e-5 * st.r.y, 7.2921159e-5 * st.r.x, 0);
       st.r.addScaledVector(st.v, h);
+      // floating upright ("Stable 1"), rocking on the swell
+      if (v.config === 'CM') this._hangCM(h, 0.22 + Math.sin(this.clock.get * 0.9) * 0.08, 3);
     } else {
       // the IU flies the stack: ascent steering, TLI steering, and an orbital-rate prograde hold while
       // coasting in the parking orbit (the crew only takes over with LV GUID = CMC)
       const iu = mods.saturn && v.isAttached('saturn') && (this.mode === 'ASCENT' || ((mods.saturn.stage === 'SIVB_TLI' || mods.saturn.stage === 'SIVB_COAST') && v.sw.get('CM.LV.LV_GUID') !== 'CMC'));
       if (iu) this._ascentAttitude(h, this.mode === 'ASCENT' ? 2 : 0.5);
+      else if (v.config === 'CM' && (v.parts.drogues || v.parts.mains)) this._hangCM(h, v.parts.mains ? 0.47 : 0.15, v.parts.mains ? 2.5 : 1.5);
       else this._rotate(h);
       this._translate(h, mass);
       this._contacts(h);
@@ -540,6 +561,24 @@ export class FlightDynamics {
       _q.setFromAxisAngle(_tmp.copy(st.w).divideScalar(wl), wl * h);
       st.q.multiply(_q).normalize();
     }
+  }
+
+  /** The CM under its parachutes (and afloat): apex up, tilted `tilt` rad (the risers pull at the apex,
+   *  the mains hang it ~27° over), turning to it with time constant `tau` s. */
+  _hangCM(h, tilt, tau) {
+    const st = this.vehicle.state;
+    const up = _gm.copy(st.r).normalize();
+    // keep the current heading: the tilt leans toward the body's present +Y, levelled
+    const side = _by.set(0, 1, 0).applyQuaternion(st.q);
+    side.addScaledVector(up, -side.dot(up));
+    if (side.lengthSq() < 1e-6) side.set(1, 0, 0).addScaledVector(up, -up.x);
+    side.normalize();
+    const X = _bx.copy(up).multiplyScalar(Math.cos(tilt)).addScaledVector(side, Math.sin(tilt)).normalize();
+    const Y = side.addScaledVector(X, -side.dot(X)).normalize();
+    const Z = _bz.crossVectors(X, Y);
+    _q.setFromRotationMatrix(_m4.makeBasis(X, Y, Z));
+    st.q.slerp(_q, 1 - Math.exp(-h / tau)).normalize();
+    st.w.set(0, 0, 0);
   }
 
   _translate(h, mass) {
@@ -695,7 +734,7 @@ export class FlightDynamics {
   }
 
   _findDockTarget() {
-    for (const b of this.bodies.values()) if (!b.debris && ['SIVB_LM', 'CSM', 'LM_ASC', 'LM'].includes(b.config) && b.r.distanceTo(this.vehicle.state.r) < 3000) return b;
+    for (const b of this.bodies.values()) if (!b.debris && !b.jettisoned && DOCKABLE.has(b.config) && b.r.distanceTo(this.vehicle.state.r) < 3000) return b;
     return null;
   }
 

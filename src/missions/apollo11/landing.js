@@ -28,7 +28,6 @@ export default {
       seat: 'CDR',
       csm: null,
       lm: 'PRE_PDI',
-      maxWarp: 4,
     };
   },
   briefing: {

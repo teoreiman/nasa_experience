@@ -83,6 +83,7 @@ export class MissionRunner {
     this.realTime = 0;
     this.skip = null; // { get, label }
     this.achievements = []; // unlocked during this chapter (shown in the debrief)
+    this.playerLists = new Set(); // items of the checklists the player is working through
     this.ctx = this._createContext();
   }
 
@@ -150,6 +151,7 @@ export class MissionRunner {
 
   cancel(reason = 'cancel') {
     if (this._cancelled) return;
+    this._ffwdStop();
     this._cancelled = true;
     this.ended = true;
     const err = new MissionAbort(reason);
@@ -376,7 +378,13 @@ export class MissionRunner {
       line.channel === 'pao' ||
       line.channel === 'narration';
     if (!audible) return Promise.resolve();
+    const queuedAt = this.clock.get;
     const play = async () => {
+      // a callout nobody waits for that the time warp left behind: log it, do not play it late
+      if (line.wait === false && !line.clip && !line.keep && this.clock.get - queuedAt > 120) {
+        this.bus.emit('mission:sayLog', line);
+        return;
+      }
       if (line.channel === 'ag' && !line.force) {
         const st = this.sim.vehicle.state;
         if (st.losEarth || st.inBlackout) await this._wait(() => !st.losEarth && !st.inBlackout);
@@ -385,10 +393,12 @@ export class MissionRunner {
       const words = `${line.en ?? line.es ?? ''}`.split(/\s+/).length;
       line.durationS ??= (line.clip && audio?.clipDuration?.(line.clip)) || audio?.voiceDuration?.(line) || Math.max(1.6, words / 2.6 + 0.6);
       this.bus.emit('mission:say', line);
+      this._speaking = (this._speaking ?? 0) + 1;
       try {
         if (audio?.radio) await Promise.race([audio.radio(line), this.waitReal(line.durationS + 12)]);
         else await this.waitReal(line.durationS);
       } finally {
+        if (--this._speaking === 0) this.clock.clearLimit('radio');
         this.bus.emit('mission:sayEnd', { id: line.id });
       }
     };
@@ -484,6 +494,8 @@ export class MissionRunner {
         passive: (!!check && !sws.length && !it.do) || !!it.aiPassive,
         // a flying task the crew can hand to the autopilot ("Ayuda" button)
         assist: !!it.do && !sws.length,
+        // a plain switch setting: the HUD may flip it from the list (touch shortcut)
+        flip: sws.length > 0 && !it.do && !it.check,
         done: false,
         check,
         auto,
@@ -491,12 +503,15 @@ export class MissionRunner {
     });
     const aiMode = this.role === 'controller' || !!cl.ai;
     const ordered = cl.ordered !== false;
+    if (!aiMode) this.playerLists.add(items);
     const state = { id: cl.id, title: cl.title, station: cl.station ?? this.sim.vehicle.station, mode: aiMode ? 'ai' : 'player', state: 'active' };
     let autoUsed = 0;
+    // the training chapters are about finding the controls yourself
+    const shortcutOff = this.chapter.id?.startsWith('tr-') || store.settings.difficulty === 'realistic';
     const snapshot = () =>
       this.bus.emit('mission:checklist', {
         ...state,
-        items: items.map(({ id, text, hint, optional, done, manual, assist }) => ({ id, text, hint, optional, done, manual, assist })),
+        items: items.map(({ id, text, hint, optional, done, manual, assist, flip, highlight }) => ({ id, text, hint, optional, done, manual, assist, flip: flip && !shortcutOff, ids: highlight })),
       });
     const highlightCurrent = () => {
       if (aiMode || !store.settings.highlightControls || store.settings.difficulty === 'realistic') return;
@@ -526,10 +541,20 @@ export class MissionRunner {
         if (it.manual) markManualDone(it);
       }
     });
+    // the same switch setting done from the list instead of the panel (no penalty: it is the crew's hand)
+    const offFlip = this.bus.on('mission:checklistFlip', ({ checklistId, itemId }) => {
+      if (checklistId !== cl.id || shortcutOff) return;
+      const it = items.find((i) => i.id === itemId);
+      if (it && !it.done && it.flip) {
+        it.auto();
+        this.game?.audio?.sfx?.('toggle', { gain: 0.8 });
+      }
+    });
     const cleanup = () => {
       offSw();
       offConfirm();
       offAuto();
+      offFlip();
       this.bus.emit('mission:highlight', { ids: [] });
     };
     this.cleanups.push(cleanup);
@@ -575,10 +600,18 @@ export class MissionRunner {
       snapshot();
       return { completed: true, time: this.clock.get - t0, autoUsed };
     } finally {
+      this.playerLists.delete(items);
       cleanup();
       const i = this.cleanups.indexOf(cleanup);
       if (i >= 0) this.cleanups.splice(i, 1);
     }
+  }
+
+  /** The first checklist step only the player can do (a switch, a key, flying), or null when the
+   *  open checklists are just waiting for something to happen. */
+  pendingPlayerStep() {
+    for (const items of this.playerLists) for (const it of items) if (!it.done && !it.optional && !it.passive) return it;
+    return null;
   }
 
   // ---------------------------------------------------------------- ground tasks
@@ -620,12 +653,14 @@ export class MissionRunner {
         if (!resolved) resolved = { choiceId };
       },
     };
+    this._openDecisions = (this._openDecisions ?? 0) + 1;
     this.bus.emit('mission:groundTask', payload);
     if (task.evidence?.length) this.bus.emit('mission:highlight', { ids: task.evidence });
     let ok;
     try {
       ok = await this._wait(() => !!resolved, { timeout: task.timeout ?? null });
     } finally {
+      this._openDecisions--;
       this.clock.clearLimit('groundTask');
       if (task.evidence?.length) this.bus.emit('mission:highlight', { ids: [] });
     }
@@ -698,9 +733,11 @@ export class MissionRunner {
       const finish = (opt) => {
         if (done) return;
         done = true;
+        this._openDecisions--;
         this.bus.emit('mission:choiceEnd', { id, choice: opt });
         resolve(opt);
       };
+      this._openDecisions = (this._openDecisions ?? 0) + 1;
       this.bus.emit('mission:choice', { id, title, prompt, options, timeoutS: timeout, resolve: finish });
       if (timeout) this.waitReal(timeout).then(() => finish(defaultOption ?? options[0].id), () => {});
       this.cleanups.push(() => {
@@ -729,7 +766,66 @@ export class MissionRunner {
       const target = this.skip.get;
       this.ctx.disallowSkip();
       this._skipTo(target).catch(() => {});
+    } else this.fastForward();
+  }
+
+  // ---------------------------------------------------------------- fast-forward ("Adelantar")
+
+  /**
+   * Run at the highest warp the vehicle allows until something happens — a radio line, an objective,
+   * a checklist for the player, a decision, a poll, an alert, a vehicle event (staging, entry
+   * interface, blackout, chutes…), the computer asking to burn — or a scripted wait ends. Never past
+   * a burn: it stops a minute before ignition. Then back to real time.
+   */
+  fastForward(on = !this.ffwd) {
+    if (this.ended) return;
+    if (!on) {
+      this._ffwdStop();
+      return;
     }
+    if (this.ffwd) return;
+    // time only flies when the mission is waiting for time, not for the player
+    const step = this.pendingPlayerStep();
+    if (step) {
+      this.bus.emit('mission:alert', { text: `Antes de adelantar: ${step.text}`, level: 'info', durationS: 4 });
+      return;
+    }
+    const decision = this._openDecisions > 0;
+    if (decision) {
+      this.bus.emit('mission:alert', { text: 'Antes de adelantar: responde la decisión pendiente', level: 'info', durationS: 4 });
+      return;
+    }
+    const clock = this.clock;
+    const f = (this.ffwd = { offs: [], stop: undefined, chapterLimit: clock._limits.get('chapter') });
+    if (f.chapterLimit !== undefined) clock.clearLimit('chapter');
+    this.sim.dyn.fastForward = true;
+    const burn = this.sim.gnc?.activeComputer?.burn;
+    if (burn && !burn.done && !burn.firing && burn.tig > clock.get + 75) {
+      f.stop = burn.tig - 60;
+      clock.addStop(f.stop);
+    }
+    for (const t of ['mission:say', 'mission:objective', 'mission:choice', 'mission:groundTask', 'mission:poll', 'mission:caption', 'mission:end', 'agc:v99', 'cw:alarm', 'systems:failure']) f.offs.push(this.bus.on(t, () => this._ffwdStop(t)));
+    f.offs.push(this.bus.on('mission:alert', (a) => a.level !== 'info' && this._ffwdStop(`alert ${a.text}`)));
+    f.offs.push(this.bus.on('vehicle:event', (e) => !['RCS', 'ULLAGE'].includes(e.kind) && this._ffwdStop(e.kind)));
+    // a new checklist the player has to work through
+    f.offs.push(this.bus.on('mission:checklist', (c) => c.mode === 'player' && c.state === 'active' && !c.items.some((i) => i.done) && this._ffwdStop(`checklist ${c.title}`)));
+    // mid-transmission the conversation goes on in real time: do not leap hours ahead under it
+    if (this._speaking) clock.setLimit('radio', 10);
+    clock.setWarpMax();
+    this.bus.emit('mission:ffwd', { on: true });
+  }
+
+  _ffwdStop(reason = null) {
+    const f = this.ffwd;
+    if (!f) return;
+    this.ffwd = null;
+    for (const off of f.offs) off();
+    if (f.stop !== undefined) this.clock.removeStop(f.stop);
+    if (f.chapterLimit !== undefined) this.clock.setLimit('chapter', f.chapterLimit);
+    this.sim.dyn.fastForward = false;
+    this.clock.clearLimit('radio');
+    this.clock.setWarp(1);
+    this.bus.emit('mission:ffwd', { on: false, reason });
   }
 
   // ---------------------------------------------------------------- end

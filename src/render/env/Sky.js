@@ -17,7 +17,7 @@ const FS = /* glsl */ `
 uniform vec3 sunDir; uniform vec3 up; uniform float alt; uniform float intensity; uniform float exposure;
 varying vec3 vDir;
 const vec3 BR = vec3(5.8e-6, 13.5e-6, 33.1e-6);
-const float BM = 1.3e-5;
+const float BM = 0.85e-5;
 const float HR = 8000.0;
 const float HM = 1200.0;
 const float PI = 3.14159265;
@@ -47,6 +47,10 @@ void main(){
   vec3 col = sc * (1.0 - exp(-tauV)) * sunT * intensity;
   // twilight glow from the sunlit upper atmosphere
   col += vec3(0.35, 0.22, 0.12) * 0.04 * intensity * exp(-abs(mu) * 6.0) * smoothstep(-0.35, 0.0, muS) * (1.0 - smoothstep(0.0, 0.2, muS)) * exp(-h / 30000.0);
+  // multiple scattering in the humid coastal air keeps the low sky a pale blue instead of burning to
+  // white (single scattering alone saturates every channel near the horizon)
+  float hz = (1.0 - smoothstep(0.0, 0.32, max(mu, 0.0))) * (1.0 - smoothstep(3000.0, 25000.0, h));
+  col *= mix(vec3(1.0), vec3(0.72, 0.85, 1.05), hz);
   gl_FragColor = vec4(col * exposure, 1.0);
 }`;
 
@@ -55,7 +59,7 @@ export function createSky() {
     sunDir: { value: new THREE.Vector3(0, 0, 1) },
     up: { value: new THREE.Vector3(0, 0, 1) },
     alt: { value: 0 },
-    intensity: { value: 16 },
+    intensity: { value: 13 },
     exposure: { value: 1 },
   };
   const mat = new THREE.ShaderMaterial({
@@ -91,7 +95,7 @@ const _c = new THREE.Color();
 /** CPU estimate of the sky radiance toward the horizon / zenith (for fog colour, star visibility). */
 export function skyColor(muView, muSun, alt, out = _c) {
   const BR = [5.8e-6, 13.5e-6, 33.1e-6];
-  const BM = 1.3e-5;
+  const BM = 0.85e-5;
   const am = (mu) => {
     const z = (Math.acos(Math.max(-1, Math.min(1, mu))) * 180) / Math.PI;
     return 1 / (Math.max(mu, 0) + 0.50572 * Math.pow(Math.max(96.07995 - z, 0.5), -1.6364));
@@ -102,7 +106,9 @@ export function skyColor(muView, muSun, alt, out = _c) {
     const tv = BR[i] * dep(muView, 8000) + BM * 1.1 * dep(muView, 1200);
     const ts = BR[i] * dep(muSun, 8000) + BM * 1.1 * dep(muSun, 1200);
     const sc = (BR[i] * 0.06 + BM * 0.08) / (BR[i] + BM * 1.1);
-    return sc * (1 - Math.exp(-tv)) * Math.exp(-ts) * sunVis * 16;
+    return sc * (1 - Math.exp(-tv)) * Math.exp(-ts) * sunVis * 13;
   });
-  return out.setRGB(rgb[0], rgb[1], rgb[2]);
+  // the same low-sky tint as the shader (fog colour of the ground haze)
+  const hz = (1 - Math.min(1, Math.max(0, muView / 0.32))) * (1 - Math.min(1, Math.max(0, (alt - 3000) / 22000)));
+  return out.setRGB(rgb[0] * (1 - 0.28 * hz), rgb[1] * (1 - 0.15 * hz), rgb[2] * (1 + 0.05 * hz));
 }

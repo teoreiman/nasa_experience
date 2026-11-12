@@ -56,6 +56,7 @@ const INTEGRAL = { OFF: 0.04, LOW: 0.12, MED: 0.22, HIGH: 0.34, DIM: 0.14, BRIGH
 const _mq = new THREE.Quaternion();
 const _iq = new THREE.Quaternion();
 const _sv = new THREE.Vector3();
+const _plasmaCol = new THREE.Color(1, 0.5, 0.18);
 
 const SEATS = {
   CM: [
@@ -89,6 +90,16 @@ function wallTexture(holes, w = 512, h = 512) {
 }
 
 /** Quilted Beta-cloth insulation blanket (the off-white padding that lined the cabins). */
+/** The quilt tones of the old cabin, as locker greys (warm beige → neutral light grey). */
+function shadeTone(tone) {
+  const n = parseInt(tone.slice(1), 16);
+  const r = (n >> 16) & 255;
+  const g = (n >> 8) & 255;
+  const b = n & 255;
+  const m = Math.round((r + g + b) / 3) - 6;
+  return `rgb(${m},${m},${m + 3})`;
+}
+
 function blanketTexture(tone = '#cfc9b8', cells = 6) {
   const c = document.createElement('canvas');
   c.width = c.height = 512;
@@ -124,6 +135,68 @@ function blanketTexture(tone = '#cfc9b8', cells = 6) {
     g.moveTo(0, i * s);
     g.lineTo(512, i * s);
     g.stroke();
+  }
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.SRGBColorSpace;
+  t.wrapS = t.wrapT = THREE.RepeatWrapping;
+  t.anisotropy = 4;
+  return t;
+}
+
+/** Stowage lockers and close-out panels (what really lined the cabins): light grey doors of different
+ *  sizes with seams, latches, rivets and small black placards, a little scuffed. */
+function lockerTexture(tone = '#c3c1bb', seed = 1) {
+  const c = document.createElement('canvas');
+  c.width = c.height = 512;
+  const g = c.getContext('2d');
+  let s = seed * 9973 + 17;
+  const rnd = () => ((s = (s * 16807) % 2147483647) / 2147483647);
+  g.fillStyle = '#2e2f31';
+  g.fillRect(0, 0, 512, 512);
+  // split the tile into doors: rows of random heights, columns of random widths
+  let y = 0;
+  while (y < 512) {
+    const h = Math.min(512 - y, 70 + Math.floor(rnd() * 4) * 32);
+    let x = 0;
+    while (x < 512) {
+      const w = Math.min(512 - x, 80 + Math.floor(rnd() * 4) * 40);
+      const shade = (rnd() - 0.5) * 14;
+      g.fillStyle = tone;
+      g.fillRect(x + 2, y + 2, w - 4, h - 4);
+      g.fillStyle = `rgba(${shade > 0 ? '255,255,255' : '0,0,0'},${Math.abs(shade) / 100})`;
+      g.fillRect(x + 2, y + 2, w - 4, h - 4);
+      // bevel: light top/left, dark bottom/right
+      g.fillStyle = 'rgba(255,255,255,0.18)';
+      g.fillRect(x + 2, y + 2, w - 4, 2);
+      g.fillRect(x + 2, y + 2, 2, h - 4);
+      g.fillStyle = 'rgba(0,0,0,0.22)';
+      g.fillRect(x + 2, y + h - 4, w - 4, 2);
+      g.fillRect(x + w - 4, y + 2, 2, h - 4);
+      // rivets in the corners
+      g.fillStyle = 'rgba(70,70,72,0.7)';
+      for (const [rx, ry] of [[x + 7, y + 7], [x + w - 9, y + 7], [x + 7, y + h - 9], [x + w - 9, y + h - 9]]) g.fillRect(rx, ry, 2, 2);
+      // a latch and a placard
+      if (w > 60 && h > 50) {
+        g.fillStyle = '#5b5c5f';
+        g.fillRect(x + w / 2 - 9, y + h - 18, 18, 6);
+        g.fillStyle = '#7e7f82';
+        g.fillRect(x + w / 2 - 7, y + h - 17, 14, 2);
+        if (rnd() < 0.7) {
+          g.fillStyle = '#17181a';
+          const pw = 26 + rnd() * 30;
+          g.fillRect(x + 10, y + 10, pw, 9);
+          g.fillStyle = 'rgba(230,230,225,0.75)';
+          for (let k = 0; k < pw - 6; k += 4) if (rnd() < 0.8) g.fillRect(x + 13 + k, y + 13, 2, 3);
+        }
+      }
+      x += w;
+    }
+    y += h;
+  }
+  // scuffs and fingerprints
+  for (let i = 0; i < 400; i++) {
+    g.fillStyle = `rgba(0,0,0,${rnd() * 0.04})`;
+    g.fillRect(rnd() * 512, rnd() * 512, 2 + rnd() * 6, 1 + rnd() * 3);
   }
   const t = new THREE.CanvasTexture(c);
   t.colorSpace = THREE.SRGBColorSpace;
@@ -255,10 +328,10 @@ export class CockpitView {
       sun.shadow.normalBias = 0.02;
     }
     this.scene.add(this.lights.amb, this.lights.flood, this.lights.fill, sun, sun.target);
-    const blanket = blanketTexture();
+    let seedN = 1;
     const quilt = (rx, ry, tone) => {
-      const t = tone ? blanketTexture(tone) : blanket.clone();
-      t.repeat.set(rx, ry);
+      const t = lockerTexture(tone ? shadeTone(tone) : '#c3c1bb', seedN++);
+      t.repeat.set(Math.max(1, rx * 0.5), Math.max(1, ry * 0.5));
       t.needsUpdate = true;
       return t;
     };
@@ -313,8 +386,7 @@ export class CockpitView {
         h1.rotation.z = Math.PI / 2;
       }
       const conduit = new THREE.MeshStandardMaterial({ color: 0x2b2d30, roughness: 0.6, metalness: 0.3 });
-      const c1 = shadowy(add(new THREE.CylinderGeometry(0.018, 0.018, 3.0, 10), conduit, [1.93, 0, -0.95]));
-      c1.rotation.x = Math.PI / 2;
+      shadowy(add(new THREE.CylinderGeometry(0.018, 0.018, 3.0, 10), conduit, [1.93, 0, -0.95]));
       // checklist books velcroed to the side wall, and the Hasselblad on its bracket
       const book = new THREE.MeshStandardMaterial({ color: 0xd9d2bf, roughness: 0.9 });
       const bookCover = new THREE.MeshStandardMaterial({ color: 0x23466e, roughness: 0.7 });
@@ -343,10 +415,16 @@ export class CockpitView {
       this.lights.flood.position.set(5.6, 0, 0.6);
       // front wall with two triangular windows
       const front = wallTexture([
-        [[0.12, 0.08], [0.46, 0.08], [0.46, 0.44]],
-        [[0.88, 0.08], [0.54, 0.08], [0.54, 0.44]],
+        [[0.1696, 0.08], [0.4652, 0.08], [0.4652, 0.44]],
+        [[0.8304, 0.08], [0.5348, 0.08], [0.5348, 0.44]],
       ]);
-      add(new THREE.PlaneGeometry(2.0, 1.6), new THREE.MeshStandardMaterial({ color: 0x6d7175, roughness: 0.85, alphaMap: front, alphaTest: 0.5, side: THREE.DoubleSide }), [5.0, 0, 1.3], basis([0, 1, 0], [1, 0, 0]));
+      add(new THREE.PlaneGeometry(2.3, 1.6), new THREE.MeshStandardMaterial({ color: 0x6d7175, roughness: 0.85, alphaMap: front, alphaTest: 0.5, side: THREE.DoubleSide }), [5.0, 0, 1.3], basis([0, 1, 0], [1, 0, 0]));
+      // the cabin structure behind the panels (dark, so the gaps read as depth, not as space)
+      const shell = new THREE.MeshStandardMaterial({ color: 0x1d1e20, roughness: 0.9, side: THREE.DoubleSide });
+      add(new THREE.PlaneGeometry(2.6, 2.4), shell, [5.0, -1.26, 0.35], basis([0, 0, 1], [1, 0, 0]));
+      add(new THREE.PlaneGeometry(2.6, 2.4), shell, [5.0, 1.26, 0.35], basis([0, 0, -1], [1, 0, 0]));
+      add(new THREE.PlaneGeometry(2.6, 2.6), shell, [5.0, 0, -0.8], basis([0, 1, 0], [1, 0, 0]));
+      add(new THREE.PlaneGeometry(2.6, 2.6), shell, [3.6, 0, 0.35], basis([0, 1, 0], [0, 0, 1]));
       const ceil = wallTexture([[[0.3, 0.6], [0.45, 0.6], [0.45, 0.85], [0.3, 0.85]]]);
       add(new THREE.PlaneGeometry(1.8, 2.2), new THREE.MeshStandardMaterial({ color: 0x5f6367, roughness: 0.85, alphaMap: ceil, alphaTest: 0.5, side: THREE.DoubleSide }), [6.05, 0, 0.3], basis([0, -1, 0], [0, 0, 1]));
       const lmWall = () => new THREE.MeshStandardMaterial({ color: 0xffffff, map: quilt(3, 2, '#b9b6ad'), roughness: 0.95, side: THREE.DoubleSide });
@@ -547,6 +625,14 @@ export class CockpitView {
       sunL.target.position.set(...c);
       sunL.position.set(c[0] + sl.x * 6, c[1] + sl.y * 6, c[2] + sl.z * 6);
     }
+    // entry: the shock layer's orange glow pours in through every window, flickering
+    const pl = Math.min(1, info.plasma ?? 0);
+    this._plT = (this._plT ?? 0) + dt;
+    const fl = pl * (0.82 + 0.1 * Math.sin(this._plT * 31) + 0.08 * Math.sin(this._plT * 53 + 1));
+    this.lights.amb.color.setHex(0xbfc8d8).lerp(_plasmaCol, Math.min(1, pl * 1.5));
+    this.lights.amb.intensity += fl * 0.9;
+    this.lights.fill.color.setHex(0xdfe8ff).lerp(_plasmaCol, Math.min(1, pl * 1.5));
+    this.lights.fill.intensity += fl * 2.2;
     const bright = powered ? 1 : 0.35;
     const integral = powered ? (this.station === 'CM' ? INTEGRAL[v.sw.get('CM.LTG.INTEGRAL')] ?? 0.22 : INTEGRAL[v.sw.get('LM.LTG.INTEGRAL')] ?? 0.22) : 0.02;
     for (const pm of this.panelMeshes) {

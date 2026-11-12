@@ -386,6 +386,30 @@ each returning `{ root, parts: {...}, nozzles: {...}, dockPort?, setConfig?(conf
 plus `buildConfigModel(config, parts, opts)` that assembles any `CONFIGS` entry using `moduleTransform`
 (origin = config reference point). Model space = body axes (+X forward/up the stack). LODs for distance.
 
+### 10.1 Coming home (`src/render/env/Recovery.js`)
+
+`createRecovery({ recovery, light })` is built by FlightView for every Earth-side chapter (near pass,
+camera-relative ECI) and updated each frame after the launch site. It draws:
+
+- **Entry plasma** while `dyn.mode === 'ENTRY'` and no chute is out: heating `≈ √(q·v / 8e7)` faded below
+  ~4 km/s drives an ellipsoidal shock layer ahead of the shield (local +Y = air-relative velocity
+  `state.vSurface`), a flared ionised wake, ablation sparks (`flames` particles) and an orange point light
+  (always in the scene, intensity 0 when cold: toggling a light recompiles every material; `light: false`
+  for launch chapters). `rec.heat` is forwarded to `CockpitView.update({ plasma })`, which tints and
+  flickers the cabin lights.
+- **Parachutes** from `vehicle.parts`: two drogues, then three 25 m ringsail mains (line stretch, reefed
+  ~8 s, disreefed), risers to the CM apex (body +X, 2.2 m from the reference point). After splashdown the
+  mains sag, topple, lie flat on the water and sink. `FlightDynamics._hangCM` hangs the capsule apex-up.
+- **The sea** (camera below 44 km, CM config, not near the launch site whose ground disc has its own water):
+  a 95 km curved disc that follows the camera, faded in like the site ground; wave coordinates are
+  Earth-fixed east/north metres from an anchor (re-anchored every 40 km) so the swell turns with the Earth
+  and stays precise. Splash ring, froth, fluorescein dye, carrier wake/bow foam are analytic in the shader.
+- **Recovery forces** from the chapter's `recovery: { name, hull, length, lat, lon }` (A11: USS Hornet,
+  A13: USS Iwo Jima): the carrier at its station (moved to ~3.8 km if it would be under the capsule),
+  steaming toward the capsule after splashdown and stopping ~900 m off; a Sea King circles under the
+  chutes and hovers off the capsule afterwards. The exterior camera backs off (78 m) and lifts its focus
+  under the mains (`_defaultDist`, smoothed).
+
 ## 11. Missions (agents **a11**, **a13**, **bonus**)
 
 Chapter module default export (merged with registry metadata by `loadChapter`):
@@ -528,6 +552,18 @@ from builds by vite.config.js. `SimAudio` maps sim → sound (engines by thrust 
 state, C&W tone from `CM.CW.TONE`/`LM.CW.TONE`, entry roar, landing dust hiss, MOCR room murmur + selected
 voice loops in controller mode).
 
+### 12.3 Time: warp limits and "Adelantar"
+
+`MissionRunner.fastForward()` (HUD ⏩, F8 when no scripted skip point is offered) runs at the highest warp
+the limits allow (`clock.setWarpMax`: the dynamics limit is re-evaluated every frame; the chapter cap is
+lifted meanwhile) until something happens: a radio line, an objective, a player checklist, a decision, a
+poll, a caption, a caution/warning alert, a vehicle event, V99, a C&W alarm, or 60 s before a burn's TIG.
+It refuses while a player step (a non-passive checklist item) or a decision is open, and it caps at ×10
+while a line is being spoken. With it, `FlightDynamics.maxWarp()` allows ×60 for a CMC-flown entry, ×25 for
+an IU-flown ascent, ×10 for computer-flown burns; coasting above 8 km over the Moon is ×50 at any time.
+Only real docking targets (`DOCKABLE`, not jettisoned) slow time near other bodies. Background callouts
+that warp left behind by more than 120 s are logged (`mission:sayLog`) instead of played late.
+
 ### 13.1 Recorded radio voices, real recordings, the player's soundtrack
 
 - **Radio voices** (`tools/voices/`, `npm run voices`): `extract.mjs` collects every line the scripts
@@ -573,11 +609,18 @@ available); respects safe areas. Settings screen for every `DEFAULT_SETTINGS` ke
 
 ## 15. EVA (agent **bonus**)
 
-`EVAScene` (`src/eva/EVAScene.js`) — may extend PlayScene or be standalone, same chapter/runner contract:
-first-person helmet view (visor frame, PLSS status readout) + optional third person (V), 1/6 g kangaroo-hop
-locomotion, dust, long shadows (sun ~10–14° elevation), the LM Eagle on the surface, ladder descent, first
-step (clip `a11_one_small_step`), flag planting, EASEP deployment, samples, photos (camera "Hasselblad" mode),
-TV camera, timeline & consumables; walk/touch controls via `walk` context.
+`EVAScene` extends PlayScene; with `chapter.scene === 'eva'` the FlightView creates an
+`EVAController` (`src/eva/EVAController.js`) instead of the cabin: the astronaut (`render/models/astronaut.js`:
+A7L suit with PLSS and gold visor, jointed and animated; flag, PSEP, LRRR, task marker rings) walks the
+collision terrain (`lunar.heightAt`) around the landed LM — walk / 1/6 g lope (Shift, touch "Saltar"),
+keep-out around the descent stage, 60 m tether — with dust puffs per step and shadow casters on the regolith
+(`lunar.addShadowCaster/placeCaster`). Cameras: `eva` (third person, drag/wheel orbit, follows while walking,
+kept out of the LM) and `eva:fp` (visor). Script API `ctx.view.eva`: `lm`, `ladder`, `lmPoint(fwd, right)`,
+`addTarget({id,label,e,n,radius,anim})` → promise when the player works it (E / prompt button),
+`place('flag'|'psep'|'lrrr', e, n, yaw)`, `descendLadder()`, `stepOff()`, `addCompanion()` (the LMP comes
+down and works near the LM), `photo()` (F), `stats`. The chapter (`missions/apollo11/eva.js`) runs headless
+too (tasks resolve by themselves without a view). HUD: EVA telemetry (distance to the LM, PLSS O₂, tasks),
+touch mode `eva` (left stick walks).
 
 ## 16. Definition of done for every agent
 

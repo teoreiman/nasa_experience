@@ -169,16 +169,16 @@ function paintLocal() {
   const crawlA = [[-4520, -2450], [-3400, -1700], [-2500, -1100], [-1200, -560], [-140, -60]];
   const crawlB = [[-2500, -1100], [-2300, 200], [-1900, 1500], [-1700, 2050]];
   for (const cw of [crawlA, crawlB]) {
-    L.line(cw, 44, '#8e8a7c');
-    L.line(cw, 12, '#c5c0b1');
+    L.line(cw, 44, '#7c796d');
+    L.line(cw, 12, '#a7a395');
   }
   // pad hardstands + cleared sand
   for (const [e, n] of [[0, 0], [-1660, 2100]]) {
-    L.g.fillStyle = '#b5ae95';
+    L.g.fillStyle = '#9d9681';
     L.g.beginPath();
     L.g.arc(L.X(e), L.Y(n), L.px(520), 0, Math.PI * 2);
     L.g.fill();
-    L.g.fillStyle = '#c9c4b6';
+    L.g.fillStyle = '#aaa595';
     L.g.beginPath();
     L.g.arc(L.X(e), L.Y(n), L.px(260), 0, Math.PI * 2);
     L.g.fill();

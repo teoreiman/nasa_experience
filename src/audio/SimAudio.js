@@ -243,6 +243,11 @@ export class SimAudio {
       w2?.setParam('pitch', 250 + 600 * qn);
     }
 
+    // ---- the recovery helicopter overhead (under the mains and afloat)
+    const heli = this.view?.recovery?.objects?.heli;
+    const hd = heli?.visible ? heli.position.length() : Infinity;
+    this._loop('rotor', hd < 2500 && this.role === 'astronaut', Math.min(1, 80 / Math.max(25, hd)) * (inside ? 0.3 : 0.75));
+
     // ---- cabin environment
     const cmPowered = v.modules.csm && ((tm['CM.EPS.MNA.V'] ?? 0) > 20 || (tm['CM.EPS.MNB.V'] ?? 0) > 20);
     const lmPowered = v.modules.lm && ((tm['LM.EPS.CDR_BUS.V'] ?? 0) > 20 || (tm['LM.EPS.LMP_BUS.V'] ?? 0) > 20);

@@ -56,6 +56,13 @@ export class MissionClock {
     return this.warp;
   }
 
+  /** Ask for the top warp and let the limits decide frame by frame (effectiveWarp follows them up
+   *  and down; setWarp would freeze the level allowed at this instant). */
+  setWarpMax() {
+    this.warp = WARP_LEVELS[WARP_LEVELS.length - 1];
+    this._notify();
+  }
+
   warpUp() {
     const i = WARP_LEVELS.indexOf(this.effectiveWarp);
     return this.setWarp(WARP_LEVELS[Math.min(WARP_LEVELS.length - 1, i + 1)]);

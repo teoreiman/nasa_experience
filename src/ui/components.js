@@ -522,13 +522,12 @@ export const CONTROLS = {
   eva: {
     title: 'EVA · superficie lunar',
     rows: [
-      [['W', 'A', 'S', 'D'], 'Caminar'],
-      [['Shift'], 'Trotar'],
-      [['Espacio'], 'Saltar'],
-      [['Arrastrar'], 'Mirar (o clic para capturar el puntero)'],
-      [['E'], 'Interactuar'],
-      [['V'], 'Tercera persona'],
-      [['C'], 'Cámara Hasselblad (clic = foto)'],
+      [['W', 'A', 'S', 'D'], 'Caminar (relativo a la cámara)'],
+      [['Shift'], 'Paso de canguro a 1/6 g'],
+      [['E', 'Espacio'], 'Hacer la tarea del anillo dorado'],
+      [['Arrastrar', 'Rueda'], 'Girar y acercar la cámara'],
+      [['V'], 'Tercera persona ↔ visor del casco'],
+      [['F'], 'Foto con la Hasselblad'],
     ],
   },
   mission: {
@@ -536,7 +535,7 @@ export const CONTROLS = {
     rows: [
       [['.', ','], 'Acelerar / frenar el tiempo'],
       [['/'], 'Tiempo real'],
-      [['F8'], 'Saltar al siguiente evento'],
+      [['F8', '⏩'], 'Adelantar hasta el próximo momento importante'],
       [['Tab'], 'Mostrar / ocultar la lista'],
       [['B'], 'Manual de procedimientos'],
       [['G'], 'Registro de comunicaciones'],

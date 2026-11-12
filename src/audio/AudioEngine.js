@@ -698,6 +698,27 @@ export class AudioEngine {
         chain(n, bp, g, master);
         break;
       }
+      case 'rotor': {
+        // Sea King overhead: blade slap (5 blades × 3.4 rev/s ≈ 17 thumps a second) on low noise, and
+        // the whine of the twin turbines
+        const n = start(this._src('brown'));
+        const am = this._gain(0.45);
+        chain(n, this._filter('lowpass', 380, 0.8), am, master);
+        const lfo = c.createOscillator();
+        lfo.type = 'sawtooth';
+        lfo.frequency.value = 17;
+        const depth = this._gain(0.45);
+        lfo.connect(depth).connect(am.gain);
+        lfo.start();
+        const w = c.createOscillator();
+        w.frequency.value = 1350;
+        chain(w, this._gain(0.008), master);
+        w.start();
+        nodes.push(lfo, w);
+        const h = start(this._src('pink'));
+        chain(h, this._filter('bandpass', 2600, 0.7), this._gain(0.06), master);
+        break;
+      }
       default:
         break;
     }
@@ -1253,7 +1274,7 @@ export class AudioEngine {
       o.connect(g).connect(out);
       o.start(t);
       o.stop(t + 1.7);
-      this._burst(out, 'brown', t, 0.004, a * 0.8, 0.25, this._filter('lowpass', 180));
+      this._burst(out, 'brown', t, 0.004, a * 0.8, 0.25, ['lowpass', 180]);
     };
     const pluck = (m, t, a) => {
       const o = c.createOscillator();

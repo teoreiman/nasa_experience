@@ -13,6 +13,8 @@ const EI = GET(195, 3, 6);
 const START = GET(194, 47, 0);
 
 export default {
+  // the recovery carrier on station (FlightView draws her, with the helicopter, near the splash point)
+  recovery: { name: 'USS Hornet', hull: '12', length: 270, ...HORNET },
   setup() {
     const epochUTC = MISSION_EPOCH.apollo11;
     // EI point calibrated so the CMC-guided entry splashes next to the Hornet

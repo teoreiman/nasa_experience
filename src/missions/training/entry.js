@@ -15,7 +15,6 @@ export default {
     seat: 'CDR',
     csm: 'ENTRY',
     lm: null,
-    maxWarp: 4,
   },
   speakers: { CAPCOM: 'Instructor' },
   briefing: {

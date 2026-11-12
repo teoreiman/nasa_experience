@@ -25,8 +25,8 @@
    "lang": "en",
    "text": "Go!",
    "src": [
-    "src/missions/MissionRunner.js:673",
-    "src/missions/MissionRunner.js:684"
+    "src/missions/MissionRunner.js:694",
+    "src/missions/MissionRunner.js:705"
    ]
   },
   {
@@ -35,8 +35,8 @@
    "lang": "en",
    "text": "No go, Flight.",
    "src": [
-    "src/missions/MissionRunner.js:674",
-    "src/missions/MissionRunner.js:684"
+    "src/missions/MissionRunner.js:695",
+    "src/missions/MissionRunner.js:705"
    ]
   },
   {
@@ -63,7 +63,7 @@
    "lang": "en",
    "text": "30 seconds.",
    "src": [
-    "src/missions/apollo11/landing.js:222"
+    "src/missions/apollo11/landing.js:221"
    ]
   },
   {
@@ -72,7 +72,7 @@
    "lang": "en",
    "text": "60 seconds.",
    "src": [
-    "src/missions/apollo11/landing.js:218"
+    "src/missions/apollo11/landing.js:217"
    ]
   },
   {
@@ -468,7 +468,7 @@
    "lang": "en",
    "text": "Bingo.",
    "src": [
-    "src/missions/apollo11/landing.js:227"
+    "src/missions/apollo11/landing.js:226"
    ]
   },
   {
@@ -531,7 +531,7 @@
    "lang": "en",
    "text": "Eagle, Houston. If you read, you are GO for powered descent. Over.",
    "src": [
-    "src/missions/apollo11/landing.js:54"
+    "src/missions/apollo11/landing.js:53"
    ]
   },
   {
@@ -576,7 +576,7 @@
    "lang": "en",
    "text": "Eagle, Houston. You are GO for landing. Over.",
    "src": [
-    "src/missions/apollo11/landing.js:179"
+    "src/missions/apollo11/landing.js:178"
    ]
   },
   {
@@ -603,7 +603,7 @@
    "lang": "en",
    "text": "Eagle, you are stay for T1.",
    "src": [
-    "src/missions/apollo11/landing.js:301"
+    "src/missions/apollo11/landing.js:300"
    ]
   },
   {
@@ -632,7 +632,7 @@
    "lang": "en",
    "text": "Farewell, Aquarius, and we thank you.",
    "src": [
-    "src/missions/apollo13/entry.js:58"
+    "src/missions/apollo13/entry.js:57"
    ]
   },
   {
@@ -677,8 +677,8 @@
    "lang": "en",
    "text": "Go!",
    "src": [
-    "src/missions/MissionRunner.js:673",
-    "src/missions/MissionRunner.js:684"
+    "src/missions/MissionRunner.js:694",
+    "src/missions/MissionRunner.js:705"
    ]
   },
   {
@@ -853,6 +853,33 @@
    ]
   },
   {
+   "key": "rk5ckstu8q",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Neil and Buzz, the President of the United States is in his office now and would like to say a few words to you. Over.",
+   "src": [
+    "src/missions/apollo11/eva.js:95"
+   ]
+  },
+  {
+   "key": "y3bbb99qj2",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Neil and Buzz, we'd like to remind you we are about 10 minutes from the time to head back in.",
+   "src": [
+    "src/missions/apollo11/eva.js:129"
+   ]
+  },
+  {
+   "key": "wegbdj1ziv",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Neil, this is Houston. Did you copy about the contingency sample? Over.",
+   "src": [
+    "src/missions/apollo11/eva.js:69"
+   ]
+  },
+  {
    "key": "f8d4solmrp",
    "who": "CAPCOM",
    "lang": "en",
@@ -867,8 +894,8 @@
    "lang": "en",
    "text": "No go, Flight.",
    "src": [
-    "src/missions/MissionRunner.js:674",
-    "src/missions/MissionRunner.js:684"
+    "src/missions/MissionRunner.js:695",
+    "src/missions/MissionRunner.js:705"
    ]
   },
   {
@@ -877,7 +904,7 @@
    "lang": "en",
    "text": "Odyssey, Houston. Standing by. Over.",
    "src": [
-    "src/missions/apollo13/entry.js:90"
+    "src/missions/apollo13/entry.js:89"
    ]
   },
   {
@@ -904,7 +931,7 @@
    "lang": "en",
    "text": "Odyssey, Houston. We show you on the mains. It really looks great.",
    "src": [
-    "src/missions/apollo13/entry.js:108"
+    "src/missions/apollo13/entry.js:107"
    ]
   },
   {
@@ -931,7 +958,7 @@
    "lang": "en",
    "text": "Okay, Odyssey. You are GO for LM jettison.",
    "src": [
-    "src/missions/apollo13/entry.js:46"
+    "src/missions/apollo13/entry.js:45"
    ]
   },
   {
@@ -949,7 +976,7 @@
    "lang": "en",
    "text": "Okay. We read you, Jack.",
    "src": [
-    "src/missions/apollo13/entry.js:93"
+    "src/missions/apollo13/entry.js:92"
    ]
   },
   {
@@ -1012,7 +1039,7 @@
    "lang": "en",
    "text": "Roger, 1201 alarm. We are GO. Same type. We are GO.",
    "src": [
-    "src/missions/apollo11/landing.js:154"
+    "src/missions/apollo11/landing.js:153"
    ]
   },
   {
@@ -1040,6 +1067,15 @@
    "text": "Roger, liftoff. The clock is running.",
    "src": [
     "src/missions/free/index.js:176"
+   ]
+  },
+  {
+   "key": "946clsxuuv",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Roger, Neil.",
+   "src": [
+    "src/missions/apollo11/eva.js:44"
    ]
   },
   {
@@ -1075,7 +1111,7 @@
    "lang": "en",
    "text": "Roger, Twan— Tranquility, we copy you on the ground. You got a bunch of guys about to turn blue. We are breathing again. Thanks a lot.",
    "src": [
-    "src/missions/apollo11/landing.js:281"
+    "src/missions/apollo11/landing.js:280"
    ]
   },
   {
@@ -1111,7 +1147,7 @@
    "lang": "en",
    "text": "Roger. 1201. We got it. We are GO.",
    "src": [
-    "src/missions/apollo11/landing.js:156"
+    "src/missions/apollo11/landing.js:155"
    ]
   },
   {
@@ -1120,7 +1156,7 @@
    "lang": "en",
    "text": "Roger. 1202. We got it. We are GO.",
    "src": [
-    "src/missions/apollo11/landing.js:156"
+    "src/missions/apollo11/landing.js:155"
    ]
   },
   {
@@ -1139,6 +1175,15 @@
    "text": "Roger. Main B undervolt.",
    "src": [
     "src/missions/apollo13/explosion.js:68"
+   ]
+  },
+  {
+   "key": "xefmaffkix",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Roger. Tranquility Base, you did a magnificent job.",
+   "src": [
+    "src/missions/apollo11/eva.js:138"
    ]
   },
   {
@@ -1165,7 +1210,7 @@
    "lang": "en",
    "text": "Roger. We got — we're GO on that alarm.",
    "src": [
-    "src/missions/apollo11/landing.js:142"
+    "src/missions/apollo11/landing.js:141"
    ]
   },
   {
@@ -1394,6 +1439,15 @@
    ]
   },
   {
+   "key": "vvud792c2t",
+   "who": "CAPCOM",
+   "lang": "en",
+   "text": "Tranquility Base, Houston. We see the seismometer data. It is quite sensitive; we can see you walking around.",
+   "src": [
+    "src/missions/apollo11/eva.js:109"
+   ]
+  },
+  {
    "key": "gtygl54ceo",
    "who": "CAPCOM",
    "lang": "en",
@@ -1489,7 +1543,7 @@
    "lang": "en",
    "text": "You have manual control. Lift vector up at entry interface.",
    "src": [
-    "src/missions/training/entry.js:39"
+    "src/missions/training/entry.js:38"
    ]
   },
   {
@@ -1499,6 +1553,15 @@
    "text": "zero",
    "src": [
     "src/missions/common/callouts.js"
+   ]
+  },
+  {
+   "key": "m1hepcfg2h",
+   "who": "CDR",
+   "lang": "en",
+   "text": "A pretty good thought.",
+   "src": [
+    "src/missions/apollo11/eva.js:79"
    ]
   },
   {
@@ -1588,7 +1651,7 @@
    "lang": "en",
    "text": "Give us a reading on the 1201 program alarm.",
    "src": [
-    "src/missions/apollo11/landing.js:134"
+    "src/missions/apollo11/landing.js:133"
    ]
   },
   {
@@ -1597,7 +1660,7 @@
    "lang": "en",
    "text": "Give us a reading on the 1202 program alarm.",
    "src": [
-    "src/missions/apollo11/landing.js:134"
+    "src/missions/apollo11/landing.js:133"
    ]
   },
   {
@@ -1637,6 +1700,24 @@
    ]
   },
   {
+   "key": "h3hsmybjyx",
+   "who": "CDR",
+   "lang": "en",
+   "text": "I'm at the foot of the ladder. The LM footpads are only depressed in the surface about 1 or 2 inches.",
+   "src": [
+    "src/missions/apollo11/eva.js:50"
+   ]
+  },
+  {
+   "key": "9ft56wf3uv",
+   "who": "CDR",
+   "lang": "en",
+   "text": "I'm going to step off the LM now.",
+   "src": [
+    "src/missions/apollo11/eva.js:51"
+   ]
+  },
+  {
    "key": "18abydn1kys",
    "who": "CDR",
    "lang": "en",
@@ -1656,12 +1737,21 @@
    ]
   },
   {
+   "key": "ndc7js91i1",
+   "who": "CDR",
+   "lang": "en",
+   "text": "Isn't that something! Magnificent sight out here.",
+   "src": [
+    "src/missions/apollo11/eva.js:83"
+   ]
+  },
+  {
    "key": "14r141qetwu",
    "who": "CDR",
    "lang": "en",
    "text": "It's a 1201.",
    "src": [
-    "src/missions/apollo11/landing.js:133"
+    "src/missions/apollo11/landing.js:132"
    ]
   },
   {
@@ -1670,7 +1760,7 @@
    "lang": "en",
    "text": "It's a 1202.",
    "src": [
-    "src/missions/apollo11/landing.js:133"
+    "src/missions/apollo11/landing.js:132"
    ]
   },
   {
@@ -1680,6 +1770,24 @@
    "text": "Liftoff. The clock is running.",
    "src": [
     "src/missions/common/launch.js:103"
+   ]
+  },
+  {
+   "key": "108e3qt9nrj",
+   "who": "CDR",
+   "lang": "en",
+   "text": "Okay, Houston, I'm on the porch.",
+   "src": [
+    "src/missions/apollo11/eva.js:43"
+   ]
+  },
+  {
+   "key": "16y99b4ntk0",
+   "who": "CDR",
+   "lang": "en",
+   "text": "Okay, Houston. We are back in the LM.",
+   "src": [
+    "src/missions/apollo11/eva.js:137"
    ]
   },
   {
@@ -1715,7 +1823,7 @@
    "lang": "en",
    "text": "Pretty rocky area.",
    "src": [
-    "src/missions/apollo11/landing.js:184"
+    "src/missions/apollo11/landing.js:183"
    ]
   },
   {
@@ -1724,7 +1832,7 @@
    "lang": "en",
    "text": "Program alarm.",
    "src": [
-    "src/missions/apollo11/landing.js:132"
+    "src/missions/apollo11/landing.js:131"
    ]
   },
   {
@@ -1743,6 +1851,15 @@
    "text": "Right by the high-gain antenna, the whole panel is blown out, almost from the base to the engine.",
    "src": [
     "src/missions/apollo13/powerup.js:66"
+   ]
+  },
+  {
+   "key": "14mriwd88xl",
+   "who": "CDR",
+   "lang": "en",
+   "text": "Rog. I'm going to get to that just as soon as I finish these picture series.",
+   "src": [
+    "src/missions/apollo11/eva.js:70"
    ]
   },
   {
@@ -1823,7 +1940,7 @@
    "lang": "en",
    "text": "Shutdown.",
    "src": [
-    "src/missions/apollo11/landing.js:277",
+    "src/missions/apollo11/landing.js:276",
     "src/missions/apollo13/mcc5.js:107",
     "src/missions/common/kit.js:134"
    ]
@@ -1875,12 +1992,39 @@
    ]
   },
   {
+   "key": "m16l41464h",
+   "who": "CDR",
+   "lang": "en",
+   "text": "That would be an honor.",
+   "src": [
+    "src/missions/apollo11/eva.js:96"
+   ]
+  },
+  {
    "key": "ed3ecfckem",
    "who": "CDR",
    "lang": "en",
    "text": "The Eagle has wings.",
    "src": [
     "src/missions/apollo11/undock.js:53"
+   ]
+  },
+  {
+   "key": "e1gew058n4",
+   "who": "CDR",
+   "lang": "en",
+   "text": "The surface is fine and powdery. I can kick it up loosely with my toe.",
+   "src": [
+    "src/missions/apollo11/eva.js:64"
+   ]
+  },
+  {
+   "key": "mvb7jm85p7",
+   "who": "CDR",
+   "lang": "en",
+   "text": "This is very interesting. It is a very soft surface, but here and there where I plug with the contingency sample collector, I run into a very hard surface.",
+   "src": [
+    "src/missions/apollo11/eva.js:74"
    ]
   },
   {
@@ -1952,7 +2096,7 @@
    "lang": "en",
    "text": "Eagle, this is Columbia. They just gave you a GO for powered descent.",
    "src": [
-    "src/missions/apollo11/landing.js:55"
+    "src/missions/apollo11/landing.js:54"
    ]
   },
   {
@@ -2060,7 +2204,7 @@
    "lang": "en",
    "text": "Okay, Joe.",
    "src": [
-    "src/missions/apollo13/entry.js:92"
+    "src/missions/apollo13/entry.js:91"
    ]
   },
   {
@@ -2249,8 +2393,8 @@
    "lang": "en",
    "text": "Go!",
    "src": [
-    "src/missions/MissionRunner.js:673",
-    "src/missions/MissionRunner.js:684"
+    "src/missions/MissionRunner.js:694",
+    "src/missions/MissionRunner.js:705"
    ]
   },
   {
@@ -2259,8 +2403,8 @@
    "lang": "en",
    "text": "No go, Flight.",
    "src": [
-    "src/missions/MissionRunner.js:674",
-    "src/missions/MissionRunner.js:684"
+    "src/missions/MissionRunner.js:695",
+    "src/missions/MissionRunner.js:705"
    ]
   },
   {
@@ -2296,8 +2440,8 @@
    "lang": "en",
    "text": "Go!",
    "src": [
-    "src/missions/MissionRunner.js:673",
-    "src/missions/MissionRunner.js:684"
+    "src/missions/MissionRunner.js:694",
+    "src/missions/MissionRunner.js:705"
    ]
   },
   {
@@ -2306,8 +2450,8 @@
    "lang": "en",
    "text": "No go, Flight.",
    "src": [
-    "src/missions/MissionRunner.js:674",
-    "src/missions/MissionRunner.js:684"
+    "src/missions/MissionRunner.js:695",
+    "src/missions/MissionRunner.js:705"
    ]
   },
   {
@@ -2316,8 +2460,8 @@
    "lang": "en",
    "text": "Go!",
    "src": [
-    "src/missions/MissionRunner.js:673",
-    "src/missions/MissionRunner.js:684"
+    "src/missions/MissionRunner.js:694",
+    "src/missions/MissionRunner.js:705"
    ]
   },
   {
@@ -2326,8 +2470,8 @@
    "lang": "en",
    "text": "No go, Flight.",
    "src": [
-    "src/missions/MissionRunner.js:674",
-    "src/missions/MissionRunner.js:684"
+    "src/missions/MissionRunner.js:695",
+    "src/missions/MissionRunner.js:705"
    ]
   },
   {
@@ -2354,8 +2498,8 @@
    "lang": "en",
    "text": "Go!",
    "src": [
-    "src/missions/MissionRunner.js:673",
-    "src/missions/MissionRunner.js:684"
+    "src/missions/MissionRunner.js:694",
+    "src/missions/MissionRunner.js:705"
    ]
   },
   {
@@ -2364,8 +2508,8 @@
    "lang": "en",
    "text": "No go, Flight.",
    "src": [
-    "src/missions/MissionRunner.js:674",
-    "src/missions/MissionRunner.js:684"
+    "src/missions/MissionRunner.js:695",
+    "src/missions/MissionRunner.js:705"
    ]
   },
   {
@@ -2392,7 +2536,7 @@
    "lang": "en",
    "text": "BOOSTER?",
    "src": [
-    "src/missions/MissionRunner.js:664"
+    "src/missions/MissionRunner.js:685"
    ]
   },
   {
@@ -2419,7 +2563,7 @@
    "lang": "en",
    "text": "CAPCOM, we are stay for T1.",
    "src": [
-    "src/missions/apollo11/landing.js:300"
+    "src/missions/apollo11/landing.js:299"
    ]
   },
   {
@@ -2428,7 +2572,7 @@
    "lang": "en",
    "text": "CAPCOM?",
    "src": [
-    "src/missions/MissionRunner.js:664"
+    "src/missions/MissionRunner.js:685"
    ]
   },
   {
@@ -2437,7 +2581,7 @@
    "lang": "en",
    "text": "CONTROL?",
    "src": [
-    "src/missions/MissionRunner.js:664"
+    "src/missions/MissionRunner.js:685"
    ]
   },
   {
@@ -2464,7 +2608,7 @@
    "lang": "en",
    "text": "EECOM?",
    "src": [
-    "src/missions/MissionRunner.js:664"
+    "src/missions/MissionRunner.js:685"
    ]
   },
   {
@@ -2473,7 +2617,7 @@
    "lang": "en",
    "text": "FAO?",
    "src": [
-    "src/missions/MissionRunner.js:664"
+    "src/missions/MissionRunner.js:685"
    ]
   },
   {
@@ -2491,7 +2635,7 @@
    "lang": "en",
    "text": "FIDO?",
    "src": [
-    "src/missions/MissionRunner.js:664"
+    "src/missions/MissionRunner.js:685"
    ]
   },
   {
@@ -2500,7 +2644,7 @@
    "lang": "en",
    "text": "FLIGHT?",
    "src": [
-    "src/missions/MissionRunner.js:664"
+    "src/missions/MissionRunner.js:685"
    ]
   },
   {
@@ -2509,7 +2653,7 @@
    "lang": "en",
    "text": "GNC?",
    "src": [
-    "src/missions/MissionRunner.js:664"
+    "src/missions/MissionRunner.js:685"
    ]
   },
   {
@@ -2518,8 +2662,8 @@
    "lang": "en",
    "text": "Go!",
    "src": [
-    "src/missions/MissionRunner.js:673",
-    "src/missions/MissionRunner.js:684"
+    "src/missions/MissionRunner.js:694",
+    "src/missions/MissionRunner.js:705"
    ]
   },
   {
@@ -2528,7 +2672,7 @@
    "lang": "en",
    "text": "GUIDO?",
    "src": [
-    "src/missions/MissionRunner.js:664"
+    "src/missions/MissionRunner.js:685"
    ]
   },
   {
@@ -2537,7 +2681,7 @@
    "lang": "en",
    "text": "INCO?",
    "src": [
-    "src/missions/MissionRunner.js:664"
+    "src/missions/MissionRunner.js:685"
    ]
   },
   {
@@ -2591,7 +2735,7 @@
    "lang": "en",
    "text": "NETWORK?",
    "src": [
-    "src/missions/MissionRunner.js:664"
+    "src/missions/MissionRunner.js:685"
    ]
   },
   {
@@ -2600,8 +2744,8 @@
    "lang": "en",
    "text": "No go, Flight.",
    "src": [
-    "src/missions/MissionRunner.js:674",
-    "src/missions/MissionRunner.js:684"
+    "src/missions/MissionRunner.js:695",
+    "src/missions/MissionRunner.js:705"
    ]
   },
   {
@@ -2628,7 +2772,7 @@
    "lang": "en",
    "text": "Okay, all flight controllers, about 45 seconds to T1 stay/no stay.",
    "src": [
-    "src/missions/apollo11/landing.js:299"
+    "src/missions/apollo11/landing.js:298"
    ]
   },
   {
@@ -2646,7 +2790,7 @@
    "lang": "en",
    "text": "PAO?",
    "src": [
-    "src/missions/MissionRunner.js:664"
+    "src/missions/MissionRunner.js:685"
    ]
   },
   {
@@ -2655,7 +2799,7 @@
    "lang": "en",
    "text": "PROCEDURES?",
    "src": [
-    "src/missions/MissionRunner.js:664"
+    "src/missions/MissionRunner.js:685"
    ]
   },
   {
@@ -2673,7 +2817,7 @@
    "lang": "en",
    "text": "RETRO?",
    "src": [
-    "src/missions/MissionRunner.js:664"
+    "src/missions/MissionRunner.js:685"
    ]
   },
   {
@@ -2682,7 +2826,7 @@
    "lang": "en",
    "text": "SURGEON?",
    "src": [
-    "src/missions/MissionRunner.js:664"
+    "src/missions/MissionRunner.js:685"
    ]
   },
   {
@@ -2691,7 +2835,7 @@
    "lang": "en",
    "text": "TELMU?",
    "src": [
-    "src/missions/MissionRunner.js:664"
+    "src/missions/MissionRunner.js:685"
    ]
   },
   {
@@ -2745,8 +2889,8 @@
    "lang": "en",
    "text": "Go!",
    "src": [
-    "src/missions/MissionRunner.js:673",
-    "src/missions/MissionRunner.js:684"
+    "src/missions/MissionRunner.js:694",
+    "src/missions/MissionRunner.js:705"
    ]
   },
   {
@@ -2755,8 +2899,8 @@
    "lang": "en",
    "text": "No go, Flight.",
    "src": [
-    "src/missions/MissionRunner.js:674",
-    "src/missions/MissionRunner.js:684"
+    "src/missions/MissionRunner.js:695",
+    "src/missions/MissionRunner.js:705"
    ]
   },
   {
@@ -2765,8 +2909,8 @@
    "lang": "en",
    "text": "Go!",
    "src": [
-    "src/missions/MissionRunner.js:673",
-    "src/missions/MissionRunner.js:684"
+    "src/missions/MissionRunner.js:694",
+    "src/missions/MissionRunner.js:705"
    ]
   },
   {
@@ -2775,8 +2919,8 @@
    "lang": "en",
    "text": "No go, Flight.",
    "src": [
-    "src/missions/MissionRunner.js:674",
-    "src/missions/MissionRunner.js:684"
+    "src/missions/MissionRunner.js:695",
+    "src/missions/MissionRunner.js:705"
    ]
   },
   {
@@ -2785,7 +2929,7 @@
    "lang": "en",
    "text": "We're go on that alarm, Flight.",
    "src": [
-    "src/missions/apollo11/landing.js:142"
+    "src/missions/apollo11/landing.js:141"
    ]
   },
   {
@@ -2794,8 +2938,8 @@
    "lang": "en",
    "text": "Go!",
    "src": [
-    "src/missions/MissionRunner.js:673",
-    "src/missions/MissionRunner.js:684"
+    "src/missions/MissionRunner.js:694",
+    "src/missions/MissionRunner.js:705"
    ]
   },
   {
@@ -2804,8 +2948,8 @@
    "lang": "en",
    "text": "No go, Flight.",
    "src": [
-    "src/missions/MissionRunner.js:674",
-    "src/missions/MissionRunner.js:684"
+    "src/missions/MissionRunner.js:695",
+    "src/missions/MissionRunner.js:705"
    ]
   },
   {
@@ -3376,12 +3520,21 @@
    ]
   },
   {
+   "key": "17w4fyvo0tq",
+   "who": "LMP",
+   "lang": "en",
+   "text": "Beautiful view!",
+   "src": [
+    "src/missions/apollo11/eva.js:82"
+   ]
+  },
+  {
    "key": "vcwz1ieq5p",
    "who": "LMP",
    "lang": "en",
    "text": "Contact light.",
    "src": [
-    "src/missions/apollo11/landing.js:234"
+    "src/missions/apollo11/landing.js:233"
    ]
   },
   {
@@ -3390,7 +3543,7 @@
    "lang": "en",
    "text": "Contact light. Engine stop.",
    "src": [
-    "src/missions/training/landing.js:126"
+    "src/missions/training/landing.js:125"
    ]
   },
   {
@@ -3714,8 +3867,8 @@
    "lang": "en",
    "text": "en",
    "src": [
-    "src/missions/apollo11/landing.js:200",
-    "src/missions/training/landing.js:101"
+    "src/missions/apollo11/landing.js:199",
+    "src/missions/training/landing.js:100"
    ]
   },
   {
@@ -3724,7 +3877,7 @@
    "lang": "en",
    "text": "Five percent. Quantity light.",
    "src": [
-    "src/missions/apollo11/landing.js:209"
+    "src/missions/apollo11/landing.js:208"
    ]
   },
   {
@@ -3760,7 +3913,7 @@
    "lang": "en",
    "text": "Ignition. Ten percent.",
    "src": [
-    "src/missions/apollo11/landing.js:116"
+    "src/missions/apollo11/landing.js:115"
    ]
   },
   {
@@ -3800,6 +3953,15 @@
    ]
   },
   {
+   "key": "yfut80z5s1",
+   "who": "LMP",
+   "lang": "en",
+   "text": "Magnificent desolation.",
+   "src": [
+    "src/missions/apollo11/eva.js:84"
+   ]
+  },
+  {
    "key": "mpa0yxt0et",
    "who": "LMP",
    "lang": "en",
@@ -3814,7 +3976,16 @@
    "lang": "en",
    "text": "Okay. Engine stop. ACA out of detent.",
    "src": [
-    "src/missions/apollo11/landing.js:278"
+    "src/missions/apollo11/landing.js:277"
+   ]
+  },
+  {
+   "key": "10pgsznbbd5",
+   "who": "LMP",
+   "lang": "en",
+   "text": "Okay. Now I want to back up and partially close the hatch, making sure not to lock it on my way out.",
+   "src": [
+    "src/missions/apollo11/eva.js:78"
    ]
   },
   {
@@ -3832,7 +4003,7 @@
    "lang": "en",
    "text": "Proceed.",
    "src": [
-    "src/missions/apollo11/landing.js:103"
+    "src/missions/apollo11/landing.js:102"
    ]
   },
   {
@@ -3841,7 +4012,7 @@
    "lang": "en",
    "text": "Program alarm. Same type: 1201.",
    "src": [
-    "src/missions/apollo11/landing.js:153"
+    "src/missions/apollo11/landing.js:152"
    ]
   },
   {
@@ -3850,7 +4021,7 @@
    "lang": "en",
    "text": "Roger. Understand. GO for landing. 3000 feet.",
    "src": [
-    "src/missions/apollo11/landing.js:180"
+    "src/missions/apollo11/landing.js:179"
    ]
   },
   {
@@ -3904,7 +4075,7 @@
    "lang": "en",
    "text": "Throttle up. Full thrust.",
    "src": [
-    "src/missions/apollo11/landing.js:118"
+    "src/missions/apollo11/landing.js:117"
    ]
   },
   {
@@ -3913,8 +4084,8 @@
    "lang": "en",
    "text": "Go!",
    "src": [
-    "src/missions/MissionRunner.js:673",
-    "src/missions/MissionRunner.js:684"
+    "src/missions/MissionRunner.js:694",
+    "src/missions/MissionRunner.js:705"
    ]
   },
   {
@@ -3923,8 +4094,8 @@
    "lang": "en",
    "text": "No go, Flight.",
    "src": [
-    "src/missions/MissionRunner.js:674",
-    "src/missions/MissionRunner.js:684"
+    "src/missions/MissionRunner.js:695",
+    "src/missions/MissionRunner.js:705"
    ]
   },
   {
@@ -3951,7 +4122,7 @@
    "lang": "en",
    "text": "Apollo 13 is home. A successful failure.",
    "src": [
-    "src/missions/apollo13/entry.js:116"
+    "src/missions/apollo13/entry.js:115"
    ]
   },
   {
@@ -3960,8 +4131,8 @@
    "lang": "en",
    "text": "Go!",
    "src": [
-    "src/missions/MissionRunner.js:673",
-    "src/missions/MissionRunner.js:684"
+    "src/missions/MissionRunner.js:694",
+    "src/missions/MissionRunner.js:705"
    ]
   },
   {
@@ -3988,8 +4159,8 @@
    "lang": "en",
    "text": "No go, Flight.",
    "src": [
-    "src/missions/MissionRunner.js:674",
-    "src/missions/MissionRunner.js:684"
+    "src/missions/MissionRunner.js:695",
+    "src/missions/MissionRunner.js:705"
    ]
   },
   {
@@ -4107,7 +4278,7 @@
    "lang": "en",
    "text": "We are in the blackout period. We expect about 3 minutes.",
    "src": [
-    "src/missions/apollo13/entry.js:86"
+    "src/missions/apollo13/entry.js:85"
    ]
   },
   {
@@ -4125,8 +4296,8 @@
    "lang": "en",
    "text": "Go!",
    "src": [
-    "src/missions/MissionRunner.js:673",
-    "src/missions/MissionRunner.js:684"
+    "src/missions/MissionRunner.js:694",
+    "src/missions/MissionRunner.js:705"
    ]
   },
   {
@@ -4135,8 +4306,8 @@
    "lang": "en",
    "text": "No go, Flight.",
    "src": [
-    "src/missions/MissionRunner.js:674",
-    "src/missions/MissionRunner.js:684"
+    "src/missions/MissionRunner.js:695",
+    "src/missions/MissionRunner.js:705"
    ]
   },
   {
@@ -4163,7 +4334,7 @@
    "lang": "en",
    "text": "Odyssey, this is Iwo Jima. We have you in sight. Welcome home.",
    "src": [
-    "src/missions/apollo13/entry.js:115"
+    "src/missions/apollo13/entry.js:114"
    ]
   },
   {
@@ -4181,7 +4352,7 @@
    "lang": "en",
    "text": "Splashdown. Good entry.",
    "src": [
-    "src/missions/training/entry.js:81"
+    "src/missions/training/entry.js:80"
    ]
   },
   {
@@ -4199,8 +4370,8 @@
    "lang": "en",
    "text": "Go!",
    "src": [
-    "src/missions/MissionRunner.js:673",
-    "src/missions/MissionRunner.js:684"
+    "src/missions/MissionRunner.js:694",
+    "src/missions/MissionRunner.js:705"
    ]
   },
   {
@@ -4209,8 +4380,8 @@
    "lang": "en",
    "text": "No go, Flight.",
    "src": [
-    "src/missions/MissionRunner.js:674",
-    "src/missions/MissionRunner.js:684"
+    "src/missions/MissionRunner.js:695",
+    "src/missions/MissionRunner.js:705"
    ]
   },
   {
@@ -4219,8 +4390,8 @@
    "lang": "en",
    "text": "Go!",
    "src": [
-    "src/missions/MissionRunner.js:673",
-    "src/missions/MissionRunner.js:684"
+    "src/missions/MissionRunner.js:694",
+    "src/missions/MissionRunner.js:705"
    ]
   },
   {
@@ -4229,8 +4400,8 @@
    "lang": "en",
    "text": "No go, Flight.",
    "src": [
-    "src/missions/MissionRunner.js:674",
-    "src/missions/MissionRunner.js:684"
+    "src/missions/MissionRunner.js:695",
+    "src/missions/MissionRunner.js:705"
    ]
   },
   {
@@ -4239,8 +4410,8 @@
    "lang": "en",
    "text": "Go!",
    "src": [
-    "src/missions/MissionRunner.js:673",
-    "src/missions/MissionRunner.js:684"
+    "src/missions/MissionRunner.js:694",
+    "src/missions/MissionRunner.js:705"
    ]
   },
   {
@@ -4249,8 +4420,8 @@
    "lang": "en",
    "text": "No go, Flight.",
    "src": [
-    "src/missions/MissionRunner.js:674",
-    "src/missions/MissionRunner.js:684"
+    "src/missions/MissionRunner.js:695",
+    "src/missions/MissionRunner.js:705"
    ]
   },
   {
@@ -4259,8 +4430,8 @@
    "lang": "es",
    "text": "¡GO!",
    "src": [
-    "src/missions/MissionRunner.js:673",
-    "src/missions/MissionRunner.js:684"
+    "src/missions/MissionRunner.js:694",
+    "src/missions/MissionRunner.js:705"
    ]
   },
   {
@@ -4287,8 +4458,8 @@
    "lang": "es",
    "text": "NO GO, Flight.",
    "src": [
-    "src/missions/MissionRunner.js:674",
-    "src/missions/MissionRunner.js:684"
+    "src/missions/MissionRunner.js:695",
+    "src/missions/MissionRunner.js:705"
    ]
   },
   {
@@ -4297,8 +4468,8 @@
    "lang": "es",
    "text": "¡GO!",
    "src": [
-    "src/missions/MissionRunner.js:673",
-    "src/missions/MissionRunner.js:684"
+    "src/missions/MissionRunner.js:694",
+    "src/missions/MissionRunner.js:705"
    ]
   },
   {
@@ -4325,7 +4496,7 @@
    "lang": "es",
    "text": "30 segundos.",
    "src": [
-    "src/missions/apollo11/landing.js:222"
+    "src/missions/apollo11/landing.js:221"
    ]
   },
   {
@@ -4334,7 +4505,7 @@
    "lang": "es",
    "text": "60 segundos.",
    "src": [
-    "src/missions/apollo11/landing.js:218"
+    "src/missions/apollo11/landing.js:217"
    ]
   },
   {
@@ -4352,7 +4523,7 @@
    "lang": "es",
    "text": "Adiós, Aquarius, y gracias.",
    "src": [
-    "src/missions/apollo13/entry.js:58"
+    "src/missions/apollo13/entry.js:57"
    ]
   },
   {
@@ -4797,6 +4968,15 @@
    ]
   },
   {
+   "key": "10n64bors8q",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Base Tranquilidad, Houston. Vemos los datos del sismómetro. Es muy sensible: los vemos caminar.",
+   "src": [
+    "src/missions/apollo11/eva.js:109"
+   ]
+  },
+  {
    "key": "1t1znnx66f",
    "who": "CAPCOM",
    "lang": "es",
@@ -4820,7 +5000,7 @@
    "lang": "es",
    "text": "Bien, Odyssey. Tienen GO para separar el LM.",
    "src": [
-    "src/missions/apollo13/entry.js:46"
+    "src/missions/apollo13/entry.js:45"
    ]
   },
   {
@@ -4838,7 +5018,7 @@
    "lang": "es",
    "text": "Bien. Te escuchamos, Jack.",
    "src": [
-    "src/missions/apollo13/entry.js:93"
+    "src/missions/apollo13/entry.js:92"
    ]
   },
   {
@@ -4856,7 +5036,7 @@
    "lang": "es",
    "text": "Bingo.",
    "src": [
-    "src/missions/apollo11/landing.js:227"
+    "src/missions/apollo11/landing.js:226"
    ]
   },
   {
@@ -5027,7 +5207,7 @@
    "lang": "es",
    "text": "Eagle, Houston. Si nos copian: tienen GO para el descenso motorizado.",
    "src": [
-    "src/missions/apollo11/landing.js:54"
+    "src/missions/apollo11/landing.js:53"
    ]
   },
   {
@@ -5036,7 +5216,7 @@
    "lang": "es",
    "text": "Eagle, Houston. Tienen GO para alunizar.",
    "src": [
-    "src/missions/apollo11/landing.js:179"
+    "src/missions/apollo11/landing.js:178"
    ]
   },
   {
@@ -5063,7 +5243,7 @@
    "lang": "es",
    "text": "Eagle, se quedan para T1: STAY.",
    "src": [
-    "src/missions/apollo11/landing.js:301"
+    "src/missions/apollo11/landing.js:300"
    ]
   },
   {
@@ -5204,13 +5384,40 @@
    ]
   },
   {
+   "key": "l3cyu14hh4",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Neil y Buzz, el presidente de los Estados Unidos está en su despacho y quiere decirles unas palabras. Cambio.",
+   "src": [
+    "src/missions/apollo11/eva.js:95"
+   ]
+  },
+  {
+   "key": "13vcjrn1mli",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Neil y Buzz, les recordamos que faltan unos 10 minutos para volver adentro.",
+   "src": [
+    "src/missions/apollo11/eva.js:129"
+   ]
+  },
+  {
+   "key": "4ykw9x99dr",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Neil, aquí Houston. ¿Copiaste lo de la muestra de contingencia? Cambio.",
+   "src": [
+    "src/missions/apollo11/eva.js:69"
+   ]
+  },
+  {
    "key": "rky2qaq70m",
    "who": "CAPCOM",
    "lang": "es",
    "text": "NO GO, Flight.",
    "src": [
-    "src/missions/MissionRunner.js:674",
-    "src/missions/MissionRunner.js:684"
+    "src/missions/MissionRunner.js:695",
+    "src/missions/MissionRunner.js:705"
    ]
   },
   {
@@ -5246,7 +5453,7 @@
    "lang": "es",
    "text": "Odyssey, Houston. A la escucha. Cambio.",
    "src": [
-    "src/missions/apollo13/entry.js:90"
+    "src/missions/apollo13/entry.js:89"
    ]
   },
   {
@@ -5255,7 +5462,7 @@
    "lang": "es",
    "text": "Odyssey, Houston. Los vemos con los principales. Se ve realmente bien.",
    "src": [
-    "src/missions/apollo13/entry.js:108"
+    "src/missions/apollo13/entry.js:107"
    ]
   },
   {
@@ -5417,7 +5624,7 @@
    "lang": "es",
    "text": "Recibido, 1201. Lo tenemos. Seguimos GO.",
    "src": [
-    "src/missions/apollo11/landing.js:156"
+    "src/missions/apollo11/landing.js:155"
    ]
   },
   {
@@ -5426,7 +5633,7 @@
    "lang": "es",
    "text": "Recibido, 1202. Lo tenemos. Seguimos GO.",
    "src": [
-    "src/missions/apollo11/landing.js:156"
+    "src/missions/apollo11/landing.js:155"
    ]
   },
   {
@@ -5444,7 +5651,7 @@
    "lang": "es",
    "text": "Recibido, alarma 1201. Seguimos GO. Del mismo tipo. Seguimos GO.",
    "src": [
-    "src/missions/apollo11/landing.js:154"
+    "src/missions/apollo11/landing.js:153"
    ]
   },
   {
@@ -5493,6 +5700,15 @@
    ]
   },
   {
+   "key": "k5lyo5ehcv",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Recibido, Neil.",
+   "src": [
+    "src/missions/apollo11/eva.js:44"
+   ]
+  },
+  {
    "key": "cif3w6uts",
    "who": "CAPCOM",
    "lang": "es",
@@ -5516,7 +5732,7 @@
    "lang": "es",
    "text": "Recibido, Tran… Tranquilidad, los copiamos en tierra. Tienen a un montón de gente aquí a punto de ponerse azul. Volvemos a respirar. Muchas gracias.",
    "src": [
-    "src/missions/apollo11/landing.js:281"
+    "src/missions/apollo11/landing.js:280"
    ]
   },
   {
@@ -5535,6 +5751,15 @@
    "text": "Recibido: TLI inhibida.",
    "src": [
     "src/missions/free/index.js:260"
+   ]
+  },
+  {
+   "key": "vh2sjwfpft",
+   "who": "CAPCOM",
+   "lang": "es",
+   "text": "Recibido. Base Tranquilidad, hicieron un trabajo magnífico.",
+   "src": [
+    "src/missions/apollo11/eva.js:138"
    ]
   },
   {
@@ -5570,7 +5795,7 @@
    "lang": "es",
    "text": "Recibido. Estamos… seguimos GO con esa alarma.",
    "src": [
-    "src/missions/apollo11/landing.js:142"
+    "src/missions/apollo11/landing.js:141"
    ]
   },
   {
@@ -5660,7 +5885,7 @@
    "lang": "es",
    "text": "Tienes el control manual. Sustentación arriba en la interfaz de reentrada.",
    "src": [
-    "src/missions/training/entry.js:39"
+    "src/missions/training/entry.js:38"
    ]
   },
   {
@@ -5808,6 +6033,15 @@
    ]
   },
   {
+   "key": "48rc06wjf8",
+   "who": "CDR",
+   "lang": "es",
+   "text": "¿No es algo increíble? Una vista magnífica.",
+   "src": [
+    "src/missions/apollo11/eva.js:83"
+   ]
+  },
+  {
    "key": "fjlbjjw27e",
    "who": "CDR",
    "lang": "es",
@@ -5826,6 +6060,15 @@
    ]
   },
   {
+   "key": "2h9mopubji",
+   "who": "CDR",
+   "lang": "es",
+   "text": "Ahora voy a bajar del LM.",
+   "src": [
+    "src/missions/apollo11/eva.js:51"
+   ]
+  },
+  {
    "key": "1qzt0b8iev",
    "who": "CDR",
    "lang": "es",
@@ -5840,7 +6083,7 @@
    "lang": "es",
    "text": "Alarma de programa.",
    "src": [
-    "src/missions/apollo11/landing.js:132"
+    "src/missions/apollo11/landing.js:131"
    ]
   },
   {
@@ -5858,7 +6101,7 @@
    "lang": "es",
    "text": "Apagado.",
    "src": [
-    "src/missions/apollo11/landing.js:277",
+    "src/missions/apollo11/landing.js:276",
     "src/missions/apollo13/mcc5.js:107",
     "src/missions/common/kit.js:134"
    ]
@@ -5880,6 +6123,24 @@
    "text": "Apagado. Fue un buen encendido.",
    "src": [
     "src/missions/apollo13/pc2.js:51"
+   ]
+  },
+  {
+   "key": "aejcyywsou",
+   "who": "CDR",
+   "lang": "es",
+   "text": "Bien, Houston, estoy en el porche.",
+   "src": [
+    "src/missions/apollo11/eva.js:43"
+   ]
+  },
+  {
+   "key": "og9meh16z5",
+   "who": "CDR",
+   "lang": "es",
+   "text": "Bien, Houston. Estamos de vuelta en el LM.",
+   "src": [
+    "src/missions/apollo11/eva.js:137"
    ]
   },
   {
@@ -5910,6 +6171,15 @@
    ]
   },
   {
+   "key": "bqunn1951",
+   "who": "CDR",
+   "lang": "es",
+   "text": "Buena idea.",
+   "src": [
+    "src/missions/apollo11/eva.js:79"
+   ]
+  },
+  {
    "key": "vybeml577h",
    "who": "CDR",
    "lang": "es",
@@ -5924,7 +6194,7 @@
    "lang": "es",
    "text": "Dennos una lectura sobre la alarma de programa 1201.",
    "src": [
-    "src/missions/apollo11/landing.js:134"
+    "src/missions/apollo11/landing.js:133"
    ]
   },
   {
@@ -5933,7 +6203,7 @@
    "lang": "es",
    "text": "Dennos una lectura sobre la alarma de programa 1202.",
    "src": [
-    "src/missions/apollo11/landing.js:134"
+    "src/missions/apollo11/landing.js:133"
    ]
   },
   {
@@ -5978,7 +6248,7 @@
    "lang": "es",
    "text": "Es un 1201.",
    "src": [
-    "src/missions/apollo11/landing.js:133"
+    "src/missions/apollo11/landing.js:132"
    ]
   },
   {
@@ -5987,7 +6257,25 @@
    "lang": "es",
    "text": "Es un 1202.",
    "src": [
-    "src/missions/apollo11/landing.js:133"
+    "src/missions/apollo11/landing.js:132"
+   ]
+  },
+  {
+   "key": "xgimxorens",
+   "who": "CDR",
+   "lang": "es",
+   "text": "Esto es muy interesante. Es una superficie muy blanda, pero aquí y allá, donde clavo el colector, me topo con algo muy duro.",
+   "src": [
+    "src/missions/apollo11/eva.js:74"
+   ]
+  },
+  {
+   "key": "17oyg5i883r",
+   "who": "CDR",
+   "lang": "es",
+   "text": "Estoy al pie de la escalera. Las patas del LM apenas se hunden en la superficie una o dos pulgadas.",
+   "src": [
+    "src/missions/apollo11/eva.js:50"
    ]
   },
   {
@@ -6034,6 +6322,15 @@
    "text": "Justo al lado de la antena de alta ganancia: el panel entero voló, casi desde la base hasta el motor.",
    "src": [
     "src/missions/apollo13/powerup.js:66"
+   ]
+  },
+  {
+   "key": "k87ov98flp",
+   "who": "CDR",
+   "lang": "es",
+   "text": "La superficie es fina y polvorienta. Puedo levantarla con la punta de la bota.",
+   "src": [
+    "src/missions/apollo11/eva.js:64"
    ]
   },
   {
@@ -6136,6 +6433,15 @@
    ]
   },
   {
+   "key": "12u2f6e68fp",
+   "who": "CDR",
+   "lang": "es",
+   "text": "Recibido. Voy a hacerlo en cuanto termine esta serie de fotos.",
+   "src": [
+    "src/missions/apollo11/eva.js:70"
+   ]
+  },
+  {
    "key": "170a68s1ylw",
    "who": "CDR",
    "lang": "es",
@@ -6172,6 +6478,15 @@
    ]
   },
   {
+   "key": "qmj4sfu280",
+   "who": "CDR",
+   "lang": "es",
+   "text": "Sería un honor.",
+   "src": [
+    "src/missions/apollo11/eva.js:96"
+   ]
+  },
+  {
    "key": "fmexgoauf5",
    "who": "CDR",
    "lang": "es",
@@ -6195,7 +6510,7 @@
    "lang": "es",
    "text": "Zona bastante rocosa.",
    "src": [
-    "src/missions/apollo11/landing.js:184"
+    "src/missions/apollo11/landing.js:183"
    ]
   },
   {
@@ -6231,7 +6546,7 @@
    "lang": "es",
    "text": "Bien, Joe.",
    "src": [
-    "src/missions/apollo13/entry.js:92"
+    "src/missions/apollo13/entry.js:91"
    ]
   },
   {
@@ -6339,7 +6654,7 @@
    "lang": "es",
    "text": "Eagle, aquí Columbia. Acaban de darles GO para el descenso motorizado.",
    "src": [
-    "src/missions/apollo11/landing.js:55"
+    "src/missions/apollo11/landing.js:54"
    ]
   },
   {
@@ -6538,8 +6853,8 @@
    "lang": "es",
    "text": "¡GO!",
    "src": [
-    "src/missions/MissionRunner.js:673",
-    "src/missions/MissionRunner.js:684"
+    "src/missions/MissionRunner.js:694",
+    "src/missions/MissionRunner.js:705"
    ]
   },
   {
@@ -6548,8 +6863,8 @@
    "lang": "es",
    "text": "NO GO, Flight.",
    "src": [
-    "src/missions/MissionRunner.js:674",
-    "src/missions/MissionRunner.js:684"
+    "src/missions/MissionRunner.js:695",
+    "src/missions/MissionRunner.js:705"
    ]
   },
   {
@@ -6558,8 +6873,8 @@
    "lang": "es",
    "text": "¡GO!",
    "src": [
-    "src/missions/MissionRunner.js:673",
-    "src/missions/MissionRunner.js:684"
+    "src/missions/MissionRunner.js:694",
+    "src/missions/MissionRunner.js:705"
    ]
   },
   {
@@ -6595,8 +6910,8 @@
    "lang": "es",
    "text": "NO GO, Flight.",
    "src": [
-    "src/missions/MissionRunner.js:674",
-    "src/missions/MissionRunner.js:684"
+    "src/missions/MissionRunner.js:695",
+    "src/missions/MissionRunner.js:705"
    ]
   },
   {
@@ -6605,8 +6920,8 @@
    "lang": "es",
    "text": "¡GO!",
    "src": [
-    "src/missions/MissionRunner.js:673",
-    "src/missions/MissionRunner.js:684"
+    "src/missions/MissionRunner.js:694",
+    "src/missions/MissionRunner.js:705"
    ]
   },
   {
@@ -6615,8 +6930,8 @@
    "lang": "es",
    "text": "NO GO, Flight.",
    "src": [
-    "src/missions/MissionRunner.js:674",
-    "src/missions/MissionRunner.js:684"
+    "src/missions/MissionRunner.js:695",
+    "src/missions/MissionRunner.js:705"
    ]
   },
   {
@@ -6625,8 +6940,8 @@
    "lang": "es",
    "text": "¡GO!",
    "src": [
-    "src/missions/MissionRunner.js:673",
-    "src/missions/MissionRunner.js:684"
+    "src/missions/MissionRunner.js:694",
+    "src/missions/MissionRunner.js:705"
    ]
   },
   {
@@ -6653,8 +6968,8 @@
    "lang": "es",
    "text": "NO GO, Flight.",
    "src": [
-    "src/missions/MissionRunner.js:674",
-    "src/missions/MissionRunner.js:684"
+    "src/missions/MissionRunner.js:695",
+    "src/missions/MissionRunner.js:705"
    ]
   },
   {
@@ -6663,8 +6978,8 @@
    "lang": "es",
    "text": "¡GO!",
    "src": [
-    "src/missions/MissionRunner.js:673",
-    "src/missions/MissionRunner.js:684"
+    "src/missions/MissionRunner.js:694",
+    "src/missions/MissionRunner.js:705"
    ]
   },
   {
@@ -6673,7 +6988,7 @@
    "lang": "es",
    "text": "¿BOOSTER?",
    "src": [
-    "src/missions/MissionRunner.js:664"
+    "src/missions/MissionRunner.js:685"
    ]
   },
   {
@@ -6682,7 +6997,7 @@
    "lang": "es",
    "text": "¿CAPCOM?",
    "src": [
-    "src/missions/MissionRunner.js:664"
+    "src/missions/MissionRunner.js:685"
    ]
   },
   {
@@ -6691,7 +7006,7 @@
    "lang": "es",
    "text": "¿CONTROL?",
    "src": [
-    "src/missions/MissionRunner.js:664"
+    "src/missions/MissionRunner.js:685"
    ]
   },
   {
@@ -6700,7 +7015,7 @@
    "lang": "es",
    "text": "¿EECOM?",
    "src": [
-    "src/missions/MissionRunner.js:664"
+    "src/missions/MissionRunner.js:685"
    ]
   },
   {
@@ -6709,7 +7024,7 @@
    "lang": "es",
    "text": "¿FAO?",
    "src": [
-    "src/missions/MissionRunner.js:664"
+    "src/missions/MissionRunner.js:685"
    ]
   },
   {
@@ -6718,7 +7033,7 @@
    "lang": "es",
    "text": "¿FIDO?",
    "src": [
-    "src/missions/MissionRunner.js:664"
+    "src/missions/MissionRunner.js:685"
    ]
   },
   {
@@ -6727,7 +7042,7 @@
    "lang": "es",
    "text": "¿FLIGHT?",
    "src": [
-    "src/missions/MissionRunner.js:664"
+    "src/missions/MissionRunner.js:685"
    ]
   },
   {
@@ -6736,7 +7051,7 @@
    "lang": "es",
    "text": "¿GNC?",
    "src": [
-    "src/missions/MissionRunner.js:664"
+    "src/missions/MissionRunner.js:685"
    ]
   },
   {
@@ -6745,7 +7060,7 @@
    "lang": "es",
    "text": "¿GUIDO?",
    "src": [
-    "src/missions/MissionRunner.js:664"
+    "src/missions/MissionRunner.js:685"
    ]
   },
   {
@@ -6754,7 +7069,7 @@
    "lang": "es",
    "text": "¿INCO?",
    "src": [
-    "src/missions/MissionRunner.js:664"
+    "src/missions/MissionRunner.js:685"
    ]
   },
   {
@@ -6763,7 +7078,7 @@
    "lang": "es",
    "text": "¿NETWORK?",
    "src": [
-    "src/missions/MissionRunner.js:664"
+    "src/missions/MissionRunner.js:685"
    ]
   },
   {
@@ -6772,7 +7087,7 @@
    "lang": "es",
    "text": "¿PAO?",
    "src": [
-    "src/missions/MissionRunner.js:664"
+    "src/missions/MissionRunner.js:685"
    ]
   },
   {
@@ -6781,7 +7096,7 @@
    "lang": "es",
    "text": "¿PROCEDURES?",
    "src": [
-    "src/missions/MissionRunner.js:664"
+    "src/missions/MissionRunner.js:685"
    ]
   },
   {
@@ -6790,7 +7105,7 @@
    "lang": "es",
    "text": "¿RETRO?",
    "src": [
-    "src/missions/MissionRunner.js:664"
+    "src/missions/MissionRunner.js:685"
    ]
   },
   {
@@ -6799,7 +7114,7 @@
    "lang": "es",
    "text": "¿SURGEON?",
    "src": [
-    "src/missions/MissionRunner.js:664"
+    "src/missions/MissionRunner.js:685"
    ]
   },
   {
@@ -6808,7 +7123,7 @@
    "lang": "es",
    "text": "¿TELMU?",
    "src": [
-    "src/missions/MissionRunner.js:664"
+    "src/missions/MissionRunner.js:685"
    ]
   },
   {
@@ -6835,7 +7150,7 @@
    "lang": "es",
    "text": "CAPCOM, nos quedamos en T1.",
    "src": [
-    "src/missions/apollo11/landing.js:300"
+    "src/missions/apollo11/landing.js:299"
    ]
   },
   {
@@ -6943,7 +7258,7 @@
    "lang": "es",
    "text": "Muy bien, controladores: unos 45 segundos para T1, STAY / NO STAY.",
    "src": [
-    "src/missions/apollo11/landing.js:299"
+    "src/missions/apollo11/landing.js:298"
    ]
   },
   {
@@ -6979,8 +7294,8 @@
    "lang": "es",
    "text": "NO GO, Flight.",
    "src": [
-    "src/missions/MissionRunner.js:674",
-    "src/missions/MissionRunner.js:684"
+    "src/missions/MissionRunner.js:695",
+    "src/missions/MissionRunner.js:705"
    ]
   },
   {
@@ -7034,8 +7349,8 @@
    "lang": "es",
    "text": "¡GO!",
    "src": [
-    "src/missions/MissionRunner.js:673",
-    "src/missions/MissionRunner.js:684"
+    "src/missions/MissionRunner.js:694",
+    "src/missions/MissionRunner.js:705"
    ]
   },
   {
@@ -7044,8 +7359,8 @@
    "lang": "es",
    "text": "NO GO, Flight.",
    "src": [
-    "src/missions/MissionRunner.js:674",
-    "src/missions/MissionRunner.js:684"
+    "src/missions/MissionRunner.js:695",
+    "src/missions/MissionRunner.js:705"
    ]
   },
   {
@@ -7054,8 +7369,8 @@
    "lang": "es",
    "text": "¡GO!",
    "src": [
-    "src/missions/MissionRunner.js:673",
-    "src/missions/MissionRunner.js:684"
+    "src/missions/MissionRunner.js:694",
+    "src/missions/MissionRunner.js:705"
    ]
   },
   {
@@ -7064,8 +7379,8 @@
    "lang": "es",
    "text": "NO GO, Flight.",
    "src": [
-    "src/missions/MissionRunner.js:674",
-    "src/missions/MissionRunner.js:684"
+    "src/missions/MissionRunner.js:695",
+    "src/missions/MissionRunner.js:705"
    ]
   },
   {
@@ -7074,7 +7389,7 @@
    "lang": "es",
    "text": "Seguimos GO con esa alarma, Flight.",
    "src": [
-    "src/missions/apollo11/landing.js:142"
+    "src/missions/apollo11/landing.js:141"
    ]
   },
   {
@@ -7083,8 +7398,8 @@
    "lang": "es",
    "text": "¡GO!",
    "src": [
-    "src/missions/MissionRunner.js:673",
-    "src/missions/MissionRunner.js:684"
+    "src/missions/MissionRunner.js:694",
+    "src/missions/MissionRunner.js:705"
    ]
   },
   {
@@ -7093,8 +7408,8 @@
    "lang": "es",
    "text": "NO GO, Flight.",
    "src": [
-    "src/missions/MissionRunner.js:674",
-    "src/missions/MissionRunner.js:684"
+    "src/missions/MissionRunner.js:695",
+    "src/missions/MissionRunner.js:705"
    ]
   },
   {
@@ -7194,6 +7509,15 @@
    "text": "Trece, aquí control de lanzamiento. Buena suerte y que Dios los acompañe.",
    "src": [
     "src/missions/common/launch.js:83"
+   ]
+  },
+  {
+   "key": "eqtkgnsn86",
+   "who": "LMP",
+   "lang": "es",
+   "text": "¡Hermosa vista!",
+   "src": [
+    "src/missions/apollo11/eva.js:82"
    ]
   },
   {
@@ -7679,7 +8003,7 @@
    "lang": "es",
    "text": "Aceleración. Empuje máximo.",
    "src": [
-    "src/missions/apollo11/landing.js:118"
+    "src/missions/apollo11/landing.js:117"
    ]
   },
   {
@@ -7688,7 +8012,7 @@
    "lang": "es",
    "text": "Alarma de programa. Del mismo tipo: 1201.",
    "src": [
-    "src/missions/apollo11/landing.js:153"
+    "src/missions/apollo11/landing.js:152"
    ]
   },
   {
@@ -8007,12 +8331,21 @@
    ]
   },
   {
+   "key": "17ytd0kz17c",
+   "who": "LMP",
+   "lang": "es",
+   "text": "Bien. Ahora voy a retroceder y cerrar a medias la escotilla, cuidando de no trabarla al salir.",
+   "src": [
+    "src/missions/apollo11/eva.js:78"
+   ]
+  },
+  {
    "key": "13wbzrecy53",
    "who": "LMP",
    "lang": "es",
    "text": "Bien. Motor parado. ACA fuera de retén.",
    "src": [
-    "src/missions/apollo11/landing.js:278"
+    "src/missions/apollo11/landing.js:277"
    ]
   },
   {
@@ -8021,7 +8354,7 @@
    "lang": "es",
    "text": "Cinco por ciento. Luz de cantidad.",
    "src": [
-    "src/missions/apollo11/landing.js:209"
+    "src/missions/apollo11/landing.js:208"
    ]
   },
   {
@@ -8039,8 +8372,8 @@
    "lang": "es",
    "text": "es",
    "src": [
-    "src/missions/apollo11/landing.js:200",
-    "src/missions/training/landing.js:101"
+    "src/missions/apollo11/landing.js:199",
+    "src/missions/training/landing.js:100"
    ]
   },
   {
@@ -8085,7 +8418,7 @@
    "lang": "es",
    "text": "Ignición. Diez por ciento.",
    "src": [
-    "src/missions/apollo11/landing.js:116"
+    "src/missions/apollo11/landing.js:115"
    ]
   },
   {
@@ -8112,7 +8445,7 @@
    "lang": "es",
    "text": "Luz de contacto.",
    "src": [
-    "src/missions/apollo11/landing.js:234"
+    "src/missions/apollo11/landing.js:233"
    ]
   },
   {
@@ -8121,7 +8454,16 @@
    "lang": "es",
    "text": "Luz de contacto. Motor parado.",
    "src": [
-    "src/missions/training/landing.js:126"
+    "src/missions/training/landing.js:125"
+   ]
+  },
+  {
+   "key": "12hy243serr",
+   "who": "LMP",
+   "lang": "es",
+   "text": "Magnífica desolación.",
+   "src": [
+    "src/missions/apollo11/eva.js:84"
    ]
   },
   {
@@ -8166,7 +8508,7 @@
    "lang": "es",
    "text": "Proceder.",
    "src": [
-    "src/missions/apollo11/landing.js:103"
+    "src/missions/apollo11/landing.js:102"
    ]
   },
   {
@@ -8175,7 +8517,7 @@
    "lang": "es",
    "text": "Recibido. Entendido: GO para alunizar. 3.000 pies.",
    "src": [
-    "src/missions/apollo11/landing.js:180"
+    "src/missions/apollo11/landing.js:179"
    ]
   },
   {
@@ -8202,8 +8544,8 @@
    "lang": "es",
    "text": "¡GO!",
    "src": [
-    "src/missions/MissionRunner.js:673",
-    "src/missions/MissionRunner.js:684"
+    "src/missions/MissionRunner.js:694",
+    "src/missions/MissionRunner.js:705"
    ]
   },
   {
@@ -8212,8 +8554,8 @@
    "lang": "es",
    "text": "NO GO, Flight.",
    "src": [
-    "src/missions/MissionRunner.js:674",
-    "src/missions/MissionRunner.js:684"
+    "src/missions/MissionRunner.js:695",
+    "src/missions/MissionRunner.js:705"
    ]
   },
   {
@@ -8222,8 +8564,8 @@
    "lang": "es",
    "text": "¡GO!",
    "src": [
-    "src/missions/MissionRunner.js:673",
-    "src/missions/MissionRunner.js:684"
+    "src/missions/MissionRunner.js:694",
+    "src/missions/MissionRunner.js:705"
    ]
   },
   {
@@ -8350,7 +8692,7 @@
    "lang": "es",
    "text": "El Apolo 13 está en casa. Un fracaso exitoso.",
    "src": [
-    "src/missions/apollo13/entry.js:116"
+    "src/missions/apollo13/entry.js:115"
    ]
   },
   {
@@ -8368,7 +8710,7 @@
    "lang": "es",
    "text": "Estamos en el apagón. Esperamos unos 3 minutos.",
    "src": [
-    "src/missions/apollo13/entry.js:86"
+    "src/missions/apollo13/entry.js:85"
    ]
   },
   {
@@ -8386,8 +8728,8 @@
    "lang": "es",
    "text": "NO GO, Flight.",
    "src": [
-    "src/missions/MissionRunner.js:674",
-    "src/missions/MissionRunner.js:684"
+    "src/missions/MissionRunner.js:695",
+    "src/missions/MissionRunner.js:705"
    ]
   },
   {
@@ -8414,8 +8756,8 @@
    "lang": "es",
    "text": "¡GO!",
    "src": [
-    "src/missions/MissionRunner.js:673",
-    "src/missions/MissionRunner.js:684"
+    "src/missions/MissionRunner.js:694",
+    "src/missions/MissionRunner.js:705"
    ]
   },
   {
@@ -8424,8 +8766,8 @@
    "lang": "es",
    "text": "NO GO, Flight.",
    "src": [
-    "src/missions/MissionRunner.js:674",
-    "src/missions/MissionRunner.js:684"
+    "src/missions/MissionRunner.js:695",
+    "src/missions/MissionRunner.js:705"
    ]
   },
   {
@@ -8443,7 +8785,7 @@
    "lang": "es",
    "text": "Amerizaje. Buena reentrada.",
    "src": [
-    "src/missions/training/entry.js:81"
+    "src/missions/training/entry.js:80"
    ]
   },
   {
@@ -8470,7 +8812,7 @@
    "lang": "es",
    "text": "Odyssey, aquí el Iwo Jima. Los tenemos a la vista. Bienvenidos a casa.",
    "src": [
-    "src/missions/apollo13/entry.js:115"
+    "src/missions/apollo13/entry.js:114"
    ]
   },
   {
@@ -8479,8 +8821,8 @@
    "lang": "es",
    "text": "¡GO!",
    "src": [
-    "src/missions/MissionRunner.js:673",
-    "src/missions/MissionRunner.js:684"
+    "src/missions/MissionRunner.js:694",
+    "src/missions/MissionRunner.js:705"
    ]
   },
   {
@@ -8498,8 +8840,8 @@
    "lang": "es",
    "text": "NO GO, Flight.",
    "src": [
-    "src/missions/MissionRunner.js:674",
-    "src/missions/MissionRunner.js:684"
+    "src/missions/MissionRunner.js:695",
+    "src/missions/MissionRunner.js:705"
    ]
   },
   {
@@ -8508,8 +8850,8 @@
    "lang": "es",
    "text": "¡GO!",
    "src": [
-    "src/missions/MissionRunner.js:673",
-    "src/missions/MissionRunner.js:684"
+    "src/missions/MissionRunner.js:694",
+    "src/missions/MissionRunner.js:705"
    ]
   },
   {
@@ -8518,8 +8860,8 @@
    "lang": "es",
    "text": "NO GO, Flight.",
    "src": [
-    "src/missions/MissionRunner.js:674",
-    "src/missions/MissionRunner.js:684"
+    "src/missions/MissionRunner.js:695",
+    "src/missions/MissionRunner.js:705"
    ]
   },
   {
@@ -8528,8 +8870,8 @@
    "lang": "es",
    "text": "¡GO!",
    "src": [
-    "src/missions/MissionRunner.js:673",
-    "src/missions/MissionRunner.js:684"
+    "src/missions/MissionRunner.js:694",
+    "src/missions/MissionRunner.js:705"
    ]
   },
   {
@@ -8538,8 +8880,8 @@
    "lang": "es",
    "text": "NO GO, Flight.",
    "src": [
-    "src/missions/MissionRunner.js:674",
-    "src/missions/MissionRunner.js:684"
+    "src/missions/MissionRunner.js:695",
+    "src/missions/MissionRunner.js:705"
    ]
   }
  ]

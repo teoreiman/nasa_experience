@@ -1485,3 +1485,106 @@
 .hud.pilot-land .hud-telemetry {
   display: none;
 }
+
+/* "Adelantar" next to the time warp buttons: lit (and the clock pulses) while it runs */
+.warp button.ffwd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 0.2rem;
+  color: var(--amber);
+}
+
+.warp button.ffwd svg {
+  width: 0.95rem;
+  height: 0.95rem;
+}
+
+.warp button.ffwd.on {
+  background: var(--amber);
+  border-color: var(--amber);
+  color: #1a1000;
+  box-shadow: 0 0 14px var(--amber-glow);
+}
+
+.hud.ffwd-on .hud-clock .val {
+  animation: ffwdPulse 0.8s ease-in-out infinite;
+}
+
+@keyframes ffwdPulse {
+  50% {
+    opacity: 0.55;
+  }
+}
+
+/* ------------------------------------------------------------------ moonwalk (EVA) */
+.eva-prompt {
+  position: absolute;
+  left: 50%;
+  bottom: calc(10.5rem + var(--safe-b));
+  transform: translateX(-50%);
+  z-index: 6;
+  pointer-events: auto;
+  animation: riseIn 0.25s ease both;
+}
+
+.eva-prompt .btn {
+  font-size: 1.05rem;
+  padding: 0.65em 1.4em;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5), 0 0 24px var(--amber-glow);
+}
+
+.touch-ui .touch-btns.eva {
+  display: none;
+}
+
+.touch-ui.mode-eva .touch-stick.right {
+  display: none;
+}
+
+.touch-ui.mode-eva .touch-btns.eva {
+  display: flex;
+  flex-direction: column;
+  right: calc(1.2rem + var(--safe-r));
+  bottom: calc(1.4rem + var(--safe-b));
+  gap: 0.4rem;
+}
+
+.touch-ui.mode-eva .touch-btns.eva .btn {
+  min-width: 6.2rem;
+  min-height: 3rem;
+}
+
+@media (max-height: 500px) and (orientation: landscape) {
+  .eva-prompt {
+    bottom: calc(5.4rem + var(--safe-b));
+  }
+
+  .eva-prompt .btn {
+    font-size: 0.9rem;
+    padding: 0.55em 1.1em;
+  }
+
+  .touch-ui.mode-eva .touch-btns.eva {
+    right: calc(0.9rem + var(--safe-r));
+    bottom: calc(0.8rem + var(--safe-b));
+  }
+
+  .touch-ui.mode-eva .touch-btns.eva .btn {
+    min-width: 5rem;
+    min-height: 2.6rem;
+  }
+}
+
+/* checklist: a step can be tapped (the head turns to its control); "Accionar" flips the current switch */
+.cl-item:not(.done) {
+  cursor: pointer;
+}
+
+.cl-item .act.flip {
+  color: #1a1000;
+  background: var(--amber);
+  border-color: var(--amber);
+  font-weight: 700;
+  padding: 0.35em 0.7em;
+}

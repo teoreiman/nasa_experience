@@ -357,6 +357,58 @@ function cmFoil() {
 // ------------------------------------------------------------------ materials
 
 const MAT = {};
+/** Pad concrete: slabs with expansion joints, weathering stains, rust streaks and exhaust scorch. */
+function concreteMaps() {
+  const S = 512;
+  const c = canvas(S, S);
+  const g = c.getContext('2d');
+  const h = canvas(S, S);
+  const hg = h.getContext('2d');
+  let seed = 7;
+  const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+  g.fillStyle = '#a19e96';
+  g.fillRect(0, 0, S, S);
+  hg.fillStyle = '#808080';
+  hg.fillRect(0, 0, S, S);
+  const img = g.getImageData(0, 0, S, S);
+  for (let i = 0; i < img.data.length; i += 4) {
+    const n = (rnd() - 0.5) * 18;
+    img.data[i] += n;
+    img.data[i + 1] += n;
+    img.data[i + 2] += n;
+  }
+  g.putImageData(img, 0, 0);
+  // slab tone differences, then weathering blotches
+  const slab = S / 8;
+  for (let i = 0; i < 8; i++) {
+    for (let j = 0; j < 8; j++) {
+      g.fillStyle = `rgba(${rnd() < 0.5 ? '0,0,0' : '255,255,250'},${0.02 + rnd() * 0.05})`;
+      g.fillRect(i * slab, j * slab, slab, slab);
+    }
+  }
+  for (let i = 0; i < 70; i++) {
+    const x = rnd() * S;
+    const y = rnd() * S;
+    const r = 6 + rnd() * 50;
+    const grd = g.createRadialGradient(x, y, 0, x, y, r);
+    const dark = rnd() < 0.7;
+    grd.addColorStop(0, dark ? `rgba(60,55,48,${0.05 + rnd() * 0.12})` : `rgba(120,85,55,${0.05 + rnd() * 0.08})`);
+    grd.addColorStop(1, 'rgba(0,0,0,0)');
+    g.fillStyle = grd;
+    g.fillRect(x - r, y - r, r * 2, r * 2);
+  }
+  // expansion joints (dark, sunken)
+  for (let k = 0; k <= 8; k++) {
+    g.fillStyle = 'rgba(52,50,46,0.28)';
+    g.fillRect(k * slab - 1, 0, 2, S);
+    g.fillRect(0, k * slab - 1, S, 2);
+    hg.fillStyle = '#5a5a5a';
+    hg.fillRect(k * slab - 2, 0, 4, S);
+    hg.fillRect(0, k * slab - 2, S, 4);
+  }
+  return { map: tex(c, { repeat: true }), normal: tex(heightToNormal(h, 1.5), { srgb: false, repeat: true }) };
+}
+
 export function materials() {
   if (MAT.ready) return MAT;
   MAT.ready = true;
@@ -401,7 +453,10 @@ export function materials() {
   MAT.dish = std({ color: 0xe8e8e2, roughness: 0.45, metalness: 0.2, side: THREE.DoubleSide });
   MAT.tower = std({ color: 0xa8341f, roughness: 0.65, metalness: 0.3 });
   MAT.towerDark = std({ color: 0x5a2014, roughness: 0.7, metalness: 0.3 });
-  MAT.concrete = std({ color: 0xb6b2a8, roughness: 0.95, metalness: 0 });
+  const conc = concreteMaps();
+  conc.map.repeat.set(9, 9);
+  conc.normal.repeat.set(9, 9);
+  MAT.concrete = std({ map: conc.map, normalMap: conc.normal, normalScale: new THREE.Vector2(0.7, 0.7), color: 0xe2ded5, roughness: 0.94, metalness: 0 });
   MAT.mlGrey = std({ color: 0x8e8e88, roughness: 0.85, metalness: 0.15 });
   MAT.dockTarget = std({ color: 0xf2f2f2, roughness: 0.6, emissive: 0x111111 });
   return MAT;

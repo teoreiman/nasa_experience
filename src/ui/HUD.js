@@ -17,6 +17,8 @@ import { availableServices } from '../missions/free/index.js';
 const CAMERA_NAMES = {
   cockpit: 'Cabina',
   pilot: 'Piloto',
+  eva: 'Tercera persona',
+  'eva:fp': 'Visor del casco',
   'exterior:chase': 'Exterior',
   'exterior:wide': 'Exterior lejana',
   'pad:far': 'Cámara de seguimiento',
@@ -86,6 +88,7 @@ export class HUD {
           h('button', { title: 'Frenar (,)', on: { click: () => this._warp(-1) } }, '−'),
           this.warpVal,
           h('button', { title: 'Acelerar (.)', on: { click: () => this._warp(1) } }, '+'),
+          (this.ffwdEl = h('button', { class: 'ffwd', title: 'Adelantar hasta el próximo momento importante (F8)', on: { click: () => this._ffwd() } }, iconSVGEl('skip'))),
         ),
       ),
     );
@@ -131,6 +134,11 @@ export class HUD {
     this._off = [
       bus.on('mission:say', (l) => this._say(l)),
       bus.on('mission:sayEnd', ({ id }) => this._sayEnd(id)),
+      bus.on('mission:sayLog', (l) => this._pushLog(l)),
+      bus.on('mission:ffwd', ({ on }) => {
+        this.ffwdEl.classList.toggle('on', on);
+        this.root.classList.toggle('ffwd-on', on);
+      }),
       bus.on('mission:objective', (o) => this._objective(o)),
       bus.on('mission:checklist', (c) => this._checklist(c)),
       // one card per decision (a ground task can arrive while a choice is open): each closes by id
@@ -184,6 +192,12 @@ export class HUD {
   }
 
   // ---------------------------------------------------------------- clock & warp
+
+  /** "Adelantar": the runner warps until something happens, then drops back to real time. */
+  _ffwd() {
+    this.sim.runner?.fastForward?.();
+    this.game.audio?.sfx?.('uiClick', { gain: 0.6 });
+  }
 
   _warp(dir) {
     const c = this.sim.clock;
@@ -351,14 +365,21 @@ export class HUD {
         c.items.map((i) =>
           h(
             'div',
-            { class: `cl-item ${i.done ? 'done' : ''} ${i === cur && c.mode === 'player' ? 'current' : ''}` },
+            {
+              class: `cl-item ${i.done ? 'done' : ''} ${i === cur && c.mode === 'player' ? 'current' : ''}`,
+              // tap a step: the head turns to its control (and back into the cabin if outside)
+              on: { click: () => this._lookAtStep(i) },
+            },
             h('span', { class: 'box' }),
             h('span', { class: 'txt' }, i.text, i.hint && !i.done && i === cur && !realistic ? h('span', { class: 'hint' }, i.hint) : null),
+            !i.done && c.mode === 'player' && i === cur && i.flip && !cadet && this.game.input.isTouch
+              ? h('button', { class: 'act flip', on: { click: (e) => (e.stopPropagation(), bus.emit('mission:checklistFlip', { checklistId: c.id, itemId: i.id })) } }, 'Accionar')
+              : null,
             !i.done && c.mode === 'player' && (i.manual || cadet || (i.assist && i === cur && !realistic))
               ? h('button', {
                   class: `act ${i.assist && !i.manual && !cadet ? 'assist' : ''}`,
                   title: i.assist && !i.manual ? 'El piloto automático lo hace por ti (resta puntos)' : '',
-                  on: { click: () => bus.emit(i.manual ? 'mission:checklistConfirm' : 'mission:checklistAuto', { checklistId: c.id, itemId: i.id }) },
+                  on: { click: (e) => (e.stopPropagation(), bus.emit(i.manual ? 'mission:checklistConfirm' : 'mission:checklistAuto', { checklistId: c.id, itemId: i.id })) },
                 }, i.manual ? 'Hecho' : cadet ? 'Auto' : 'Ayuda')
               : null,
           ),
@@ -366,6 +387,14 @@ export class HUD {
       ),
     );
     this.clEl.classList.toggle('collapsed', this.clCollapsed);
+  }
+
+  _lookAtStep(item) {
+    const v = this.view;
+    if (this.role !== 'astronaut' || item.done || !item.ids?.length || !v?.cockpit) return;
+    if (v.cameraMode !== 'cockpit') v.setCamera?.('cockpit');
+    v.cockpit.aimAt(item.ids);
+    this.game.audio?.sfx?.('uiClick', { gain: 0.4 });
   }
 
   // ---------------------------------------------------------------- captions, alerts, hints
@@ -730,6 +759,7 @@ export class HUD {
   // ---------------------------------------------------------------- telemetry
 
   _phase() {
+    if (this.view?.eva) return 'eva';
     const sim = this.sim;
     const v = sim.vehicle;
     const st = v.state;
@@ -784,6 +814,18 @@ export class HUD {
       add('TIG', [`${sign}${String(Math.floor(a / 60)).padStart(2, '0')}:${String(Math.floor(a % 60)).padStart(2, '0')}`, ''], tig > -30 && tig < 0 ? 'caution' : '');
       add('ΔV por ganar', this._fmtVel(burn.vg.length()), burn.firing ? 'good' : '');
     };
+    if (ph === 'eva') {
+      const eva = this.view.eva;
+      const dLm = eva.distanceTo(eva.lm.e, eva.lm.n);
+      add('Distancia al LM', store.settings.units === 'metric' ? [dLm.toFixed(0), 'm'] : [(dLm / FT).toFixed(0), 'ft'], dLm > 45 ? 'caution' : '');
+      add('Recorrido', store.settings.units === 'metric' ? [eva.stats.walked.toFixed(0), 'm'] : [(eva.stats.walked / FT).toFixed(0), 'ft']);
+      // PLSS: about 4 h of oxygen at the start of the moonwalk (it lasted 2 h 31 min)
+      const t0 = (this._evaT0 ??= sim.clock.get);
+      const o2 = Math.max(0, 1 - (sim.clock.get - t0) / (4 * 3600));
+      add('O₂ PLSS', [`${Math.round(o2 * 100)}`, '%'], o2 < 0.25 ? 'warn' : o2 < 0.4 ? 'caution' : 'good', o2);
+      add('Tareas', [`${eva.targets.size}`, 'pendientes'], eva.targets.size ? '' : 'good');
+      return { ph, F };
+    }
     if (ph === 'launch') {
       const sat = v.modules.saturn;
       add('Altitud', this._fmtAlt(Math.max(0, st.alt)));
@@ -975,6 +1017,7 @@ export class HUD {
       const knob = h('i');
       const lbl = h('span', null, label);
       const el = h('div', { class: `touch-stick ${side}` }, lbl, knob);
+      el.axes = [axX, axY];
       let id = null;
       let cx = 0;
       let cy = 0;
@@ -983,8 +1026,8 @@ export class HUD {
         const mx = Math.max(-1, Math.min(1, dx / r));
         const my = Math.max(-1, Math.min(1, dy / r));
         knob.style.transform = `translate(${mx * r * 0.6}px, ${my * r * 0.6}px)`;
-        input.setVirtualAxis(axX, mx);
-        input.setVirtualAxis(axY, -my);
+        input.setVirtualAxis(el.axes[0], mx);
+        input.setVirtualAxis(el.axes[1], -my);
       };
       el.addEventListener('pointerdown', (e) => {
         id = e.pointerId;
@@ -1030,6 +1073,7 @@ export class HUD {
       h('div', { class: 'touch-btns roll' }, hold('↺ Alabeo', 'rollLeft'), hold('Alabeo ↻', 'rollRight')),
       h('div', { class: 'touch-btns throttle' }, hold('▲ Acel.', 'throttleUp'), hold('▼ Acel.', 'throttleDown')),
       h('div', { class: 'touch-btns rod' }, tap('ROD ▲ más lento', 'rodUp'), tap('ROD ▼ más rápido', 'rodDown')),
+      h('div', { class: 'touch-btns eva' }, hold('🏃 Saltar', 'run'), tap('📷 Foto', 'evaPhoto')),
       this.touchToggle,
     );
     this.touchEl = wrap;
@@ -1044,6 +1088,7 @@ export class HUD {
 
   /** Which hand controllers make sense right now (phones show only those). */
   _touchMode() {
+    if (this.view?.eva) return 'eva';
     const v = this.sim.vehicle;
     const st = v.state;
     const sat = v.modules.saturn;
@@ -1061,12 +1106,25 @@ export class HUD {
     if (mode !== this._touchModeCur) {
       this._touchModeCur = mode;
       this.touchEl.className = `touch-ui hud-keep mode-${mode}`;
-      this.touchLeft.label.textContent = mode === 'ascent' ? 'DIRECCIÓN' : 'ROTACIÓN';
+      this.touchLeft.label.textContent = mode === 'ascent' ? 'DIRECCIÓN' : mode === 'eva' ? 'CAMINAR' : 'ROTACIÓN';
+      this.touchLeft.axes = mode === 'eva' ? ['walkX', 'walkZ'] : ['yaw', 'pitch'];
       const input = this.game.input;
-      for (const ax of ['pitch', 'yaw', 'roll', 'transX', 'transY', 'transZ']) input.setVirtualAxis(ax, 0);
+      for (const ax of ['pitch', 'yaw', 'roll', 'transX', 'transY', 'transZ', 'walkX', 'walkZ']) input.setVirtualAxis(ax, 0);
     }
-    this.touchToggle.hidden = auto === 'ascent' || auto === 'landing' || auto === 'entry';
+    this.touchToggle.hidden = auto === 'ascent' || auto === 'landing' || auto === 'entry' || auto === 'eva';
     this.touchToggle.textContent = mode === 'off' ? '🕹 Mandos' : '✕ Mandos';
+  }
+
+  /** Waiting in real time with nothing to do: point at "Adelantar" once per chapter. */
+  _idleHint(dt) {
+    const r = this.sim.runner;
+    if (this._idleShown || !r || r.ended || this.game.scene?.paused) return;
+    const idle = !r.ffwd && this.sim.clock.effectiveWarp === 1 && !r.pendingPlayerStep?.() && !(r._openDecisions > 0) && !r._speaking;
+    this._idleT = idle ? (this._idleT ?? 0) + dt : 0;
+    if (this._idleT > 25) {
+      this._idleShown = true;
+      this._hint(`Nada que hacer por ahora: ${this.game.input.isTouch ? 'toca ⏩ junto al reloj' : 'pulsa ⏩ junto al reloj (o F8)'} para adelantar hasta el próximo momento importante.`, 9);
+    }
   }
 
   // ---------------------------------------------------------------- frame
@@ -1085,6 +1143,7 @@ export class HUD {
     this.fd?.update(dt);
     this.ed?.update(dt);
     this.pilot?.update(dt);
+    this._idleHint(dt);
     this._updateTouch();
     this._render();
     this._tlmAcc += dt;
@@ -1125,7 +1184,7 @@ export class HUD {
     this.helpModal?.close();
     clearTimeout(this._hintT);
     this.root.remove();
-    for (const ax of ['pitch', 'yaw', 'roll', 'transX', 'transY', 'transZ']) this.game.input.setVirtualAxis(ax, 0);
+    for (const ax of ['pitch', 'yaw', 'roll', 'transX', 'transY', 'transZ', 'walkX', 'walkZ']) this.game.input.setVirtualAxis(ax, 0);
   }
 }
 
